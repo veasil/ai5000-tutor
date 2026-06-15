@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>状态设计 — AI5000天 负责任开发者</title>
+<meta name="description" content="空 / 加载 / 出错 / 安全红灯 —— 每个数据界面都要把这些状态画出来。" />
+<link rel="icon" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@400;500;600;700;900&family=ZCOOL+KuaiLe&family=Press+Start+2P&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="index.html">
+      <img class="logo" src="assets/logo.png" alt="AI5000天 标志" />
+      <div class="title-lock"><span class="n1">AI5000天</span><span class="n2">负责任开发者</span><span class="pill-tag">AI 创客 Tutor</span></div>
+    </a>
+    <div class="tabs">
+      <a href="works.html">创客作品墙</a>
+      <a href="index.html">闯关首页</a>
+      <a href="works.html">我的作品</a>
+      <a href="index.html#content">我的徽章</a>
+      <a href="map.html">闯关地图</a>
+    </div>
+    <div class="me"><span class="ava">伍</span><span>小伍创客 8023</span></div>
+  </div>
+</nav>
+
+<main>
+  <section class="content wrap">
+    <div class="page-head">
+      <h1>状态设计</h1>
+      <p>空 / 加载 / 出错 / 安全红灯 —— 每个数据界面都要把这些状态画出来，不留空白和沉默。</p>
+    </div>
+
+    <div class="states-grid">
+      <div class="card">
+        <span class="state-cap">空状态 · EMPTY</span>
+        <div class="state-center">
+          <div class="round-ava"></div>
+          <h4>你还没有发布作品</h4>
+          <p>做完一个闯关作品，就能发布到作品墙，让大家来玩。</p>
+          <button class="btn btn-ink">▶ 去做第一个作品</button>
+        </div>
+      </div>
+
+      <div class="card skeleton">
+        <span class="state-cap">加载中 · SKELETON</span>
+        <div class="sk-row">
+          <div class="sk"><div class="sthumb"></div><div class="sline"></div><div class="sline short"></div></div>
+          <div class="sk"><div class="sthumb"></div><div class="sline"></div><div class="sline short"></div></div>
+        </div>
+        <p style="font-size:13px;color:var(--ink-mute);margin-top:16px">内容正在加载，用骨架占位代替空白转圈。</p>
+      </div>
+
+      <div class="card">
+        <span class="state-cap">出错 · ERROR</span>
+        <div class="state-center">
+          <div style="font-size:40px">📡</div>
+          <h4>连接失败，请重试</h4>
+          <p>检查一下网络，再试一次就好。</p>
+          <div style="display:flex;gap:12px;align-items:center">
+            <button class="btn btn-ink" style="padding:12px 24px;font-size:15px">重试</button>
+            <button class="btn" style="background:none;color:var(--ink-soft);padding:12px 8px;font-size:15px">返回首页</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card state-danger">
+        <span class="state-cap">安全红灯 · SAFETY</span>
+        <div class="danger-body">
+          <div class="ic">🚨</div>
+          <div>
+            <h4>这个话题，我们先停一下</h4>
+            <p>你刚才说的内容有点敏感。先深呼吸，需要的话，随时可以找带你的营地老师聊聊。</p>
+            <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+              <button class="btn-danger">我知道了</button>
+              <button class="btn-ghost danger">找老师帮忙</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="foot-in">
+    <span>© 2026 AI5000天 · 负责任开发者 AI 创客 Tutor</span>
+    <div class="foot-links">
+      <a href="index.html">闯关首页</a><a href="#">隐私政策</a><a href="#">服务条款</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

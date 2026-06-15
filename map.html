@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>闯关地图 — AI5000天 负责任开发者</title>
+<meta name="description" content="沿着像素路径一关一关向上闯，点亮五力，直达终点「作品发布会」。" />
+<link rel="icon" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@400;500;600;700;900&family=ZCOOL+KuaiLe&family=Press+Start+2P&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="index.html">
+      <img class="logo" src="assets/logo.png" alt="AI5000天 标志" />
+      <div class="title-lock"><span class="n1">AI5000天</span><span class="n2">负责任开发者</span><span class="pill-tag">AI 创客 Tutor</span></div>
+    </a>
+    <div class="tabs">
+      <a href="works.html">创客作品墙</a>
+      <a href="index.html">闯关首页</a>
+      <a href="works.html">我的作品</a>
+      <a href="index.html#content">我的徽章</a>
+      <a href="map.html" class="active">闯关地图</a>
+    </div>
+    <div class="me"><span class="ava">伍</span><span>小伍创客 8023</span></div>
+  </div>
+</nav>
+
+<main>
+  <section class="content wrap">
+    <div class="page-head">
+      <h1>🗺 我的闯关地图</h1>
+      <p>沿着路径一关一关向上闯，点亮五力，直达终点「作品发布会」。</p>
+    </div>
+    <div class="legend">
+      <span class="lg"><span class="sw" style="background:var(--primary)"></span>已通关</span>
+      <span class="lg"><span class="sw" style="background:var(--primary-bright)"></span>进行中</span>
+      <span class="lg"><span class="sw" style="background:var(--blue-soft)"></span>未解锁</span>
+    </div>
+    <div class="path" id="path"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="foot-in">
+    <span>© 2026 AI5000天 · 负责任开发者 AI 创客 Tutor</span>
+    <div class="foot-links">
+      <a href="states.html">设计 · 状态页</a><a href="#">家长入口</a><a href="#">隐私政策</a><a href="#">服务条款</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const S={done:'done',now:'now',lock:'lock'};
+  const levels=[
+    {lv:'LV 01',name:'风险冒险局',icon:'assets/power-safety.png',st:S.done,txt:'✓ 已通关'},
+    {lv:'LV 02',name:'议题锁定',icon:'assets/power-safety.png',st:S.done,txt:'✓ 已通关'},
+    {lv:'LV 03',name:'脑洞发射台',icon:'assets/power-brain.png',st:S.done,txt:'✓ 已通关'},
+    {lv:'LV 04',name:'灵感捕手',icon:'assets/power-brain.png',st:S.now,txt:'▶ 进行中',here:true},
+    {lv:'LV 05',name:'五感探测站',icon:'assets/power-sense.png',st:S.lock,txt:'🔒 未解锁'},
+    {lv:'LV 06',name:'真实质感间',icon:'assets/power-sense.png',st:S.lock,txt:'🔒 未解锁'},
+    {lv:'LV 07',name:'创意熔炉',icon:'assets/power-create.png',st:S.lock,txt:'🔒 未解锁'},
+    {lv:'LV 08',name:'作品孵化器',icon:'assets/power-create.png',st:S.lock,txt:'🔒 未解锁'},
+    {lv:'LV 09',name:'责任检查站',icon:'assets/power-safety.png',st:S.lock,txt:'🔒 未解锁'},
+    {lv:'LV 10',name:'作品发布会',icon:'assets/power-comm.png',st:S.lock,txt:'🏆 终点 · 未解锁'}
+  ];
+  document.getElementById('path').innerHTML=levels.map(function(l){
+    const muted=l.st===S.lock?' muted':'';
+    return '<div class="level reveal">'
+      +'<div class="tile '+l.st+'"><img src="'+l.icon+'" alt=""><span class="lv">'+l.lv+'</span></div>'
+      +'<div class="lmeta"><div class="lname'+muted+'">'+l.name+'</div>'
+      +'<div class="lstatus'+muted+'">'+l.txt+'</div>'
+      +(l.here?'<span class="here">你在这里 ▾</span>':'')
+      +'</div></div>';
+  }).join('');
+  const io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(function(el,i){el.style.transitionDelay=(i%2*80)+'ms';io.observe(el);});
+</script>
+</body>
+</html>
