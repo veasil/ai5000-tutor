@@ -250,18 +250,20 @@ footer{border-top:2px solid var(--ink);background:var(--surface-warm);padding:24
 .modal .goal{background:var(--primary-soft);border:2px solid var(--primary);border-radius:12px;padding:10px 14px;font-size:14px;font-weight:600;color:var(--primary-deep);margin-bottom:18px}
 
 /* ---------- 小伍 help widget (orange / honeycomb) ---------- */
-.wu-fab{position:fixed;right:26px;bottom:26px;z-index:240;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.wu-root{position:fixed;right:26px;bottom:26px;z-index:240}
+.wu-fab{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
 .wu-tip{background:var(--ink);color:#fff;font-size:13px;padding:9px 13px;border-radius:12px;white-space:nowrap;box-shadow:var(--sh-sm);opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .2s,transform .2s}
 .wu-tip::after{content:"";position:absolute;right:24px;bottom:-7px;border:7px solid transparent;border-top-color:var(--ink);border-bottom:0}
 .wu-fab:hover .wu-tip{opacity:1;transform:none}
-.wu-btn{width:66px;height:66px;border:none;background:var(--primary);cursor:pointer;position:relative;display:grid;place-items:center;filter:drop-shadow(3px 4px 0 var(--ink));clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);transition:transform .15s}
+.wu-btn{width:74px;height:74px;border:none;background:var(--primary);cursor:grab;position:relative;display:grid;place-items:center;filter:drop-shadow(3px 4px 0 var(--ink));clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);transition:transform .15s;touch-action:none}
 .wu-btn:hover{transform:translateY(-3px) rotate(-4deg)}
-.wu-btn img{width:48px;height:48px;border-radius:50%;object-fit:cover;object-position:top;background:#fff}
-.wu-chat{position:fixed;right:26px;bottom:106px;z-index:240;width:344px;max-width:calc(100vw - 36px);background:var(--surface);border:3px solid var(--ink);border-radius:20px;box-shadow:var(--sh-lg);overflow:hidden;display:none;flex-direction:column}
+.wu-btn.dragging{cursor:grabbing;transform:none}
+.wu-btn .face{width:60px;height:60px;border-radius:50%;background:url('assets/wu-13.png') 50% 8%/310% no-repeat,#fff;pointer-events:none}
+.wu-chat{position:absolute;right:0;bottom:90px;width:344px;max-width:calc(100vw - 36px);background:var(--surface);border:3px solid var(--ink);border-radius:20px;box-shadow:var(--sh-lg);overflow:hidden;display:none;flex-direction:column}
 .wu-chat.open{display:flex;animation:pop .18s ease}
 .wu-head{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--primary);border-bottom:3px solid var(--ink);position:relative;overflow:hidden}
 .wu-head .hexdeco{position:absolute;width:26px;height:30px;background:rgba(255,255,255,.16);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
-.wu-head .ha{width:38px;height:38px;border-radius:50%;border:2px solid var(--ink);object-fit:cover;object-position:top;background:#fff;z-index:1}
+.wu-head .ha{width:46px;height:46px;flex:none;border-radius:50%;border:2px solid var(--ink);background:url('assets/wu-13.png') 50% 8%/310% no-repeat,#fff;z-index:1}
 .wu-head .htxt{z-index:1}
 .wu-head .ht{font-family:var(--serif);font-weight:700;color:#fff;font-size:16px;line-height:1.2}
 .wu-head .hs{font-size:11px;color:#fff;opacity:.92}
