@@ -36,232 +36,24 @@
               "id": "RjIX7",
               "name": "Slogan区",
               "width": "fill_container",
-              "gap": 44,
+              "height": 800,
+              "gap": 64,
+              "justifyContent": "center",
               "alignItems": "center",
               "children": [
                 {
                   "type": "frame",
-                  "id": "VWrIs",
-                  "name": "Slogan左",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 20,
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "WBelJ",
-                      "name": "眉标",
-                      "fill": "$primary-soft",
-                      "cornerRadius": 100,
-                      "stroke": "$primary-deep",
-                      "gap": 8,
-                      "padding": [
-                        6,
-                        12
-                      ],
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "RgeMe",
-                          "name": "火",
-                          "fill": "$primary-deep",
-                          "content": "🔥",
-                          "fontFamily": "$font-body",
-                          "fontSize": 12,
-                          "fontWeight": "normal"
-                        },
-                        {
-                          "type": "text",
-                          "id": "YJ2kx",
-                          "name": "眉文",
-                          "fill": "$primary-deep",
-                          "content": "24 小时沉浸式 · 从 0 到 10",
-                          "fontFamily": "$font-fun",
-                          "fontSize": 14,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "O3Ll5s",
-                      "name": "小伍气泡",
-                      "width": "fill_container",
-                      "fill": "$surface",
-                      "cornerRadius": 24,
-                      "effect": {
-                        "type": "shadow",
-                        "shadowType": "outer",
-                        "color": "#2C20171A",
-                        "offset": {
-                          "x": 0,
-                          "y": 3
-                        },
-                        "blur": 14
-                      },
-                      "layout": "vertical",
-                      "padding": 24,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "O3Ll5s-text",
-                          "name": "Slogan",
-                          "fill": "$ink",
-                          "textGrowth": "fixed-width",
-                          "width": "fill_container",
-                          "content": "嗨，我是小伍！2 天、24 小时，\n我陪你从第 0 关一路闯到第 10 关，\n做出属于你的第一个 AI 作品 🚀",
-                          "lineHeight": 1.35,
-                          "fontFamily": "$font-display",
-                          "fontSize": 34,
-                          "fontWeight": "900"
-                        },
-                        {
-                          "type": "polygon",
-                          "polygonCount": 3,
-                          "cornerRadius": 2,
-                          "id": "O3Ll5s-tail",
-                          "layoutPosition": "absolute",
-                          "x": 872,
-                          "y": 74,
-                          "name": "气泡尾部",
-                          "rotation": 90,
-                          "fill": "$surface",
-                          "width": 24,
-                          "height": 16
-                        }
-                      ]
-                    },
-                    {
-                      "type": "text",
-                      "id": "bX8RM",
-                      "name": "副文案",
-                      "fill": "$ink-soft",
-                      "textGrowth": "fixed-width",
-                      "width": 540,
-                      "content": "在「负责任开发者 · AI 创客 Tutor」里，我会带你点亮五力，安全地做出属于你的第一个 AI 作品。",
-                      "lineHeight": 1.6,
-                      "fontFamily": "$font-body",
-                      "fontSize": 16,
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "UvbbT",
-                      "name": "按钮组",
-                      "gap": 14,
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "Wv0c0",
-                          "name": "主按钮",
-                          "fill": "$primary",
-                          "cornerRadius": 100,
-                          "stroke": "$primary-deep",
-                          "effect": {
-                            "type": "shadow",
-                            "shadowType": "outer",
-                            "color": "#2C201726",
-                            "offset": {
-                              "x": 0,
-                              "y": 3
-                            },
-                            "blur": 14
-                          },
-                          "gap": 8,
-                          "padding": [
-                            15,
-                            26
-                          ],
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "jTtGM",
-                              "name": "i",
-                              "fill": "#FFFFFF",
-                              "content": "▶",
-                              "fontFamily": "$font-body",
-                              "fontSize": 14,
-                              "fontWeight": "normal"
-                            },
-                            {
-                              "type": "text",
-                              "id": "V2A6Fy",
-                              "name": "t",
-                              "fill": "#FFFFFF",
-                              "content": "继续第 4 关 · 灵感捕手",
-                              "fontFamily": "$font-body",
-                              "fontSize": 16,
-                              "fontWeight": "700"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "SMAaQ",
-                          "name": "次按钮",
-                          "fill": "$surface",
-                          "cornerRadius": 100,
-                          "stroke": "$line",
-                          "effect": {
-                            "type": "shadow",
-                            "shadowType": "outer",
-                            "color": "#2C20171A",
-                            "offset": {
-                              "x": 0,
-                              "y": 2
-                            },
-                            "blur": 10
-                          },
-                          "gap": 8,
-                          "padding": [
-                            15,
-                            22
-                          ],
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "qEQqb",
-                              "name": "t",
-                              "fill": "$ink",
-                              "content": "🗺 看闯关地图",
-                              "fontFamily": "$font-body",
-                              "fontSize": 15,
-                              "fontWeight": "600"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
                   "id": "Mebjg",
                   "name": "小伍卡",
-                  "width": 380,
-                  "height": 540,
-                  "fill": "#FFFFFF00",
-                  "effect": {
-                    "type": "shadow",
-                    "shadowType": "outer",
-                    "color": "#2C201726",
-                    "offset": {
-                      "x": 0,
-                      "y": 8
-                    },
-                    "blur": 24
-                  },
+                  "width": 480,
+                  "height": 780,
                   "layout": "none",
                   "children": [
                     {
                       "type": "rectangle",
                       "id": "VQB32",
                       "x": 40,
-                      "y": 20,
+                      "y": 110,
                       "name": "小伍立绘",
                       "fill": {
                         "type": "image",
@@ -269,25 +61,14 @@
                         "url": "assets/wu-13.png",
                         "mode": "fit"
                       },
-                      "width": 300,
-                      "height": 450,
-                      "effect": {
-                        "type": "shadow",
-                        "shadowType": "outer",
-                        "color": "#2C201733",
-                        "offset": {
-                          "x": 0,
-                          "y": 18
-                        },
-                        "blur": 36,
-                        "spread": -6
-                      }
+                      "width": 400,
+                      "height": 600
                     },
                     {
                       "type": "frame",
                       "id": "ZDAnV",
-                      "x": 120,
-                      "y": 452,
+                      "x": 160,
+                      "y": 716,
                       "name": "名签",
                       "fill": "$primary",
                       "cornerRadius": 100,
@@ -308,6 +89,355 @@
                           "fontFamily": "$font-fun",
                           "fontSize": 14,
                           "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "VWrIs",
+                  "name": "Slogan左",
+                  "width": 620,
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "O3Ll5s",
+                      "name": "小伍气泡",
+                      "width": "fill_container",
+                      "fill": "$surface",
+                      "cornerRadius": 30,
+                      "stroke": "$ink",
+                      "strokeWidth": 3,
+                      "effect": {
+                        "type": "shadow",
+                        "shadowType": "outer",
+                        "color": "#2C2017",
+                        "offset": {
+                          "x": 0,
+                          "y": 10
+                        }
+                      },
+                      "layout": "vertical",
+                      "gap": 24,
+                      "padding": 40,
+                      "children": [
+                        {
+                          "type": "path",
+                          "id": "jzQyk",
+                          "layoutPosition": "absolute",
+                          "x": -27,
+                          "y": 150,
+                          "name": "气泡尾部",
+                          "geometry": "M30 2l-30 18 30 18",
+                          "viewBox": [
+                            0,
+                            0,
+                            30,
+                            40
+                          ],
+                          "fill": "$surface",
+                          "width": 30,
+                          "height": 40,
+                          "stroke": "$ink",
+                          "strokeWidth": 3,
+                          "strokeLinejoin": "round",
+                          "strokeLinecap": "round"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "WHOcV",
+                          "name": "标题",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Aif1x",
+                              "name": "l1",
+                              "fill": "$ink",
+                              "content": "嗨，我是",
+                              "lineHeight": 1.1,
+                              "fontFamily": "$font-serif",
+                              "fontSize": 40,
+                              "fontWeight": "500"
+                            },
+                            {
+                              "type": "text",
+                              "id": "I7Dbe1",
+                              "name": "l2",
+                              "fill": "$primary",
+                              "content": "小伍。",
+                              "lineHeight": 1,
+                              "fontFamily": "$font-serif",
+                              "fontSize": 62,
+                              "fontWeight": "700",
+                              "fontStyle": "italic"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "eAFtN",
+                          "name": "引语",
+                          "fill": "$ink-soft",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "我不只是个 AI 小助手——我会陪你一关一关点亮五力，安全地做出属于你的第一个 AI 作品。准备好一起出发了吗？",
+                          "lineHeight": 1.7,
+                          "fontFamily": "$font-serif",
+                          "fontSize": 17,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "s3Z2G",
+                          "name": "行动行",
+                          "gap": 18,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "BGnFY",
+                              "name": "主按钮",
+                              "fill": "$ink",
+                              "cornerRadius": 100,
+                              "gap": 8,
+                              "padding": [
+                                16,
+                                30
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "VEPNQ",
+                                  "name": "i",
+                                  "fill": "#FFFFFF",
+                                  "content": "▶",
+                                  "fontFamily": "$font-body",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "f7AwDv",
+                                  "name": "t",
+                                  "fill": "#FFFFFF",
+                                  "content": "开始闯关",
+                                  "fontFamily": "$font-serif",
+                                  "fontSize": 17,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "dqcTL",
+                              "name": "状态",
+                              "fill": "$ink-soft",
+                              "content": "第 4 关 · 灵感捕手",
+                              "fontFamily": "$font-body",
+                              "fontSize": 15,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "AZxpd",
+                          "name": "分隔线",
+                          "fill": "$line",
+                          "width": "fill_container",
+                          "height": 1
+                        },
+                        {
+                          "type": "frame",
+                          "id": "jaO03",
+                          "name": "档案格",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 18,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "ZrBPg",
+                              "name": "格行",
+                              "width": "fill_container",
+                              "gap": 24,
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "Q6P1i",
+                                  "name": "我的进度",
+                                  "width": "fill_container",
+                                  "layout": "vertical",
+                                  "gap": 4,
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "OL8Zd",
+                                      "name": "标",
+                                      "fill": "$ink-mute",
+                                      "content": "我的进度",
+                                      "fontFamily": "$font-body",
+                                      "fontSize": 11,
+                                      "fontWeight": "600",
+                                      "letterSpacing": 2
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "eqEpG",
+                                      "name": "值",
+                                      "fill": "$ink",
+                                      "content": "第 4 关",
+                                      "fontFamily": "$font-body",
+                                      "fontSize": 15,
+                                      "fontWeight": "600"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "nPXt0",
+                                  "name": "已点亮",
+                                  "width": "fill_container",
+                                  "layout": "vertical",
+                                  "gap": 4,
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "iMdhG",
+                                      "name": "标",
+                                      "fill": "$ink-mute",
+                                      "content": "已点亮",
+                                      "fontFamily": "$font-body",
+                                      "fontSize": 11,
+                                      "fontWeight": "600",
+                                      "letterSpacing": 2
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "BCvOA",
+                                      "name": "值",
+                                      "fill": "$ink",
+                                      "content": "安全力觉醒",
+                                      "fontFamily": "$font-body",
+                                      "fontSize": 15,
+                                      "fontWeight": "600"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Ds8Pa",
+                              "name": "格行",
+                              "width": "fill_container",
+                              "gap": 24,
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "GTEf6",
+                                  "name": "连续闯关",
+                                  "width": "fill_container",
+                                  "layout": "vertical",
+                                  "gap": 4,
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "E4NaY",
+                                      "name": "标",
+                                      "fill": "$ink-mute",
+                                      "content": "连续闯关",
+                                      "fontFamily": "$font-body",
+                                      "fontSize": 11,
+                                      "fontWeight": "600",
+                                      "letterSpacing": 2
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "sOVjk",
+                                      "name": "值",
+                                      "fill": "$ink",
+                                      "content": "7 天",
+                                      "fontFamily": "$font-body",
+                                      "fontSize": 15,
+                                      "fontWeight": "600"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "oZJ2V",
+                                  "name": "徽章",
+                                  "width": "fill_container",
+                                  "layout": "vertical",
+                                  "gap": 4,
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "iccZH",
+                                      "name": "标",
+                                      "fill": "$ink-mute",
+                                      "content": "徽章",
+                                      "fontFamily": "$font-body",
+                                      "fontSize": 11,
+                                      "fontWeight": "600",
+                                      "letterSpacing": 2
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "tHN7a",
+                                      "name": "值",
+                                      "fill": "$ink",
+                                      "content": "1 / 12 枚",
+                                      "fontFamily": "$font-body",
+                                      "fontSize": 15,
+                                      "fontWeight": "600"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "QC6tQ",
+                      "name": "下滑提示",
+                      "gap": 8,
+                      "padding": [
+                        8,
+                        4
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "DIZbm",
+                          "name": "t",
+                          "fill": "$ink-soft",
+                          "content": "往下滑，看看今天的任务",
+                          "fontFamily": "$font-fun",
+                          "fontSize": 15,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "D0bpE",
+                          "name": "a",
+                          "fill": "$primary",
+                          "content": "↓",
+                          "fontFamily": "$font-body",
+                          "fontSize": 16,
+                          "fontWeight": "700"
                         }
                       ]
                     }
@@ -339,17 +469,17 @@
                   "name": "今日任务卡",
                   "width": "fill_container",
                   "fill": "$surface",
-                  "cornerRadius": 12,
+                  "cornerRadius": 18,
                   "stroke": "$ink",
+                  "strokeWidth": 2,
                   "effect": {
                     "type": "shadow",
                     "shadowType": "outer",
-                    "color": "#2C20171A",
+                    "color": "$ink",
                     "offset": {
                       "x": 0,
-                      "y": 2
-                    },
-                    "blur": 10
+                      "y": 4
+                    }
                   },
                   "layout": "vertical",
                   "gap": 14,
@@ -398,7 +528,8 @@
                           "name": "计数",
                           "fill": "$surface-warm",
                           "cornerRadius": 100,
-                          "stroke": "$primary-deep",
+                          "stroke": "$ink",
+                          "strokeWidth": 1.5,
                           "padding": [
                             4,
                             10
@@ -566,17 +697,17 @@
                   "name": "火花卡",
                   "width": 320,
                   "fill": "$primary-soft",
-                  "cornerRadius": 12,
-                  "stroke": "$primary-deep",
+                  "cornerRadius": 18,
+                  "stroke": "$ink",
+                  "strokeWidth": 2,
                   "effect": {
                     "type": "shadow",
                     "shadowType": "outer",
-                    "color": "#2C20171A",
+                    "color": "$ink",
                     "offset": {
                       "x": 0,
-                      "y": 2
-                    },
-                    "blur": 10
+                      "y": 4
+                    }
                   },
                   "layout": "vertical",
                   "gap": 12,
@@ -891,17 +1022,17 @@
               "name": "我的资料卡",
               "width": "fill_container",
               "fill": "$surface",
-              "cornerRadius": 12,
+              "cornerRadius": 18,
               "stroke": "$ink",
+              "strokeWidth": 2,
               "effect": {
                 "type": "shadow",
                 "shadowType": "outer",
-                "color": "#2C20171A",
+                "color": "$ink",
                 "offset": {
                   "x": 0,
-                  "y": 2
-                },
-                "blur": 10
+                  "y": 4
+                }
               },
               "layout": "vertical",
               "gap": 16,
@@ -1190,17 +1321,17 @@
               "name": "我的徽章卡",
               "width": "fill_container",
               "fill": "$surface",
-              "cornerRadius": 12,
+              "cornerRadius": 18,
               "stroke": "$ink",
+              "strokeWidth": 2,
               "effect": {
                 "type": "shadow",
                 "shadowType": "outer",
-                "color": "#2C20171A",
+                "color": "$ink",
                 "offset": {
                   "x": 0,
-                  "y": 2
-                },
-                "blur": 10
+                  "y": 4
+                }
               },
               "layout": "vertical",
               "gap": 14,
@@ -1249,7 +1380,8 @@
                       "name": "计数",
                       "fill": "$surface-warm",
                       "cornerRadius": 100,
-                      "stroke": "$primary-deep",
+                      "stroke": "$ink",
+                      "strokeWidth": 1.5,
                       "padding": [
                         4,
                         10
@@ -1971,16 +2103,9 @@
       "reusable": true,
       "width": 1440,
       "fill": "$surface-warm",
-      "stroke": "$line",
-      "effect": {
-        "type": "shadow",
-        "shadowType": "outer",
-        "color": "#2C20171A",
-        "offset": {
-          "x": 0,
-          "y": 2
-        },
-        "blur": 10
+      "stroke": "$ink",
+      "strokeWidth": {
+        "bottom": 2
       },
       "padding": [
         14,
@@ -2166,16 +2291,16 @@
               "name": "昵称牌",
               "fill": "$surface",
               "cornerRadius": 100,
-              "stroke": "$line",
+              "stroke": "$ink",
+              "strokeWidth": 2,
               "effect": {
                 "type": "shadow",
                 "shadowType": "outer",
-                "color": "#2C20171A",
+                "color": "$ink",
                 "offset": {
                   "x": 0,
-                  "y": 2
-                },
-                "blur": 10
+                  "y": 3
+                }
               },
               "gap": 8,
               "padding": [
@@ -2314,17 +2439,17 @@
                       "clip": true,
                       "width": "fill_container",
                       "fill": "$surface",
-                      "cornerRadius": 12,
+                      "cornerRadius": 18,
                       "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 4
+                        }
                       },
                       "layout": "vertical",
                       "children": [
@@ -2487,17 +2612,17 @@
                       "clip": true,
                       "width": "fill_container",
                       "fill": "$surface",
-                      "cornerRadius": 12,
+                      "cornerRadius": 18,
                       "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 4
+                        }
                       },
                       "layout": "vertical",
                       "children": [
@@ -2660,17 +2785,17 @@
                       "clip": true,
                       "width": "fill_container",
                       "fill": "$surface",
-                      "cornerRadius": 12,
+                      "cornerRadius": 18,
                       "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 4
+                        }
                       },
                       "layout": "vertical",
                       "children": [
@@ -2842,17 +2967,17 @@
                       "clip": true,
                       "width": "fill_container",
                       "fill": "$surface",
-                      "cornerRadius": 12,
+                      "cornerRadius": 18,
                       "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 4
+                        }
                       },
                       "layout": "vertical",
                       "children": [
@@ -3015,17 +3140,17 @@
                       "clip": true,
                       "width": "fill_container",
                       "fill": "$surface",
-                      "cornerRadius": 12,
+                      "cornerRadius": 18,
                       "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 4
+                        }
                       },
                       "layout": "vertical",
                       "children": [
@@ -3188,17 +3313,17 @@
                       "clip": true,
                       "width": "fill_container",
                       "fill": "$surface",
-                      "cornerRadius": 12,
+                      "cornerRadius": 18,
                       "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 4
+                        }
                       },
                       "layout": "vertical",
                       "children": [
@@ -3470,7 +3595,8 @@
                               "fill": "$primary",
                               "width": 11,
                               "height": 11,
-                              "stroke": "$ink"
+                              "stroke": "$ink",
+                              "strokeWidth": 1.5
                             },
                             {
                               "type": "text",
@@ -3498,7 +3624,8 @@
                               "fill": "$primary-bright",
                               "width": 11,
                               "height": 11,
-                              "stroke": "$ink"
+                              "stroke": "$ink",
+                              "strokeWidth": 1.5
                             },
                             {
                               "type": "text",
@@ -3526,7 +3653,8 @@
                               "fill": "$blue-soft",
                               "width": 11,
                               "height": 11,
-                              "stroke": "$ink"
+                              "stroke": "$ink",
+                              "strokeWidth": 1.5
                             },
                             {
                               "type": "text",
@@ -3832,16 +3960,17 @@
                       "width": 116,
                       "height": 116,
                       "fill": "$primary-soft",
-                      "stroke": "$primary-deep",
+                      "cornerRadius": 12,
+                      "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 4
+                        }
                       },
                       "layout": "vertical",
                       "gap": 5,
@@ -3921,16 +4050,17 @@
                       "width": 116,
                       "height": 116,
                       "fill": "$primary-soft",
-                      "stroke": "$primary-deep",
+                      "cornerRadius": 12,
+                      "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 4
+                        }
                       },
                       "layout": "vertical",
                       "gap": 5,
@@ -4010,16 +4140,17 @@
                       "width": 116,
                       "height": 116,
                       "fill": "$primary-soft",
-                      "stroke": "$primary-deep",
+                      "cornerRadius": 12,
+                      "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 4
+                        }
                       },
                       "layout": "vertical",
                       "gap": 5,
@@ -4099,16 +4230,17 @@
                       "width": 116,
                       "height": 116,
                       "fill": "$primary",
+                      "cornerRadius": 12,
                       "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 4
+                        }
                       },
                       "layout": "vertical",
                       "gap": 5,
@@ -4187,15 +4319,15 @@
                       "name": "你在这里",
                       "fill": "$primary-bright",
                       "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 3
+                        }
                       },
                       "padding": [
                         5,
@@ -4224,16 +4356,17 @@
                       "width": 116,
                       "height": 116,
                       "fill": "$blue-soft",
-                      "stroke": "$line",
+                      "cornerRadius": 12,
+                      "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 4
+                        }
                       },
                       "layout": "vertical",
                       "gap": 5,
@@ -4310,16 +4443,16 @@
                       "y": 666,
                       "name": "锁5",
                       "fill": "$surface",
-                      "stroke": "$line",
+                      "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 3
+                        }
                       },
                       "padding": [
                         3,
@@ -4347,16 +4480,17 @@
                       "width": 116,
                       "height": 116,
                       "fill": "$blue-soft",
-                      "stroke": "$line",
+                      "cornerRadius": 12,
+                      "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 4
+                        }
                       },
                       "layout": "vertical",
                       "gap": 5,
@@ -4433,16 +4567,16 @@
                       "y": 826,
                       "name": "锁6",
                       "fill": "$surface",
-                      "stroke": "$line",
+                      "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 3
+                        }
                       },
                       "padding": [
                         3,
@@ -4470,16 +4604,17 @@
                       "width": 116,
                       "height": 116,
                       "fill": "$blue-soft",
-                      "stroke": "$line",
+                      "cornerRadius": 12,
+                      "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 4
+                        }
                       },
                       "layout": "vertical",
                       "gap": 5,
@@ -4556,16 +4691,16 @@
                       "y": 986,
                       "name": "锁7",
                       "fill": "$surface",
-                      "stroke": "$line",
+                      "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 3
+                        }
                       },
                       "padding": [
                         3,
@@ -4593,16 +4728,17 @@
                       "width": 116,
                       "height": 116,
                       "fill": "$blue-soft",
-                      "stroke": "$line",
+                      "cornerRadius": 12,
+                      "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 4
+                        }
                       },
                       "layout": "vertical",
                       "gap": 5,
@@ -4681,16 +4817,16 @@
                       "y": 1146,
                       "name": "锁8",
                       "fill": "$surface",
-                      "stroke": "$line",
+                      "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 3
+                        }
                       },
                       "padding": [
                         3,
@@ -4718,16 +4854,17 @@
                       "width": 116,
                       "height": 116,
                       "fill": "$blue-soft",
-                      "stroke": "$line",
+                      "cornerRadius": 12,
+                      "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 4
+                        }
                       },
                       "layout": "vertical",
                       "gap": 5,
@@ -4806,16 +4943,16 @@
                       "y": 1306,
                       "name": "锁9",
                       "fill": "$surface",
-                      "stroke": "$line",
+                      "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 3
+                        }
                       },
                       "padding": [
                         3,
@@ -4843,16 +4980,17 @@
                       "width": 116,
                       "height": 116,
                       "fill": "$blue-soft",
-                      "stroke": "$line",
+                      "cornerRadius": 12,
+                      "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 4
+                        }
                       },
                       "layout": "vertical",
                       "gap": 5,
@@ -4931,16 +5069,16 @@
                       "y": 1466,
                       "name": "锁10",
                       "fill": "$surface",
-                      "stroke": "$line",
+                      "stroke": "$ink",
+                      "strokeWidth": 2,
                       "effect": {
                         "type": "shadow",
                         "shadowType": "outer",
-                        "color": "#2C20171A",
+                        "color": "$ink",
                         "offset": {
                           "x": 0,
-                          "y": 2
-                        },
-                        "blur": 10
+                          "y": 3
+                        }
                       },
                       "padding": [
                         3,
@@ -4991,7 +5129,7 @@
             "mode": "fill"
           },
           "cornerRadius": 20,
-          "stroke": "$primary",
+          "stroke": "$ink",
           "strokeWidth": 2
         },
         {
@@ -5000,16 +5138,16 @@
           "name": "小气泡",
           "fill": "$surface",
           "cornerRadius": 14,
-          "stroke": "$line",
+          "stroke": "$ink",
+          "strokeWidth": 2,
           "effect": {
             "type": "shadow",
             "shadowType": "outer",
-            "color": "#2C201714",
+            "color": "$ink",
             "offset": {
               "x": 0,
-              "y": 2
-            },
-            "blur": 8
+              "y": 3
+            }
           },
           "padding": [
             10,
@@ -5093,16 +5231,17 @@
               "name": "空状态卡",
               "width": "fill_container",
               "fill": "$surface",
-              "cornerRadius": 16,
+              "cornerRadius": 18,
+              "stroke": "$ink",
+              "strokeWidth": 2,
               "effect": {
                 "type": "shadow",
                 "shadowType": "outer",
-                "color": "#2C20171A",
+                "color": "$ink",
                 "offset": {
                   "x": 0,
-                  "y": 2
-                },
-                "blur": 10
+                  "y": 4
+                }
               },
               "layout": "vertical",
               "gap": 16,
@@ -5157,7 +5296,9 @@
                         "url": "assets/wu-13.png",
                         "mode": "fill"
                       },
-                      "cornerRadius": 44
+                      "cornerRadius": 44,
+                      "stroke": "$ink",
+                      "strokeWidth": 2
                     },
                     {
                       "type": "text",
@@ -5187,18 +5328,8 @@
                       "type": "frame",
                       "id": "EftFR",
                       "name": "主按钮",
-                      "fill": "$primary",
+                      "fill": "$ink",
                       "cornerRadius": 100,
-                      "effect": {
-                        "type": "shadow",
-                        "shadowType": "outer",
-                        "color": "#2C201726",
-                        "offset": {
-                          "x": 0,
-                          "y": 3
-                        },
-                        "blur": 14
-                      },
                       "gap": 8,
                       "padding": [
                         13,
@@ -5238,16 +5369,17 @@
               "name": "加载卡",
               "width": "fill_container",
               "fill": "$surface",
-              "cornerRadius": 16,
+              "cornerRadius": 18,
+              "stroke": "$ink",
+              "strokeWidth": 2,
               "effect": {
                 "type": "shadow",
                 "shadowType": "outer",
-                "color": "#2C20171A",
+                "color": "$ink",
                 "offset": {
                   "x": 0,
-                  "y": 2
-                },
-                "blur": 10
+                  "y": 4
+                }
               },
               "layout": "vertical",
               "gap": 16,
@@ -5386,16 +5518,17 @@
               "name": "出错卡",
               "width": "fill_container",
               "fill": "$surface",
-              "cornerRadius": 16,
+              "cornerRadius": 18,
+              "stroke": "$ink",
+              "strokeWidth": 2,
               "effect": {
                 "type": "shadow",
                 "shadowType": "outer",
-                "color": "#2C20171A",
+                "color": "$ink",
                 "offset": {
                   "x": 0,
-                  "y": 2
-                },
-                "blur": 10
+                  "y": 4
+                }
               },
               "layout": "vertical",
               "gap": 16,
@@ -5481,18 +5614,8 @@
                           "type": "frame",
                           "id": "UBLLz",
                           "name": "重试",
-                          "fill": "$primary",
+                          "fill": "$ink",
                           "cornerRadius": 100,
-                          "effect": {
-                            "type": "shadow",
-                            "shadowType": "outer",
-                            "color": "#2C201726",
-                            "offset": {
-                              "x": 0,
-                              "y": 3
-                            },
-                            "blur": 14
-                          },
                           "padding": [
                             12,
                             24
@@ -5543,16 +5666,17 @@
               "name": "安全红灯卡",
               "width": "fill_container",
               "fill": "$danger-soft",
-              "cornerRadius": 16,
+              "cornerRadius": 18,
+              "stroke": "$danger",
+              "strokeWidth": 2,
               "effect": {
                 "type": "shadow",
                 "shadowType": "outer",
-                "color": "#2C20171A",
+                "color": "$danger",
                 "offset": {
                   "x": 0,
-                  "y": 2
-                },
-                "blur": 10
+                  "y": 4
+                }
               },
               "layout": "vertical",
               "gap": 16,
@@ -5722,7 +5846,7 @@
     },
     "font-display": {
       "type": "string",
-      "value": "ZCOOL QingKe HuangYou"
+      "value": "Noto Serif SC"
     },
     "font-fun": {
       "type": "string",
@@ -5779,6 +5903,10 @@
     "danger-soft": {
       "type": "color",
       "value": "#FBEAE5"
+    },
+    "font-serif": {
+      "type": "string",
+      "value": "Noto Serif SC"
     }
   }
 }
