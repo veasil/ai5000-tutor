@@ -1,0 +1,229 @@
+// prisma/schema.prisma
+// AI5000天 负责任开发者 AI Tutor
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────
+// 用户体系
+// ─────────────────────────────────────────
+
+// 家长账号（实名，手机号注册）
+model Parent {
+  id           String   @id @default(cuid())
+  phone        String   @unique
+  passwordHash String
+  children     Child[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// 孩子账号（匿名优先，可绑定家长）
+model Child {
+  id             String    @id @default(cuid())
+  anonymousName  String    // 系统生成，格式：小伍创客XXXX
+  ageStage       AgeStage
+  mode           PlayMode  @default(CREATOR)
+  organizationId String?   // 软关联 wqt-auth-backend 的 organizations.id
+  parentId       String?
+  parent         Parent?   @relation(fields: [parentId], references: [id])
+  journeys       Journey[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+enum AgeStage {
+  ENLIGHTENMENT // 启蒙期 6-8岁
+  GROWTH        // 成长期 9-12岁
+  YOUTH         // 青春期 13-15岁
+}
+
+enum PlayMode {
+  OBSERVER   // 小小观察员 6-8岁
+  CREATOR    // AI创想家 9-12岁
+  DEVELOPER  // 负责任开发者 13-15岁
+  FAMILY     // 家庭共创
+}
+
+// ─────────────────────────────────────────
+// 闯关旅程
+// ─────────────────────────────────────────
+
+model Journey {
+  id             String        @id @default(cuid())
+  childId        String
+  currentPower   FivePower     @default(SAFETY)
+  currentLevel   Int           @default(1) // 1-10
+  completedLevels Int[]        @default([])
+  publishStatus  PublishStatus @default(DRAFT)
+  safetyFlags    Json          @default("[]")
+  parentConfirm  Boolean       @default(false)
+
+  // ── 安全力觉醒（第1-2关输出）──────────────
+  topIssues      String[]      @default([])  // 关心问题 Top 3
+  selectedIssue  String?       // 锁定的责任议题
+  riskTypes      String[]      @default([])  // 如 ["身体安全","心理安全"]
+  responsibilityBoundary Json? // 责任边界清单
+
+  // ── 脑波力启蒙（第3-4关输出）──────────────
+  aiEdgeList     Json?         // {can_do: [], cannot_do: []}
+  promptDraft    Json?         // {prompt: string, optimizationSuggestions: []}
+  aiCollabCard   Json?         // 个人 AI 协作规则
+
+  // ── 实感力锻造（第5-6关输出）──────────────
+  issueStory     Json?         // {focus, experience, witness, issueSentence}
+  deepDive       Json?         // {who, what, why: []}
+
+  // ── 创心力迸发（第7-8关输出）──────────────
+  vision         String?       // 愿景句
+  aiActions      Json?         // AI 行动清单
+  abcCanvas      Json?         // {A_awareness, B_behavior, C_result}
+  demoUrl        String?       // 生成的 Demo 预览链接
+  demoTemplateId String?       // 使用的模板 ID
+  effectCheck    Json?         // 效果验证表
+
+  // ── 安全力觉醒第9关输出 ──────────────────
+  safetyReport   Json?         // 责任检查报告
+
+  // ── 沟通力绽放（第10关输出）──────────────
+  threeLines     Json?         // {problem, solution, change}
+  videoScript    Json?         // 视频脚本（分段）
+  videoUrl       String?       // 上传的视频文件 URL
+
+  // ── 关联 ─────────────────────────────────
+  child          Child         @relation(fields: [childId], references: [id])
+  stateHistory   JourneyLog[]
+  conversations  Conversation[]
+  work           Work?
+  badge          Badge?
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+enum FivePower {
+  SAFETY        // 安全力觉醒
+  BRAINWAVE     // 脑波力启蒙
+  SENSING       // 实感力锻造
+  CREATIVITY    // 创心力迸发
+  COMMUNICATION // 沟通力绽放
+}
+
+enum PublishStatus {
+  DRAFT      // 草稿
+  REVIEWING  // 审核中（第9关通过后才能进入）
+  APPROVED   // 审核通过
+  REJECTED   // 审核驳回
+}
+
+// 状态转移日志（调试 + 家长端查看用）
+model JourneyLog {
+  id         String   @id @default(cuid())
+  journeyId  String
+  fromLevel  Int
+  toLevel    Int
+  fromPower  String
+  toPower    String
+  trigger    String   // 触发原因，如 "level_complete" | "safety_flag" | "parent_confirm"
+  metadata   Json?    // 额外上下文
+  journey    Journey  @relation(fields: [journeyId], references: [id])
+  createdAt  DateTime @default(now())
+}
+
+// AI Tutor 对话历史（按 Journey + Level 存储）
+model Conversation {
+  id              String   @id @default(cuid())
+  journeyId       String
+  level           Int      // 所属关卡 1-10
+  role            String   // "user" | "assistant"
+  content         String
+  structuredOutput Json?   // AI 从本轮提取的结构化字段，已写入 Journey
+  journey         Journey  @relation(fields: [journeyId], references: [id])
+  createdAt       DateTime @default(now())
+}
+
+// ─────────────────────────────────────────
+// 风险情景卡
+// ─────────────────────────────────────────
+
+model RiskCard {
+  id              String    @id @default(cuid())
+  ageStage        AgeStage
+  riskType        String    // 身体安全/心理安全/社交安全/经济安全/数字权益
+  scenario        String    // 情景描述
+  question        String    // 提问
+  // options 结构：[{label: "A", text: "...", consequence: "...", score: {安全力: 1, ...}}]
+  options         Json
+  recommendedDemo String?   // 推荐的 Demo 模板名
+  status          String    @default("active") // active | archived
+  createdBy       String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+// ─────────────────────────────────────────
+// Demo 模板
+// ─────────────────────────────────────────
+
+model DemoTemplate {
+  id          String   @id @default(cuid())
+  name        String   // 休息提醒器/情绪安抚器/隐私小侦探/消费冷静器/信息核查助手
+  riskTypes   String[] // 适配的风险类型
+  description String
+  // params 结构：定义模板可配置的参数及默认值
+  params      Json
+  previewUrl  String?
+  status      String   @default("active")
+  createdAt   DateTime @default(now())
+}
+
+// ─────────────────────────────────────────
+// 作品与徽章
+// ─────────────────────────────────────────
+
+// 审核通过后生成的官方作品卡
+model Work {
+  id                      String    @id @default(cuid())
+  journeyId               String    @unique
+  title                   String
+  creatorNickname         String
+  ageStage                String
+  riskTypes               String[]
+  usedPowers              String[]  // 完成的五力列表
+  demoUrl                 String?
+  videoUrl                String?
+  responsibilityStatement String    // 责任声明
+  publishStatus           String    @default("under_review")
+  reviewNote              String?   // 驳回原因
+  reviewedBy              String?
+  reviewedAt              DateTime?
+  publishedAt             DateTime?
+  createdAt               DateTime  @default(now())
+}
+
+// 负责任开发者徽章
+model Badge {
+  id        String   @id @default(cuid())
+  journeyId String   @unique
+  childId   String
+  type      String   @default("负责任开发者")
+  journey   Journey  @relation(fields: [journeyId], references: [id])
+  issuedAt  DateTime @default(now())
+}
+
+// ─────────────────────────────────────────
+// 系统配置
+// ─────────────────────────────────────────
+
+model SystemSetting {
+  key         String   @id
+  value       String   // 敏感值在应用层加密
+  description String?
+  updatedAt   DateTime @updatedAt
+}

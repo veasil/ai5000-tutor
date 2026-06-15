@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI5000天 · 负责任开发者 AI Tutor — 闯关首页 v0.1</title>
+  <meta name="description" content="面向 6-15 岁的闯关式 AI 创客训练系统 · 孩子端闯关首页 v0.1 预览" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;900&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-cream: #FAF5EC;
+      --primary: #F5871F;
+      --primary-deep: #B85C09;
+      --ink: #2C2017;
+      --ink-soft: #6E6052;
+      --muted: #A89A89;
+      --surface: #FFFFFF;
+      --surface-warm: #FFFBF4;
+      --peach: #FCE8CE;
+      --line: #EADFCD;
+      --blue: #5B8BD0;
+      --font-display: "ZCOOL QingKe HuangYou", "Noto Sans SC", sans-serif;
+      --font-body: "Noto Sans SC", sans-serif;
+      --font-fun: "ZCOOL KuaiLe", "Noto Sans SC", sans-serif;
+      --font-pixel: "Press Start 2P", monospace;
+      --shadow-sm: 0 2px 10px rgba(44, 32, 23, 0.10);
+      --shadow-md: 0 3px 14px rgba(44, 32, 23, 0.10);
+      --shadow-lg: 0 18px 36px rgba(44, 32, 23, 0.20);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg-cream);
+      color: var(--ink);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 1440px; margin: 0 auto; }
+
+    /* ===== 导航 ===== */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--surface-warm);
+      border-bottom: 1px solid var(--line);
+      box-shadow: var(--shadow-sm);
+      padding: 14px 40px;
+    }
+    .nav-left { display: flex; align-items: center; gap: 16px; }
+    .logo { height: 48px; width: auto; }
+    .title-trio { display: flex; align-items: center; gap: 8px; }
+    .title-trio .n1, .title-trio .n2 {
+      font-family: var(--font-display); font-size: 17px;
+      text-shadow: 0 1px 2px rgba(44, 32, 23, 0.15);
+    }
+    .title-trio .n1 { color: var(--primary); font-weight: 900; }
+    .title-trio .n2 { color: var(--ink); font-weight: 700; }
+    .pill {
+      background: var(--primary); color: #fff; font-weight: 700; font-size: 17px;
+      border-radius: 12px; padding: 0 12px; line-height: 26px;
+      box-shadow: 0 2px 12px rgba(44, 32, 23, 0.10);
+    }
+    .tabs { display: flex; align-items: center; gap: 18px; }
+    .tabs a { font-size: 15px; color: var(--ink-soft); font-weight: 500; text-decoration: none; }
+    .tabs a.active { color: var(--primary-deep); font-weight: 700; }
+    .nickname {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: 100px; padding: 8px 12px; box-shadow: var(--shadow-sm);
+    }
+    .nickname .ava {
+      width: 22px; height: 22px; border-radius: 50%; background: var(--blue);
+      color: #fff; font-family: var(--font-fun); font-size: 13px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nickname .name { font-size: 13px; font-weight: 600; }
+
+    /* ===== 内容容器 ===== */
+    .content { display: flex; flex-direction: column; gap: 28px; padding: 40px 72px; }
+
+    /* ===== 英雄区 ===== */
+    .hero { display: flex; gap: 44px; align-items: flex-start; }
+    .hero-left { flex: 1; display: flex; flex-direction: column; gap: 20px; }
+    .brow {
+      align-self: flex-start; display: inline-flex; align-items: center; gap: 8px;
+      background: var(--peach); border: 1px solid var(--primary-deep);
+      color: var(--primary-deep); border-radius: 100px; padding: 6px 12px; font-size: 14px;
+      font-family: var(--font-fun);
+    }
+    .bubble {
+      position: relative; background: #fff; border-radius: 24px; padding: 24px;
+      box-shadow: 0 3px 14px rgba(44, 32, 23, 0.10);
+    }
+    .bubble .slogan {
+      font-family: var(--font-display); font-size: 34px; font-weight: 900;
+      line-height: 1.35; color: var(--ink); margin: 0; white-space: pre-line;
+    }
+    .bubble .tail {
+      position: absolute; right: -10px; top: 64px; width: 24px; height: 16px;
+      background: #fff; transform: rotate(45deg); border-radius: 2px;
+    }
+    .subtext { color: var(--ink-soft); font-size: 16px; line-height: 1.6; max-width: 540px; margin: 0; }
+    .btn-row { display: flex; align-items: center; gap: 14px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px; border-radius: 100px;
+      cursor: pointer; text-decoration: none; border: 1px solid transparent;
+    }
+    .btn-primary {
+      background: var(--primary); color: #fff; font-weight: 700; font-size: 16px;
+      padding: 15px 26px; border-color: var(--primary-deep);
+      box-shadow: 0 3px 14px rgba(44, 32, 23, 0.15);
+    }
+    .btn-secondary {
+      background: #fff; color: var(--ink); font-weight: 600; font-size: 15px;
+      padding: 15px 22px; border-color: var(--line); box-shadow: var(--shadow-sm);
+    }
+    .hero-right { width: 380px; display: flex; justify-content: center; flex-shrink: 0; }
+    .wu-stage { position: relative; width: 300px; }
+    .wu-stage img {
+      width: 300px; height: auto;
+      filter: drop-shadow(0 18px 30px rgba(44, 32, 23, 0.30));
+    }
+    .wu-tag {
+      position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%);
+      background: var(--primary); color: #fff; border: 1px solid var(--ink);
+      border-radius: 100px; padding: 6px 12px; font-family: var(--font-fun); font-size: 14px;
+      white-space: nowrap;
+    }
+
+    /* ===== 小伍引导条 ===== */
+    .guide { display: flex; align-items: center; gap: 12px; }
+    .guide .g-ava {
+      width: 40px; height: 40px; border-radius: 20px; object-fit: cover;
+      border: 2px solid var(--primary);
+    }
+    .guide .g-bubble {
+      background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+      padding: 10px 16px; box-shadow: 0 2px 8px rgba(44, 32, 23, 0.08);
+      font-family: var(--font-fun); color: var(--ink); font-size: 15px;
+    }
+
+    /* ===== 卡片通用 ===== */
+    .card {
+      background: #fff; border: 1px solid var(--ink); border-radius: 12px;
+      padding: 20px; box-shadow: var(--shadow-md);
+    }
+    .card-head { display: flex; align-items: center; justify-content: space-between; }
+    .card-title { display: flex; align-items: center; gap: 8px; }
+    .card-title .t { font-family: var(--font-display); font-size: 18px; font-weight: 700; }
+    .counter {
+      background: var(--surface-warm); border: 1px solid var(--primary-deep);
+      border-radius: 100px; padding: 4px 10px; color: var(--ink-soft);
+      font-family: var(--font-pixel); font-size: 9px;
+    }
+
+    /* ===== 任务火花行 ===== */
+    .task-row { display: flex; gap: 20px; align-items: stretch; }
+    .task-card { flex: 1; display: flex; flex-direction: column; gap: 14px; }
+    .task { display: flex; align-items: center; gap: 10px; padding: 8px 4px; }
+    .check {
+      width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center;
+      justify-content: center; font-size: 14px; font-weight: 700; color: #fff;
+      border: 1px solid var(--primary-deep); background: var(--primary);
+    }
+    .check.todo { background: var(--surface-warm); border-color: var(--line); }
+    .task .txt { font-size: 15px; }
+    .task.done .txt { color: var(--muted); font-weight: 500; }
+    .task.now .txt { color: var(--ink); font-weight: 700; }
+
+    .spark-card {
+      width: 320px; flex-shrink: 0; background: var(--peach); border: 1px solid var(--primary-deep);
+      border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 12px;
+      box-shadow: var(--shadow-md);
+    }
+    .spark-head { display: flex; align-items: center; gap: 10px; }
+    .spark-head .fire { font-size: 40px; line-height: 1; }
+    .spark-head .num { font-family: var(--font-display); font-size: 32px; font-weight: 800; color: var(--primary-deep); }
+    .spark-head .lbl { font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+    .week { display: flex; gap: 6px; }
+    .day {
+      width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+      font-size: 13px; border-radius: 4px;
+    }
+    .day.on { background: var(--primary); color: #fff; border: 1px solid var(--primary-deep); }
+    .day.off { background: var(--surface-warm); color: var(--muted); border: 1px solid var(--line); }
+    .spark-note { font-family: var(--font-fun); color: var(--primary-deep); font-size: 13px; }
+
+    /* ===== 资料卡 ===== */
+    .profile-body { display: flex; gap: 24px; align-items: center; }
+    .avatar-lg { width: 96px; height: 120px; object-fit: cover; border: 1px solid var(--ink); border-radius: 6px; flex-shrink: 0; }
+    .fields { flex: 1; display: flex; gap: 18px; }
+    .field { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+    .field .k { color: var(--muted); font-size: 12px; font-weight: 600; }
+    .field .v { color: var(--ink); font-size: 16px; font-weight: 700; }
+    .progress-box {
+      width: 260px; flex-shrink: 0; background: var(--surface-warm); border: 1px solid var(--line);
+      border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 8px;
+    }
+    .progress-box .row { display: flex; align-items: center; justify-content: space-between; }
+    .progress-box .row .l { color: var(--ink-soft); font-size: 12px; font-weight: 600; }
+    .progress-box .row .r { color: var(--primary-deep); font-family: var(--font-pixel); font-size: 9px; }
+    .track { background: var(--surface-warm); border: 1px solid var(--line); border-radius: 100px; height: 14px; padding: 2px; }
+    .track .fill { background: var(--primary); height: 100%; width: 30%; border-radius: 100px; }
+    .progress-box .note { font-family: var(--font-fun); color: var(--primary-deep); font-size: 12px; }
+
+    /* ===== 徽章墙 ===== */
+    .badges { display: grid; grid-template-columns: repeat(12, 1fr); gap: 12px; }
+    .badge { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .badge .blk {
+      width: 100%; height: 62px; display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-pixel); font-size: 14px; border-radius: 4px;
+    }
+    .badge.on .blk { background: var(--primary); color: #fff; border: 1px solid var(--primary-deep); }
+    .badge.off .blk { background: var(--surface-warm); color: var(--muted); border: 1px solid var(--line); font-size: 11px; }
+    .badge .n { font-size: 10px; font-weight: 600; }
+    .badge.on .n { color: var(--ink); }
+    .badge.off .n { color: var(--muted); }
+
+    @media (max-width: 1100px) {
+      .content { padding: 28px 24px; }
+      nav { padding: 12px 20px; flex-wrap: wrap; gap: 12px; }
+      .tabs { order: 3; width: 100%; flex-wrap: wrap; }
+      .hero { flex-direction: column-reverse; align-items: center; }
+      .hero-right { width: auto; }
+      .task-row { flex-direction: column; }
+      .spark-card { width: auto; }
+      .profile-body { flex-direction: column; align-items: stretch; }
+      .fields { flex-wrap: wrap; }
+      .field { min-width: 40%; }
+      .progress-box { width: auto; }
+      .badges { grid-template-columns: repeat(6, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- 导航 -->
+    <nav>
+      <div class="nav-left">
+        <img class="logo" src="assets/logo.png" alt="AI5000天 Logo" />
+        <div class="title-trio">
+          <span class="n1">AI5000天</span>
+          <span class="n2">负责任开发者</span>
+          <span class="pill">AI 创客 Tutor</span>
+        </div>
+      </div>
+      <div class="tabs">
+        <a href="#">创客作品墙</a>
+        <a href="#" class="active">闯关首页</a>
+        <a href="#">我的作品</a>
+        <a href="#">我的徽章</a>
+        <a href="#">闯关地图</a>
+      </div>
+      <div class="nickname">
+        <span class="ava">伍</span>
+        <span class="name">小伍创客 8023</span>
+      </div>
+    </nav>
+
+    <div class="content">
+      <!-- 英雄区 -->
+      <section class="hero">
+        <div class="hero-left">
+          <span class="brow">🔥 24 小时沉浸式 · 从 0 到 10</span>
+          <div class="bubble">
+            <p class="slogan">嗨，我是小伍！2 天、24 小时，
+我陪你从第 0 关一路闯到第 10 关，
+做出属于你的第一个 AI 作品 🚀</p>
+            <span class="tail"></span>
+          </div>
+          <p class="subtext">在「负责任开发者 · AI 创客 Tutor」里，我会带你点亮五力，安全地做出属于你的第一个 AI 作品。</p>
+          <div class="btn-row">
+            <a class="btn btn-primary" href="#">▶ 继续第 4 关 · 灵感捕手</a>
+            <a class="btn btn-secondary" href="#">🗺 看闯关地图</a>
+          </div>
+        </div>
+        <div class="hero-right">
+          <div class="wu-stage">
+            <img src="assets/wu-13.png" alt="小伍立绘" />
+            <span class="wu-tag">小伍 · 13岁</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 今日任务 -->
+      <div class="guide">
+        <img class="g-ava" src="assets/wu-13.png" alt="小伍" />
+        <div class="g-bubble">我帮你挑好了今天该做的事 👇</div>
+      </div>
+      <section class="task-row">
+        <div class="card task-card">
+          <div class="card-head">
+            <div class="card-title"><span>📋</span><span class="t">今日任务</span></div>
+            <span class="counter">2 / 3 完成</span>
+          </div>
+          <div class="task done"><span class="check">✓</span><span class="txt">通过安全力觉醒小测</span></div>
+          <div class="task done"><span class="check">✓</span><span class="txt">收集 3 张灵感卡</span></div>
+          <div class="task now"><span class="check todo"></span><span class="txt">闯过第 4 关「灵感捕手」</span></div>
+        </div>
+        <div class="spark-card">
+          <div class="spark-head">
+            <span class="fire">🔥</span>
+            <div>
+              <div class="num">7 天</div>
+              <div class="lbl">连续闯关</div>
+            </div>
+          </div>
+          <div class="week">
+            <span class="day on">🔥</span><span class="day on">🔥</span><span class="day on">🔥</span>
+            <span class="day on">🔥</span><span class="day on">🔥</span><span class="day on">🔥</span>
+            <span class="day off">?</span>
+          </div>
+          <div class="spark-note">再坚持 1 天，点亮「七日坚持」徽章！</div>
+        </div>
+      </section>
+
+      <!-- 我的资料 -->
+      <div class="guide">
+        <img class="g-ava" src="assets/wu-13.png" alt="小伍" />
+        <div class="g-bubble">这是你的创客小档案～</div>
+      </div>
+      <section class="card">
+        <div class="card-title"><span>👤</span><span class="t">我的资料</span></div>
+        <div class="profile-body" style="margin-top:16px;">
+          <img class="avatar-lg" src="assets/wu-13.png" alt="头像" />
+          <div class="fields">
+            <div class="field"><span class="k">昵称</span><span class="v">小伍创客 8023</span></div>
+            <div class="field"><span class="k">年龄</span><span class="v">13 岁</span></div>
+            <div class="field"><span class="k">所在营</span><span class="v">AI 创客营 · 第 3 期</span></div>
+            <div class="field"><span class="k">当前阶段</span><span class="v">脑波力启蒙</span></div>
+          </div>
+          <div class="progress-box">
+            <div class="row"><span class="l">闯关进度</span><span class="r">3 / 10</span></div>
+            <div class="track"><div class="fill"></div></div>
+            <div class="note">已点亮：安全力觉醒</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 我的徽章 -->
+      <div class="guide">
+        <img class="g-ava" src="assets/wu-13.png" alt="小伍" />
+        <div class="g-bubble">看看我们一起点亮了多少颗星 ✨</div>
+      </div>
+      <section class="card">
+        <div class="card-head">
+          <div class="card-title"><span>🏅</span><span class="t">我的徽章</span></div>
+          <span class="counter">1 / 12 枚</span>
+        </div>
+        <div class="badges" style="margin-top:14px;">
+          <div class="badge on"><span class="blk">★</span><span class="n">首关</span></div>
+          <div class="badge off"><span class="blk">?</span><span class="n">灵感</span></div>
+          <div class="badge off"><span class="blk">?</span><span class="n">五感</span></div>
+          <div class="badge off"><span class="blk">?</span><span class="n">质感</span></div>
+          <div class="badge off"><span class="blk">?</span><span class="n">创意</span></div>
+          <div class="badge off"><span class="blk">?</span><span class="n">孵化</span></div>
+          <div class="badge off"><span class="blk">?</span><span class="n">责任</span></div>
+          <div class="badge off"><span class="blk">?</span><span class="n">发布</span></div>
+          <div class="badge off"><span class="blk">?</span><span class="n">安全力</span></div>
+          <div class="badge off"><span class="blk">?</span><span class="n">脑波力</span></div>
+          <div class="badge off"><span class="blk">?</span><span class="n">实感力</span></div>
+          <div class="badge off"><span class="blk">?</span><span class="n">全通关</span></div>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
