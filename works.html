@@ -70,5 +70,6 @@
   const io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:0.1});
   document.querySelectorAll('.reveal').forEach(function(el,i){el.style.transitionDelay=(i%3*60)+'ms';io.observe(el);});
 </script>
+<script src="widget.js"></script>
 </body>
 </html>

@@ -198,3 +198,87 @@ footer{border-top:2px solid var(--ink);background:var(--surface-warm);padding:24
   .level,.level:nth-child(even){flex-direction:column;text-align:center}
 }
 @media(max-width:600px){.works-grid{grid-template-columns:1fr}}
+
+/* ---------- Level page ---------- */
+.back{display:inline-block;margin:32px 0 18px;font-size:14px;font-weight:600;color:var(--ink-soft)}
+.back:hover{color:var(--ink)}
+.lvl-head{display:flex;align-items:center;gap:18px}
+.lvl-badge{width:84px;height:84px;flex:none;border:2px solid var(--ink);border-radius:14px;background:var(--primary);box-shadow:var(--sh);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.lvl-badge img{width:42px;height:42px;object-fit:contain;filter:brightness(0) invert(1)}
+.lvl-badge .lv{font-family:var(--pixel);font-size:8px;color:#fff}
+.lvl-head h1{font-family:var(--serif);font-weight:800;font-size:32px}
+.lvl-head p{font-size:14px;color:var(--ink-soft);margin-top:4px}
+.steps{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 8px}
+.step{font-size:13px;font-weight:600;color:var(--ink-mute);background:var(--surface);border:2px solid var(--line);border-radius:999px;padding:7px 14px}
+.step.done{color:var(--primary-deep);border-color:var(--primary);background:var(--primary-soft)}
+.step.active{color:#fff;background:var(--ink);border-color:var(--ink);box-shadow:var(--sh-sm)}
+.recall{display:flex;flex-wrap:wrap;gap:10px}
+.rchip{font-size:14px;border:2px solid var(--ink);background:var(--surface);border-radius:999px;padding:9px 16px;cursor:pointer;box-shadow:var(--sh-sm);transition:transform .12s,background .15s}
+.rchip:hover{background:var(--primary-soft);transform:translateY(-2px)}
+.rchip.picked{background:var(--primary);color:#fff}
+.icards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.icard{background:var(--surface);border:2px solid var(--ink);border-radius:16px;padding:18px;box-shadow:var(--sh);display:flex;flex-direction:column;gap:12px;min-height:200px}
+.icard .cnum{font-family:var(--pixel);font-size:9px;color:var(--ink-mute)}
+.icard .row .k{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--primary-deep)}
+.icard .row .v{font-size:14px;color:var(--ink);margin-top:3px;line-height:1.5}
+.icard.empty{border-style:dashed;background:var(--surface-warm)}
+.icard.active{border-color:var(--primary);box-shadow:4px 4px 0 var(--primary)}
+.cap-input{border:2px solid var(--line);border-radius:10px;padding:8px 10px;font-family:var(--sans);font-size:14px;width:100%;outline:none;resize:none}
+.cap-input:focus{border-color:var(--primary)}
+.cap-label{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--primary-deep);margin-bottom:4px;display:block}
+.converge{margin-top:0}
+.picked-card{display:flex;align-items:center;gap:10px;background:var(--primary-soft);border:2px solid var(--primary);border-radius:12px;padding:12px 14px;font-weight:600}
+.oneliner{font-family:var(--serif);font-size:20px;line-height:1.8;margin:18px 0}
+.oneliner .blank{background:var(--surface-warm);border:2px solid var(--ink);border-radius:8px;padding:2px 12px;margin:0 4px;display:inline-block;font-weight:700;color:var(--primary-deep)}
+.lvl-cta{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:8px}
+
+/* ---------- Intro modal ---------- */
+.overlay{position:fixed;inset:0;z-index:150;background:rgba(44,32,23,.55);display:flex;align-items:center;justify-content:center;padding:24px;animation:fade .2s ease}
+.overlay.hide{display:none}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.modal{display:flex;align-items:flex-end;gap:0;max-width:760px;width:100%}
+.modal .mwu{width:230px;flex:none;align-self:flex-end}
+.modal .mwu img{width:100%;filter:drop-shadow(0 14px 20px rgba(0,0,0,.3))}
+.modal .mbubble{position:relative;background:var(--surface);border:3px solid var(--ink);border-radius:26px;padding:30px 32px;box-shadow:var(--sh-lg);flex:1;animation:pop .25s ease}
+.modal .mbubble::before{content:"";position:absolute;left:-22px;top:60px;width:0;height:0;border-style:solid;border-width:18px 22px 18px 0;border-color:transparent var(--ink) transparent transparent}
+.modal .mbubble::after{content:"";position:absolute;left:-16px;top:63px;width:0;height:0;border-style:solid;border-width:15px 19px 15px 0;border-color:transparent var(--surface) transparent transparent}
+.modal h2{font-family:var(--serif);font-weight:800;font-size:26px}
+.modal h2 b{color:var(--primary);font-style:italic}
+.modal .msteps{list-style:none;margin:16px 0;display:flex;flex-direction:column;gap:10px}
+.modal .msteps li{display:flex;gap:10px;align-items:flex-start;font-size:15px}
+.modal .msteps .no{font-family:var(--pixel);font-size:9px;color:#fff;background:var(--primary);border:2px solid var(--ink);border-radius:50%;width:24px;height:24px;display:grid;place-items:center;flex:none}
+.modal .goal{background:var(--primary-soft);border:2px solid var(--primary);border-radius:12px;padding:10px 14px;font-size:14px;font-weight:600;color:var(--primary-deep);margin-bottom:18px}
+
+/* ---------- 小伍 help widget (orange / honeycomb) ---------- */
+.wu-fab{position:fixed;right:26px;bottom:26px;z-index:240;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.wu-tip{background:var(--ink);color:#fff;font-size:13px;padding:9px 13px;border-radius:12px;white-space:nowrap;box-shadow:var(--sh-sm);opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .2s,transform .2s}
+.wu-tip::after{content:"";position:absolute;right:24px;bottom:-7px;border:7px solid transparent;border-top-color:var(--ink);border-bottom:0}
+.wu-fab:hover .wu-tip{opacity:1;transform:none}
+.wu-btn{width:66px;height:66px;border:none;background:var(--primary);cursor:pointer;position:relative;display:grid;place-items:center;filter:drop-shadow(3px 4px 0 var(--ink));clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);transition:transform .15s}
+.wu-btn:hover{transform:translateY(-3px) rotate(-4deg)}
+.wu-btn img{width:48px;height:48px;border-radius:50%;object-fit:cover;object-position:top;background:#fff}
+.wu-chat{position:fixed;right:26px;bottom:106px;z-index:240;width:344px;max-width:calc(100vw - 36px);background:var(--surface);border:3px solid var(--ink);border-radius:20px;box-shadow:var(--sh-lg);overflow:hidden;display:none;flex-direction:column}
+.wu-chat.open{display:flex;animation:pop .18s ease}
+.wu-head{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--primary);border-bottom:3px solid var(--ink);position:relative;overflow:hidden}
+.wu-head .hexdeco{position:absolute;width:26px;height:30px;background:rgba(255,255,255,.16);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+.wu-head .ha{width:38px;height:38px;border-radius:50%;border:2px solid var(--ink);object-fit:cover;object-position:top;background:#fff;z-index:1}
+.wu-head .htxt{z-index:1}
+.wu-head .ht{font-family:var(--serif);font-weight:700;color:#fff;font-size:16px;line-height:1.2}
+.wu-head .hs{font-size:11px;color:#fff;opacity:.92}
+.wu-head .hx{margin-left:auto;background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1;z-index:1}
+.wu-body{padding:16px;display:flex;flex-direction:column;gap:12px;max-height:330px;overflow-y:auto;background-color:var(--surface-warm);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='28' viewBox='0 0 24 28'%3E%3Cpath d='M12 1 L23 7.5 L23 20.5 L12 27 L1 20.5 L1 7.5 Z' fill='none' stroke='%23F5871F' stroke-opacity='0.13' stroke-width='1.4'/%3E%3C/svg%3E")}
+.wu-msg{background:var(--surface);border:2px solid var(--ink);border-radius:14px;border-top-left-radius:4px;padding:10px 13px;font-size:14px;line-height:1.6;max-width:88%;box-shadow:var(--sh-sm)}
+.wu-chips{display:flex;flex-wrap:wrap;gap:8px}
+.wu-chip{font-size:12px;border:2px solid var(--primary);color:var(--primary-deep);background:#fff;border-radius:999px;padding:6px 12px;cursor:pointer;transition:background .15s}
+.wu-chip:hover{background:var(--primary-soft)}
+.wu-input{display:flex;gap:8px;padding:12px;border-top:2px solid var(--line);background:var(--surface)}
+.wu-input input{flex:1;border:2px solid var(--ink);border-radius:999px;padding:9px 14px;font-family:var(--sans);font-size:14px;outline:none}
+.wu-input input:focus{border-color:var(--primary)}
+.wu-send{background:var(--ink);color:#fff;border:none;border-radius:999px;padding:0 18px;font-weight:700;cursor:pointer}
+
+@media(max-width:900px){
+  .icards{grid-template-columns:1fr}
+  .modal{flex-direction:column;align-items:center}
+  .modal .mwu{width:150px}
+  .modal .mbubble::before,.modal .mbubble::after{display:none}
+}

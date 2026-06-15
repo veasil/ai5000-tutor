@@ -70,15 +70,19 @@
   ];
   document.getElementById('path').innerHTML=levels.map(function(l){
     const muted=l.st===S.lock?' muted':'';
+    var tile='<div class="tile '+l.st+'"><img src="'+l.icon+'" alt=""><span class="lv">'+l.lv+'</span></div>';
+    var name=l.name;
+    if(l.st===S.now){tile='<a href="level4.html">'+tile+'</a>';name='<a href="level4.html" style="color:inherit">'+l.name+'</a>';}
     return '<div class="level reveal">'
-      +'<div class="tile '+l.st+'"><img src="'+l.icon+'" alt=""><span class="lv">'+l.lv+'</span></div>'
-      +'<div class="lmeta"><div class="lname'+muted+'">'+l.name+'</div>'
+      +tile
+      +'<div class="lmeta"><div class="lname'+muted+'">'+name+'</div>'
       +'<div class="lstatus'+muted+'">'+l.txt+'</div>'
-      +(l.here?'<span class="here">你在这里 ▾</span>':'')
+      +(l.here?'<a class="here" href="level4.html">你在这里 ▾</a>':'')
       +'</div></div>';
   }).join('');
   const io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:0.1});
   document.querySelectorAll('.reveal').forEach(function(el,i){el.style.transitionDelay=(i%2*80)+'ms';io.observe(el);});
 </script>
+<script src="widget.js"></script>
 </body>
 </html>

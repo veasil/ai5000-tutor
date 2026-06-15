@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>第 4 关 · 灵感捕手 — AI5000天 负责任开发者</title>
+<meta name="description" content="脑波力启蒙 · 灵感捕手：把发散的脑洞，收成抓得住的灵感。" />
+<link rel="icon" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@400;500;600;700;900&family=ZCOOL+KuaiLe&family=Press+Start+2P&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="index.html">
+      <img class="logo" src="assets/logo.png" alt="AI5000天 标志" />
+      <div class="title-lock"><span class="n1">AI5000天</span><span class="n2">负责任开发者</span><span class="pill-tag">AI 创客 Tutor</span></div>
+    </a>
+    <div class="tabs">
+      <a href="works.html">创客作品墙</a>
+      <a href="index.html">闯关首页</a>
+      <a href="works.html">我的作品</a>
+      <a href="index.html#content">我的徽章</a>
+      <a href="map.html" class="active">闯关地图</a>
+    </div>
+    <div class="me"><span class="ava">伍</span><span>小伍创客 8023</span></div>
+  </div>
+</nav>
+
+<!-- 进入讲解：居中模态 + 遮罩 -->
+<div class="overlay" id="intro">
+  <div class="modal">
+    <div class="mwu"><img src="assets/wu-13.png" alt="小伍" /></div>
+    <div class="mbubble">
+      <h2>欢迎来到第 4 关 · <b>灵感捕手</b>！</h2>
+      <p style="color:var(--ink-soft);margin-top:8px;line-height:1.7">上一关你在「脑洞发射台」蹦出好多点子。这一关，我陪你把它们收成抓得住的灵感——</p>
+      <ul class="msteps">
+        <li><span class="no">1</span><span><b>回顾脑洞</b>：挑出你最有感觉的点子。</span></li>
+        <li><span class="no">2</span><span><b>捕捉灵感卡</b>：从生活里补满 3 张卡（我看到的 + 我希望）。</span></li>
+        <li><span class="no">3</span><span><b>挑选</b>：哪个最想做、又最做得出来？</span></li>
+        <li><span class="no">4</span><span><b>凝练点子</b>：变成一句话，喂给你的第一个 AI 作品。</span></li>
+      </ul>
+      <div class="goal">🎯 本关目标：集齐 3 张灵感卡，凝练出你的作品点子。</div>
+      <button class="btn btn-ink" id="startBtn">▶ 开始捕捉</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="content wrap">
+    <a class="back" href="map.html">← 返回闯关地图</a>
+
+    <div class="lvl-head">
+      <div class="lvl-badge"><img src="assets/power-brain.png" alt="" /><span class="lv">LV 04</span></div>
+      <div>
+        <h1>灵感捕手</h1>
+        <p>脑波力启蒙 · 把发散的脑洞，收成抓得住的灵感</p>
+      </div>
+    </div>
+
+    <div class="steps">
+      <span class="step done">① 回顾脑洞</span>
+      <span class="step active">② 捕捉灵感卡</span>
+      <span class="step">③ 挑选</span>
+      <span class="step">④ 凝练点子</span>
+    </div>
+
+    <!-- ① 回顾脑洞 -->
+    <div class="guide reveal"><span class="gava"></span><span class="gb">先回顾你在脑洞发射台蹦出的点子，点一个有感觉的，把它变成灵感卡 👇</span></div>
+    <div class="recall reveal">
+      <span class="rchip">给流浪猫搭避雨的窝</span>
+      <span class="rchip picked">帮奶奶念药盒上的字</span>
+      <span class="rchip">提醒全家多喝水</span>
+      <span class="rchip">把旧物改造成新玩具</span>
+      <span class="rchip">帮同学找丢失的文具</span>
+      <span class="rchip">给古诗配一幅画</span>
+    </div>
+
+    <!-- ② 捕捉灵感卡 -->
+    <div class="guide reveal"><span class="gava"></span><span class="gb">灵感卡 = 「我看到的」+「我希望」。已经抓到 2 张，再来 1 张就齐啦！</span></div>
+    <div class="icards reveal">
+      <div class="icard">
+        <span class="cnum">灵感卡 01</span>
+        <div class="row"><div class="k">我看到的</div><div class="v">楼下的流浪猫，下雨天没地方躲。</div></div>
+        <div class="row"><div class="k">我希望</div><div class="v">有个东西能提醒大家给它搭个避雨的角落。</div></div>
+      </div>
+      <div class="icard">
+        <span class="cnum">灵感卡 02</span>
+        <div class="row"><div class="k">我看到的</div><div class="v">奶奶看不清药盒上的小字。</div></div>
+        <div class="row"><div class="k">我希望</div><div class="v">有个东西能把药名念给她听。</div></div>
+      </div>
+      <div class="icard active">
+        <span class="cnum">灵感卡 03 · 捕捉中</span>
+        <div><label class="cap-label">我看到的</label><textarea class="cap-input" rows="2" placeholder="最近哪个小瞬间让你觉得『要是有个东西能…就好了』？"></textarea></div>
+        <div><label class="cap-label">我希望</label><textarea class="cap-input" rows="2" placeholder="你希望它能帮上什么忙？"></textarea></div>
+      </div>
+    </div>
+
+    <!-- ③ 挑选 + ④ 凝练 -->
+    <div class="guide reveal"><span class="gava"></span><span class="gb">三张都抓到啦！哪一个你最想做、又最做得出来？我帮你把它变成一句话 ✨</span></div>
+    <div class="card converge reveal">
+      <div class="card-head"><h3>🎯 你的作品点子</h3></div>
+      <div class="picked-card">✅ 已选中：灵感卡 02 · 帮奶奶认药</div>
+      <div class="oneliner">我想做一个 <span class="blank">会念药名的语音小助手</span>，帮助 <span class="blank">看不清字的老人</span>，解决 <span class="blank">认错药</span> 的问题。</div>
+      <div class="lvl-cta">
+        <a class="btn btn-ink" href="index.html">完成本关 · 生成 Demo →</a>
+        <span class="status">完成后将点亮「脑波力」并解锁第 5 关</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="foot-in">
+    <span>© 2026 AI5000天 · 负责任开发者 AI 创客 Tutor</span>
+    <div class="foot-links"><a href="map.html">闯关地图</a><a href="states.html">设计 · 状态页</a><a href="#">隐私政策</a></div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('startBtn').addEventListener('click',function(){
+    document.getElementById('intro').classList.add('hide');
+  });
+  // 回顾脑洞 chip 选择
+  document.querySelectorAll('.recall .rchip').forEach(function(c){
+    c.addEventListener('click',function(){
+      document.querySelectorAll('.recall .rchip').forEach(function(x){x.classList.remove('picked');});
+      c.classList.add('picked');
+    });
+  });
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(function(el,i){el.style.transitionDelay=(i%3*50)+'ms';io.observe(el);});
+</script>
+<script src="widget.js"></script>
+</body>
+</html>
