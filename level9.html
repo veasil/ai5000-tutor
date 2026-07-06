@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>第 9 关 · 影响力 — AI5000天 负责任开发者</title>
+<meta name="description" content="安全力觉醒 · 影响力：让更多人看见你作品的价值。" />
+<link rel="icon" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@400;500;600;700;900&family=ZCOOL+KuaiLe&family=Press+Start+2P&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+/* ============ Level 9: Influence ============ */
+
+/* Step bar */
+.step-bar{display:flex;gap:6px;margin:28px 0 8px;flex-wrap:wrap}
+.step-bar .s{font-size:13px;font-weight:600;color:var(--ink-mute);background:var(--surface);border:2px solid var(--line);border-radius:999px;padding:8px 16px;cursor:pointer;transition:all .2s;user-select:none}
+.step-bar .s:hover{border-color:var(--primary);color:var(--primary-deep)}
+.step-bar .s.done{color:var(--primary-deep);border-color:var(--primary);background:var(--primary-soft)}
+.step-bar .s.done::before{content:'✓ ';font-size:11px}
+.step-bar .s.active{color:#fff;background:var(--ink);border-color:var(--ink);box-shadow:var(--sh-sm)}
+
+/* Step sections */
+.step-section{display:none;padding:24px 0 8px}
+.step-section.active{display:block;animation:stepIn .35s ease}
+@keyframes stepIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* Wu bubble for each step */
+.wu-step{display:flex;align-items:flex-start;gap:12px;margin-bottom:20px}
+.wu-step .gava{width:40px;height:40px;border-radius:50%;border:2px solid var(--ink);background:url('assets/wu-13.png') center top/170% no-repeat,var(--primary-soft);flex:none}
+.wu-step .gb{background:var(--surface);border:2px solid var(--ink);border-radius:14px;padding:12px 18px;box-shadow:var(--sh-sm);font-family:var(--fun);font-size:16px;line-height:1.5}
+
+/* Demo echo card */
+.demo-echo{background:var(--primary-soft);border:2px solid var(--ink);border-radius:18px;padding:20px 24px;box-shadow:var(--sh);margin:20px 0 0;position:relative;overflow:hidden}
+.demo-echo::before{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:var(--primary);opacity:.12;border-radius:50%}
+.demo-echo .de-label{font-family:var(--pixel);font-size:8px;color:var(--primary-deep);letter-spacing:1px;margin-bottom:10px}
+.demo-echo .de-grid{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;align-items:baseline}
+.demo-echo .de-k{font-size:12px;font-weight:700;color:var(--primary-deep);white-space:nowrap}
+.demo-echo .de-v{font-size:15px;color:var(--ink);line-height:1.6}
+
+/* Influence card */
+.inf-card{background:var(--surface);border:2px solid var(--ink);border-radius:18px;padding:24px;box-shadow:var(--sh);margin-top:18px;transition:border-color .2s}
+.inf-card:hover{border-color:var(--primary)}
+.inf-card .inf-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.inf-card .inf-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:24px;border:2px solid var(--ink);flex:none}
+.inf-card .inf-icon.real{background:#FBEAE5}
+.inf-card .inf-icon.spread{background:var(--primary-soft)}
+.inf-card .inf-icon.sustain{background:var(--blue-soft)}
+.inf-card .inf-title{font-family:var(--serif);font-weight:700;font-size:18px}
+.inf-card .inf-sub{font-family:var(--fun);font-size:13px;color:var(--ink-soft);margin-top:2px}
+.inf-card .inf-prompt{font-size:15px;color:var(--ink-soft);line-height:1.7;margin-bottom:14px;padding-left:4px}
+.inf-card .inf-field{margin-bottom:12px}
+.inf-card .inf-label{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--primary-deep);margin-bottom:6px;display:block}
+.inf-card .inf-input{width:100%;border:2px solid var(--line);border-radius:10px;padding:10px 14px;font-family:var(--sans);font-size:15px;outline:none;resize:none;background:var(--surface-warm);line-height:1.6;transition:border-color .2s}
+.inf-card .inf-input:focus{border-color:var(--primary)}
+
+/* Stakeholder grid */
+.stake-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.stake-cell{background:var(--surface-warm);border:2px solid var(--line);border-radius:14px;padding:14px;transition:border-color .2s}
+.stake-cell:focus-within{border-color:var(--primary)}
+.stake-cell .sk-icon{font-size:22px;margin-bottom:6px}
+.stake-cell .sk-label{font-size:13px;font-weight:700;color:var(--primary-deep);margin-bottom:6px}
+.stake-cell .sk-input{width:100%;border:2px solid var(--line);border-radius:8px;padding:8px 10px;font-family:var(--sans);font-size:13px;outline:none;resize:none;background:var(--surface);transition:border-color .2s}
+.stake-cell .sk-input:focus{border-color:var(--primary)}
+
+/* Next step button */
+.next-step{display:inline-flex;align-items:center;gap:8px;font-family:var(--serif);font-weight:600;font-size:16px;background:var(--ink);color:#fff;border:none;border-radius:999px;padding:12px 24px;cursor:pointer;box-shadow:var(--sh-sm);margin-top:20px;transition:transform .12s,box-shadow .12s}
+.next-step:hover{transform:translateY(-2px);box-shadow:var(--sh)}
+.next-step:active{transform:translateY(1px);box-shadow:none}
+.next-step:disabled{background:var(--line);color:var(--ink-mute);box-shadow:none;cursor:not-allowed;transform:none}
+
+/* Impact plan card (convergence) */
+.impact-plan{background:var(--surface);border:3px solid var(--primary);border-radius:18px;padding:28px;box-shadow:6px 6px 0 var(--primary);margin-top:24px}
+.impact-plan h3{font-family:var(--serif);font-weight:800;font-size:22px;color:var(--primary-deep);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.ip-grid{display:grid;grid-template-columns:1fr;gap:14px}
+.ip-row{display:flex;align-items:baseline;gap:10px;padding:12px 14px;background:var(--primary-soft);border:2px solid var(--primary);border-radius:12px}
+.ip-row .ip-k{font-size:12px;font-weight:700;color:var(--primary-deep);min-width:100px;flex:none}
+.ip-row .ip-v{font-size:15px;color:var(--ink);font-weight:600;line-height:1.5}
+
+/* Stakeholder view in convergence */
+.stake-view{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.stake-view-item{display:flex;align-items:center;gap:8px;background:var(--blue-soft);border:2px solid var(--blue);border-radius:10px;padding:10px 12px;font-size:13px}
+.stake-view-item .sv-label{font-weight:700;color:var(--blue-deep);white-space:nowrap}
+.stake-view-item .sv-val{color:var(--ink)}
+
+@media(max-width:900px){
+  .stake-grid{grid-template-columns:1fr}
+  .stake-view{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="index.html">
+      <img class="logo" src="assets/logo.png" alt="AI5000天 标志" />
+      <div class="title-lock"><span class="n1">AI5000天</span><span class="n2">负责任开发者</span><span class="pill-tag">AI 创客 Tutor</span></div>
+    </a>
+    <div class="tabs">
+      <a href="works.html">创客作品墙</a>
+      <a href="index.html">闯关首页</a>
+      <a href="works.html">我的作品</a>
+      <a href="index.html#content">我的徽章</a>
+      <a href="map.html" class="active">闯关地图</a>
+    </div>
+    <div class="me"><span class="ava">伍</span><span>小伍创客 8023</span></div>
+  </div>
+</nav>
+
+<!-- Intro modal -->
+<div class="overlay" id="intro">
+  <div class="modal">
+    <div class="mwu"><img src="assets/wu-13.png" alt="小伍" /></div>
+    <div class="mbubble">
+      <h2>欢迎来到第 9 关 · <b>影响力</b>！</h2>
+      <p style="color:var(--ink-soft);margin-top:8px;line-height:1.7">作品有了，接下来让更多人看见它的价值！我们从三个层面来思考——谁需要它、怎么传播它、怎么让它走得更远。</p>
+      <ul class="msteps">
+        <li><span class="no">1</span><span><b>真实影响力</b>：它能帮到谁？解决了什么真实的社会问题？</span></li>
+        <li><span class="no">2</span><span><b>传播影响力</b>：用一句话让别人记住它——你的 slogan！</span></li>
+        <li><span class="no">3</span><span><b>持续影响力</b>：怎么让它活下去、走得远？</span></li>
+        <li><span class="no">4</span><span><b>多方视角</b>：用户、家长、平台、社会，各自怎么看它？</span></li>
+        <li><span class="no">5</span><span><b>生成方案</b>：汇总成你的影响力方案！</span></li>
+      </ul>
+      <div class="goal">🐝 本关目标：让你的作品拥有三层影响力——真实、传播、持续。</div>
+      <button class="btn btn-ink" id="startBtn">▶ 开始规划</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="content wrap">
+    <a class="back" href="map.html">← 返回闯关地图</a>
+
+    <div class="lvl-head">
+      <div class="lvl-badge"><img src="assets/power-safety.png" alt="" /><span class="lv">LV 09</span></div>
+      <div>
+        <h1>影响力</h1>
+        <p>安全力觉醒 · 让更多人看见你作品的价值</p>
+      </div>
+    </div>
+
+    <!-- Step bar -->
+    <div class="step-bar" id="stepBar">
+      <span class="s active" data-step="1">① 真实影响力</span>
+      <span class="s" data-step="2">② 传播影响力</span>
+      <span class="s" data-step="3">③ 持续影响力</span>
+      <span class="s" data-step="4">④ 多方视角</span>
+      <span class="s" data-step="5">⑤ 生成方案</span>
+    </div>
+
+    <!-- Demo echo card -->
+    <div class="demo-echo reveal" id="demoEcho">
+      <div class="de-label">LV 07-08 DEMO 回声</div>
+      <div class="de-grid">
+        <span class="de-k">议题</span><span class="de-v" id="deTopic">网络欺凌</span>
+        <span class="de-k">Demo</span><span class="de-v" id="deDemo">一个帮助被欺凌同学识别恶意评论并自动提醒信任大人的浏览器插件</span>
+      </div>
+    </div>
+
+    <!-- ============ STEP 1: 真实影响力 ============ -->
+    <div class="step-section active" id="step1">
+      <div class="wu-step">
+        <span class="gava"></span>
+        <span class="gb">作品有了，接下来让更多人看见它的价值 🐝 我们分三层来——</span>
+      </div>
+      <div class="wu-step" style="margin-top:-8px">
+        <span class="gava" style="visibility:hidden"></span>
+        <span class="gb">第一层：它能帮到谁？解决了什么真实的社会问题？</span>
+      </div>
+
+      <div class="inf-card reveal">
+        <div class="inf-head">
+          <div class="inf-icon real">🤝</div>
+          <div>
+            <div class="inf-title">真实影响力</div>
+            <div class="inf-sub">Real Impact</div>
+          </div>
+        </div>
+        <div class="inf-prompt">它能帮到谁？解决了什么真实的社会问题？</div>
+        <div class="inf-field">
+          <label class="inf-label">帮到的人</label>
+          <textarea class="inf-input" id="helpWho" rows="2" placeholder="比如：被网络欺凌的同学、他们的家长、班主任……"></textarea>
+        </div>
+        <div class="inf-field">
+          <label class="inf-label">解决的问题</label>
+          <textarea class="inf-input" id="solveWhat" rows="2" placeholder="比如：帮助受害同学及时发现恶意评论，减少心理伤害……"></textarea>
+        </div>
+      </div>
+
+      <button class="next-step" id="toStep2">下一步 →</button>
+    </div>
+
+    <!-- ============ STEP 2: 传播影响力 ============ -->
+    <div class="step-section" id="step2">
+      <div class="wu-step">
+        <span class="gava"></span>
+        <span class="gb">用一句话让别人记住它——你的 slogan 是？</span>
+      </div>
+
+      <div class="inf-card reveal">
+        <div class="inf-head">
+          <div class="inf-icon spread">📣</div>
+          <div>
+            <div class="inf-title">传播影响力</div>
+            <div class="inf-sub">Spread Impact</div>
+          </div>
+        </div>
+        <div class="inf-prompt">如果你只有一句话让别人记住你的作品，你会说什么？</div>
+        <div class="inf-field">
+          <label class="inf-label">你的 Slogan</label>
+          <textarea class="inf-input" id="slogan" rows="2" placeholder="比如：让每一次恶意评论，都有一道温暖的防线"></textarea>
+        </div>
+        <div style="margin-top:8px;font-size:13px;color:var(--ink-mute)">
+          💡 小技巧：好的 slogan = <b>痛点 + 解决方案</b>，让人一听就懂、过耳不忘
+        </div>
+      </div>
+
+      <button class="next-step" id="toStep3">下一步 →</button>
+    </div>
+
+    <!-- ============ STEP 3: 持续影响力 ============ -->
+    <div class="step-section" id="step3">
+      <div class="wu-step">
+        <span class="gava"></span>
+        <span class="gb">怎么让它活下去、走得远？</span>
+      </div>
+
+      <div class="inf-card reveal">
+        <div class="inf-head">
+          <div class="inf-icon sustain">🔄</div>
+          <div>
+            <div class="inf-title">持续影响力（商业闭环）</div>
+            <div class="inf-sub">Sustainable Impact</div>
+          </div>
+        </div>
+        <div class="inf-prompt">你的作品靠什么持续下去？它怎么获得资源、用户、反馈，形成正向循环？</div>
+        <div class="inf-field">
+          <label class="inf-label">它靠什么持续下去</label>
+          <textarea class="inf-input" id="sustainHow" rows="3" placeholder="比如：和学校合作推广，免费给学生用，学校支付基础维护费用；用户反馈驱动功能迭代……"></textarea>
+        </div>
+      </div>
+
+      <button class="next-step" id="toStep4">下一步 →</button>
+    </div>
+
+    <!-- ============ STEP 4: 多方视角 ============ -->
+    <div class="step-section" id="step4">
+      <div class="wu-step">
+        <span class="gava"></span>
+        <span class="gb">想想：用户、家长、平台、社会，各自会怎么看它？</span>
+      </div>
+
+      <div class="stake-grid reveal">
+        <div class="stake-cell">
+          <div class="sk-icon">👤</div>
+          <div class="sk-label">用户怎么看？</div>
+          <textarea class="sk-input" id="skUser" rows="2" placeholder="比如：真的好用，我不用再害怕打开评论区了"></textarea>
+        </div>
+        <div class="stake-cell">
+          <div class="sk-icon">👨‍👩‍👧</div>
+          <div class="sk-label">家长怎么看？</div>
+          <textarea class="sk-input" id="skParent" rows="2" placeholder="比如：终于有工具帮孩子保护自己了，放心多了"></textarea>
+        </div>
+        <div class="stake-cell">
+          <div class="sk-icon">🏢</div>
+          <div class="sk-label">平台怎么看？</div>
+          <textarea class="sk-input" id="skPlatform" rows="2" placeholder="比如：能减少举报积压，提升社区氛围"></textarea>
+        </div>
+        <div class="stake-cell">
+          <div class="sk-icon">🌍</div>
+          <div class="sk-label">社会怎么看？</div>
+          <textarea class="sk-input" id="skSociety" rows="2" placeholder="比如：这是青少年数字权益保护的进步"></textarea>
+        </div>
+      </div>
+
+      <button class="next-step" id="toStep5">生成影响力方案 →</button>
+    </div>
+
+    <!-- ============ STEP 5: 生成方案 ============ -->
+    <div class="step-section" id="step5">
+      <div class="wu-step">
+        <span class="gava"></span>
+        <span class="gb">三层影响力 + 四方视角，汇总成你的影响力方案！🐝</span>
+      </div>
+
+      <div class="impact-plan reveal" id="impactPlan" style="display:none">
+        <h3>🐝 我的影响力方案</h3>
+        <div class="ip-grid">
+          <div class="ip-row">
+            <span class="ip-k">🤝 帮到的人</span>
+            <span class="ip-v" id="ipHelpWho">—</span>
+          </div>
+          <div class="ip-row">
+            <span class="ip-k">🎯 解决的问题</span>
+            <span class="ip-v" id="ipSolveWhat">—</span>
+          </div>
+          <div class="ip-row">
+            <span class="ip-k">📣 Slogan</span>
+            <span class="ip-v" id="ipSlogan">—</span>
+          </div>
+          <div class="ip-row">
+            <span class="ip-k">🔄 持续下去靠</span>
+            <span class="ip-v" id="ipSustain">—</span>
+          </div>
+        </div>
+        <div style="margin-top:18px">
+          <div style="font-family:var(--serif);font-weight:700;font-size:16px;margin-bottom:10px">👀 多方视角</div>
+          <div class="stake-view">
+            <div class="stake-view-item"><span class="sv-label">👤 用户：</span><span class="sv-val" id="ipSkUser">—</span></div>
+            <div class="stake-view-item"><span class="sv-label">👨‍👩‍👧 家长：</span><span class="sv-val" id="ipSkParent">—</span></div>
+            <div class="stake-view-item"><span class="sv-label">🏢 平台：</span><span class="sv-val" id="ipSkPlatform">—</span></div>
+            <div class="stake-view-item"><span class="sv-label">🌍 社会：</span><span class="sv-val" id="ipSkSociety">—</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lvl-cta" id="lvlCta" style="display:none;margin-top:20px">
+        <a class="btn btn-ink" href="level10.html">进入第 10 关 · 小伍创客发布会 →</a>
+        <span class="status">完成后将点亮「安全力觉醒」并解锁最终关</span>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<footer>
+  <div class="foot-in">
+    <span>© 2026 AI5000天 · 负责任开发者 AI 创客 Tutor</span>
+    <div class="foot-links"><a href="map.html">闯关地图</a><a href="states.html">设计 · 状态页</a><a href="#">隐私政策</a></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // ============ State ============
+  var state = {
+    currentStep: 1,
+    helpWho: '',
+    solveWhat: '',
+    slogan: '',
+    sustainHow: '',
+    skUser: '',
+    skParent: '',
+    skPlatform: '',
+    skSociety: ''
+  };
+
+  var el = function(id){ return document.getElementById(id); };
+
+  // ============ Intro Modal ============
+  el('startBtn').addEventListener('click', function(){
+    el('intro').classList.add('hide');
+  });
+
+  // ============ Step Navigation ============
+  var totalSteps = 5;
+
+  function goToStep(n) {
+    if (n < 1 || n > totalSteps) return;
+    state.currentStep = n;
+    // Update step sections
+    for (var i = 1; i <= totalSteps; i++) {
+      var sec = el('step' + i);
+      if (sec) sec.classList.toggle('active', i === n);
+    }
+    // Update step bar
+    var bars = el('stepBar').querySelectorAll('.s');
+    bars.forEach(function(b){
+      var s = parseInt(b.getAttribute('data-step'));
+      b.classList.remove('active','done');
+      if (s < n) b.classList.add('done');
+      else if (s === n) b.classList.add('active');
+    });
+    // On entering step 5, generate plan
+    if (n === 5) generatePlan();
+    // Trigger reveal animations in new section
+    var sec = el('step' + n);
+    if (sec) {
+      sec.querySelectorAll('.reveal').forEach(function(r){ r.classList.add('in'); });
+      sec.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  }
+
+  // Click step bar
+  el('stepBar').addEventListener('click', function(e){
+    var s = e.target.closest('.s');
+    if (s) {
+      var n = parseInt(s.getAttribute('data-step'));
+      if (n <= state.currentStep) goToStep(n);
+    }
+  });
+
+  // ============ Validation helpers ============
+  function shakeElement(elem) {
+    elem.style.animation = 'none';
+    elem.offsetHeight;
+    elem.style.animation = 'shake .4s ease';
+    setTimeout(function(){ elem.style.animation = ''; }, 500);
+  }
+
+  // Add shake keyframe
+  var shakeStyle = document.createElement('style');
+  shakeStyle.textContent = '@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}';
+  document.head.appendChild(shakeStyle);
+
+  function requireField(id) {
+    var v = el(id).value.trim();
+    if (!v) {
+      shakeElement(el(id));
+      return null;
+    }
+    return v;
+  }
+
+  // ============ Step transitions ============
+  el('toStep2').addEventListener('click', function(){
+    var h = requireField('helpWho');
+    var s = requireField('solveWhat');
+    if (!h || !s) return;
+    state.helpWho = h;
+    state.solveWhat = s;
+    goToStep(2);
+  });
+
+  el('toStep3').addEventListener('click', function(){
+    var v = requireField('slogan');
+    if (!v) return;
+    state.slogan = v;
+    goToStep(3);
+  });
+
+  el('toStep4').addEventListener('click', function(){
+    var v = requireField('sustainHow');
+    if (!v) return;
+    state.sustainHow = v;
+    goToStep(4);
+  });
+
+  el('toStep5').addEventListener('click', function(){
+    // Collect stakeholder views (optional, no validation)
+    state.skUser = el('skUser').value.trim();
+    state.skParent = el('skParent').value.trim();
+    state.skPlatform = el('skPlatform').value.trim();
+    state.skSociety = el('skSociety').value.trim();
+    goToStep(5);
+  });
+
+  // ============ Generate Impact Plan ============
+  function generatePlan() {
+    el('ipHelpWho').textContent = state.helpWho || '—';
+    el('ipSolveWhat').textContent = state.solveWhat || '—';
+    el('ipSlogan').textContent = state.slogan ? '"' + state.slogan + '"' : '—';
+    el('ipSustain').textContent = state.sustainHow || '—';
+
+    el('ipSkUser').textContent = state.skUser || '—';
+    el('ipSkParent').textContent = state.skParent || '—';
+    el('ipSkPlatform').textContent = state.skPlatform || '—';
+    el('ipSkSociety').textContent = state.skSociety || '—';
+
+    el('impactPlan').style.display = 'block';
+    el('lvlCta').style.display = 'flex';
+
+    // Mark all steps done
+    var bars = el('stepBar').querySelectorAll('.s');
+    bars.forEach(function(b){ b.classList.remove('active'); b.classList.add('done'); });
+  }
+
+  // ============ Intersection Observer for reveal animations ============
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold: 0.1});
+  document.querySelectorAll('.reveal').forEach(function(elem, i){
+    elem.style.transitionDelay = (i % 3 * 60) + 'ms';
+    io.observe(elem);
+  });
+
+})();
+</script>
+<script src="widget.js"></script>
+</body>
+</html>

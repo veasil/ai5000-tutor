@@ -18,7 +18,7 @@
         '<div class="wu-msg">嗨，我是小伍！闯关卡住、不知道写什么、或者想确认安全，都可以问我 🐝</div>' +
         '<div class="wu-chips">' +
           '<span class="wu-chip">这一关要做什么？</span>' +
-          '<span class="wu-chip">灵感卡怎么写？</span>' +
+          '<span class="wu-chip">冰山图怎么画？</span>' +
           '<span class="wu-chip">我能填真名吗？</span>' +
         '</div>' +
       '</div>' +
@@ -46,8 +46,8 @@
     u.style.background='var(--ink)'; u.style.color='#fff'; u.style.borderTopLeftRadius='14px'; u.style.borderTopRightRadius='4px';
     u.textContent=q; body.appendChild(u); body.scrollTop=body.scrollHeight;
     var ans = {
-      '这一关要做什么？':'第 4 关「灵感捕手」：先回顾你在脑洞发射台想到的点子，再从生活里补满 3 张灵感卡，最后挑 1 张凝练成你的作品点子～',
-      '灵感卡怎么写？':'灵感卡 = 「我看到的」+「我希望」。比如：我看到奶奶看不清药盒上的字；我希望有个东西能念给她听。',
+      '这一关要做什么？':'这一关是「问题侦探局」！把问题一层一层剥开——谁被牵扯进来了？为什么没被解决？别人试过吗？最后画出你的问题冰山，找到切入窗口！',
+      '冰山图怎么画？':'跟着 4 步走就好：先填牵涉了谁 → 再写为何没解决 → 再填谁试过 → 最后拖动那个橙色的圆点到冰山上你觉得能切入的位置！',
       '我能填真名吗？':'不用哦！为了保护大家，写成「一位同学」「我的家人」就好，别写真名、学校和地址 🛡️'
     };
     setTimeout(function(){ reply(ans[q] || '这个问题我记下啦，先试着自己写一点，卡住随时再叫我！'); }, 350);

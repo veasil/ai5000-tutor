@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>第 2 关 · 责任议题锁定 — AI5000天 负责任开发者</title>
+<meta name="description" content="安全力觉醒 · 责任议题锁定：从三个问题里，找到你真正想做的那一个。" />
+<link rel="icon" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@400;500;700;900&family=ZCOOL+KuaiLe&family=Press+Start+2P&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+/* ---------- Level 2 specific ---------- */
+.topic-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
+.topic-card{background:var(--surface);border:3px solid var(--ink);border-radius:18px;padding:24px 20px;box-shadow:var(--sh);cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s;position:relative;text-align:center}
+.topic-card:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+.topic-card.active{border-color:var(--primary);box-shadow:4px 4px 0 var(--primary)}
+.topic-card.completed{border-color:var(--primary);background:var(--primary-soft)}
+.topic-card .t-icon{font-size:36px;margin-bottom:10px}
+.topic-card .t-name{font-family:var(--serif);font-weight:800;font-size:20px;margin-bottom:4px}
+.topic-card .t-sub{font-size:13px;color:var(--ink-soft)}
+.topic-card .t-check{position:absolute;top:12px;right:12px;width:28px;height:28px;background:var(--primary);border:2px solid var(--ink);border-radius:50%;display:none;place-items:center;color:#fff;font-size:16px;font-weight:700}
+.topic-card.completed .t-check{display:grid}
+
+/* Five-dimension assessment panel */
+.assess-panel{display:none;margin-top:18px;animation:slideUp .3s ease}
+.assess-panel.open{display:block}
+@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+.dim-list{display:flex;flex-direction:column;gap:16px}
+.dim-row{background:var(--surface);border:2px solid var(--ink);border-radius:14px;padding:16px 18px;box-shadow:var(--sh-sm)}
+.dim-row .dim-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.dim-row .dim-label{font-weight:700;font-size:15px}
+.dim-row .dim-hint{font-size:12px;color:var(--ink-soft);max-width:36ch}
+.dim-row .dim-val{font-family:var(--pixel);font-size:12px;color:var(--primary-deep);background:var(--primary-soft);border:2px solid var(--primary);border-radius:999px;padding:4px 14px;min-width:36px;text-align:center}
+.dim-slider{-webkit-appearance:none;appearance:none;width:100%;height:10px;border-radius:999px;outline:none;border:2px solid var(--ink);background:var(--surface-warm);cursor:pointer}
+.dim-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:28px;height:28px;border-radius:50%;background:var(--primary);border:2px solid var(--ink);cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+.dim-slider::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--primary);border:2px solid var(--ink);cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+
+/* Scale labels */
+.scale-labels{display:flex;justify-content:space-between;margin-top:4px;font-size:10px;color:var(--ink-mute)}
+
+/* Follow-up question */
+.follow-up{display:none;margin-top:12px;padding:14px 16px;background:var(--danger-soft);border:2px solid var(--danger);border-radius:12px;animation:slideUp .25s ease}
+.follow-up.show{display:block}
+.follow-up .fu-q{font-weight:600;font-size:14px;color:var(--danger);margin-bottom:8px}
+.follow-up .fu-input{width:100%;border:2px solid var(--ink);border-radius:10px;padding:10px 12px;font-family:var(--sans);font-size:14px;outline:none;resize:none;min-height:60px}
+.follow-up .fu-input:focus{border-color:var(--primary)}
+
+/* Data analysis panel */
+.data-panel{background:var(--surface);border:2px solid var(--ink);border-radius:18px;padding:24px;box-shadow:var(--sh);margin-top:18px}
+.data-panel h3{font-family:var(--serif);font-weight:700;font-size:18px;margin-bottom:16px}
+
+.chart-legend{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.chart-legend .leg-item{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600}
+.chart-legend .leg-dot{width:14px;height:14px;border-radius:4px;border:2px solid var(--ink)}
+
+.bar-chart{display:flex;flex-direction:column;gap:10px}
+.bar-row{display:flex;align-items:center;gap:12px}
+.bar-row .bar-label{width:52px;font-size:12px;font-weight:700;color:var(--ink-soft);text-align:right;flex:none}
+.bar-group{flex:1;display:flex;flex-direction:column;gap:4px}
+.bar-track{display:flex;align-items:center;gap:6px}
+.bar-track .bar-name{width:52px;font-size:11px;font-weight:600;color:var(--ink-mute);flex:none}
+.bar-track .bar-bg{flex:1;height:22px;background:var(--surface-warm);border:2px solid var(--line);border-radius:999px;position:relative;overflow:hidden}
+.bar-track .bar-fill{height:100%;border-radius:999px;transition:width .6s ease}
+.bar-track .bar-num{font-family:var(--pixel);font-size:9px;min-width:22px;text-align:center;color:var(--ink-soft)}
+
+/* Recommendation card */
+.rec-card{background:var(--primary-soft);border:3px solid var(--primary);border-radius:18px;padding:24px;box-shadow:4px 4px 0 var(--primary);margin-top:18px;position:relative}
+.rec-card::before{content:"🐝";font-size:28px;position:absolute;top:-16px;left:20px;background:var(--primary-soft);padding:0 6px}
+.rec-card h3{font-family:var(--serif);font-weight:800;font-size:20px;color:var(--primary-deep);margin-bottom:12px}
+.rec-card .rec-body{font-size:15px;line-height:1.8;color:var(--ink)}
+.rec-card .rec-body b{color:var(--primary-deep)}
+.rec-card .rec-scores{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.rec-card .rec-tag{background:var(--surface);border:2px solid var(--ink);border-radius:999px;padding:5px 14px;font-size:13px;font-weight:700;box-shadow:var(--sh-sm)}
+
+/* Confirm section */
+.confirm-section{margin-top:24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.btn-confirm{font-family:var(--serif);font-weight:700;font-size:18px;background:var(--primary);color:#fff;border:3px solid var(--ink);border-radius:999px;padding:14px 32px;cursor:pointer;box-shadow:var(--sh);transition:transform .12s,box-shadow .12s}
+.btn-confirm:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.btn-confirm:active{transform:translate(2px,2px);box-shadow:none}
+.btn-confirm:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:var(--sh)}
+.btn-swap{font-family:var(--serif);font-weight:600;font-size:16px;background:var(--surface);color:var(--ink-soft);border:2px solid var(--ink);border-radius:999px;padding:12px 24px;cursor:pointer;box-shadow:var(--sh-sm);transition:transform .12s,box-shadow .12s}
+.btn-swap:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink);color:var(--ink)}
+.btn-swap:active{transform:translate(1px,1px);box-shadow:none}
+
+/* Lock animation */
+.locked-overlay{display:none;position:fixed;inset:0;z-index:160;background:rgba(44,32,23,.6);align-items:center;justify-content:center}
+.locked-overlay.show{display:flex}
+.locked-box{background:var(--surface);border:3px solid var(--ink);border-radius:22px;padding:36px 42px;box-shadow:var(--sh-lg);text-align:center;animation:pop .3s ease}
+.locked-box .lock-icon{font-size:48px;margin-bottom:12px}
+.locked-box h2{font-family:var(--serif);font-weight:800;font-size:24px;margin-bottom:8px}
+.locked-box p{font-size:15px;color:var(--ink-soft);margin-bottom:18px;line-height:1.6}
+.locked-box .btn-ink{margin-top:8px}
+
+/* Assessment tab navigation */
+.assess-tabs{display:flex;gap:8px;margin-bottom:14px}
+.assess-tab{font-size:13px;font-weight:600;border:2px solid var(--ink);border-radius:999px;padding:6px 16px;cursor:pointer;background:var(--surface);box-shadow:2px 2px 0 var(--ink);transition:transform .12s,box-shadow .12s}
+.assess-tab:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink)}
+.assess-tab.active{background:var(--ink);color:#fff;box-shadow:none}
+.assess-tab.done{background:var(--primary-soft);border-color:var(--primary);color:var(--primary-deep)}
+
+/* Completion checkmark per topic */
+.topic-card .assess-badge{display:none;margin-top:10px;font-family:var(--fun);font-size:12px;color:var(--primary-deep);background:var(--primary-soft);border-radius:999px;padding:4px 12px}
+.topic-card.completed .assess-badge{display:inline-block}
+
+/* Step 4 hidden initially */
+.step4-section,.step5-section{display:none}
+.step4-section.visible,.step5-section.visible{display:block}
+
+/* Progress dots */
+.progress-dots{display:flex;gap:6px;justify-content:center;margin:10px 0}
+.progress-dots .dot{width:10px;height:10px;border-radius:50%;background:var(--line);border:1.5px solid var(--ink-mute)}
+.progress-dots .dot.filled{background:var(--primary);border-color:var(--primary-deep)}
+
+@media(max-width:900px){
+  .topic-cards{grid-template-columns:1fr}
+  .assess-tabs{flex-wrap:wrap}
+  .bar-row .bar-label{width:40px;font-size:11px}
+  .bar-track .bar-name{width:40px;font-size:10px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="index.html">
+      <img class="logo" src="assets/logo.png" alt="AI5000天 标志" />
+      <div class="title-lock"><span class="n1">AI5000天</span><span class="n2">负责任开发者</span><span class="pill-tag">AI 创客 Tutor</span></div>
+    </a>
+    <div class="tabs">
+      <a href="works.html">创客作品墙</a>
+      <a href="index.html">闯关首页</a>
+      <a href="works.html">我的作品</a>
+      <a href="index.html#content">我的徽章</a>
+      <a href="map.html" class="active">闯关地图</a>
+    </div>
+    <div class="me"><span class="ava">伍</span><span>小伍创客 8023</span></div>
+  </div>
+</nav>
+
+<!-- 进入讲解模态 -->
+<div class="overlay" id="intro">
+  <div class="modal">
+    <div class="mwu"><img src="assets/wu-13.png" alt="小伍" /></div>
+    <div class="mbubble">
+      <h2>欢迎来到第 2 关 · <b>责任议题锁定</b>！</h2>
+      <p style="color:var(--ink-soft);margin-top:8px;line-height:1.7">上一关你找出了 3 个在意的问题，这一关我陪你挑出真正想做的那个——</p>
+      <ul class="msteps">
+        <li><span class="no">1</span><span><b>回显议题</b>：看看你选出的 3 个问题。</span></li>
+        <li><span class="no">2</span><span><b>五维自评</b>：给每个问题打分——你在意吗？负得了责吗？做得出来吗？</span></li>
+        <li><span class="no">3</span><span><b>追问</b>：低分的地方，多想一步。</span></li>
+        <li><span class="no">4</span><span><b>分析推荐</b>：三个放一起比，我帮你找最平衡的。</span></li>
+        <li><span class="no">5</span><span><b>确认</b>：选定它，锁住，出发！</span></li>
+      </ul>
+      <div class="goal">🎯 本关目标：从三个议题里锁定一个，生成你的责任议题卡。</div>
+      <button class="btn btn-ink" id="startBtn">▶ 开始锁定</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="content wrap">
+    <a class="back" href="map.html">← 返回闯关地图</a>
+
+    <div class="lvl-head">
+      <div class="lvl-badge"><img src="assets/power-safety.png" alt="" /><span class="lv">LV 02</span></div>
+      <div>
+        <h1>责任议题锁定</h1>
+        <p>安全力觉醒 · 从三个问题里，找到你真正想做的那一个</p>
+      </div>
+    </div>
+
+    <div class="steps" id="stepsBar">
+      <span class="step active" data-step="1">① 回显</span>
+      <span class="step" data-step="2">② 五维自评</span>
+      <span class="step" data-step="3">③ 追问</span>
+      <span class="step" data-step="4">④ 分析推荐</span>
+      <span class="step" data-step="5">⑤ 确认</span>
+    </div>
+
+    <!-- ① 回显议题 -->
+    <div class="guide reveal" id="step1Guide"><span class="gava"></span><span class="gb">你锁定了这 3 个问题，我们来挑一个真正想做的。</span></div>
+    <div class="topic-cards reveal" id="topicCards">
+      <div class="topic-card" data-topic="0">
+        <span class="t-check">✓</span>
+        <div class="t-icon">🛡️</div>
+        <div class="t-name">网络欺凌</div>
+        <div class="t-sub">有人在网络上恶意攻击别人</div>
+        <span class="assess-badge">已评完 ✓</span>
+      </div>
+      <div class="topic-card" data-topic="1">
+        <span class="t-check">✓</span>
+        <div class="t-icon">🔒</div>
+        <div class="t-name">隐私泄露</div>
+        <div class="t-sub">个人信息被偷偷拿走了</div>
+        <span class="assess-badge">已评完 ✓</span>
+      </div>
+      <div class="topic-card" data-topic="2">
+        <span class="t-check">✓</span>
+        <div class="t-icon">⚖️</div>
+        <div class="t-name">算法歧视</div>
+        <div class="t-sub">算法对某些人不公平</div>
+        <span class="assess-badge">已评完 ✓</span>
+      </div>
+    </div>
+
+    <!-- ② 五维自评 -->
+    <div class="guide reveal" id="step2Guide" style="display:none"><span class="gava"></span><span class="gb">先别急着选。对每个问题，问问自己这五句——</span></div>
+    <div id="assessArea" style="display:none">
+      <div class="assess-tabs" id="assessTabs">
+        <button class="assess-tab active" data-tab="0">🛡️ 网络欺凌</button>
+        <button class="assess-tab" data-tab="1">🔒 隐私泄露</button>
+        <button class="assess-tab" data-tab="2">⚖️ 算法歧视</button>
+      </div>
+      <div class="assess-panel open" id="assessPanel">
+        <!-- Dynamically rendered per topic -->
+      </div>
+      <div style="text-align:center;margin-top:18px">
+        <button class="btn btn-ink" id="assessNextBtn" style="display:none">下一步 → 追问</button>
+      </div>
+    </div>
+
+    <!-- ③ 追问 -->
+    <div class="guide reveal" id="step3Guide" style="display:none"><span class="gava"></span><span class="gb">有些分数比较低的地方，再多想一步。把你的想法写下来👇</span></div>
+    <div id="followUpArea" style="display:none">
+      <!-- Dynamically rendered -->
+    </div>
+    <div style="text-align:center;margin-top:18px">
+      <button class="btn btn-ink" id="followUpNextBtn" style="display:none">下一步 → 分析推荐</button>
+    </div>
+
+    <!-- ④ 分析推荐 -->
+    <div class="step4-section" id="step4Section">
+      <div class="guide reveal"><span class="gava"></span><span class="gb">都填完啦！我把三个摆一起看看 👇</span></div>
+      <div class="data-panel reveal" id="dataPanel">
+        <h3>📊 三议题 × 五维度 对比</h3>
+        <div class="chart-legend" id="chartLegend"></div>
+        <div class="bar-chart" id="barChart"></div>
+      </div>
+      <div class="rec-card reveal" id="recCard">
+        <h3>我的建议</h3>
+        <div class="rec-body" id="recBody"></div>
+        <div class="rec-scores" id="recScores"></div>
+      </div>
+    </div>
+
+    <!-- ⑤ 确认 -->
+    <div class="step5-section" id="step5Section">
+      <div class="guide reveal"><span class="gava"></span><span class="gb">这就是你的责任议题卡！确认它，我们就锁住，向着下一关出发 🐝</span></div>
+      <div class="card reveal" id="finalCard">
+        <div class="card-head"><h3>📋 责任议题卡</h3></div>
+        <div id="finalCardBody" style="margin-top:14px;font-size:15px;line-height:1.8"></div>
+        <div class="confirm-section">
+          <button class="btn-confirm" id="confirmBtn">🔒 就选它</button>
+          <button class="btn-swap" id="swapBtn">↩ 我想换一个</button>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<!-- 锁定成功弹窗 -->
+<div class="locked-overlay" id="lockedOverlay">
+  <div class="locked-box">
+    <div class="lock-icon">🎉</div>
+    <h2>议题锁定成功！</h2>
+    <p id="lockedMsg">你选择了「网络欺凌」作为责任议题。<br>安全力觉醒进度 +1，第 3 关已解锁！</p>
+    <a class="btn btn-ink" href="level3.html">进入第 3 关 · 实感力启动 →</a>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-in">
+    <span>© 2026 AI5000天 · 负责任开发者 AI 创客 Tutor</span>
+    <div class="foot-links"><a href="map.html">闯关地图</a><a href="states.html">设计 · 状态页</a><a href="#">隐私政策</a></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // ==================== DATA ====================
+  var TOPICS = [
+    { name:'网络欺凌', icon:'🛡️', desc:'有人在网络上恶意攻击别人' },
+    { name:'隐私泄露', icon:'🔒', desc:'个人信息被偷偷拿走了' },
+    { name:'算法歧视', icon:'⚖️', desc:'算法对某些人不公平' }
+  ];
+
+  var DIMS = [
+    { key:'resonance', label:'共振', hint:'我足够被它触动' },
+    { key:'responsibility', label:'责任', hint:'我足够愿意为它负责' },
+    { key:'originality', label:'原创', hint:'我足够想用自己的方式做' },
+    { key:'embeddedness', label:'嵌入', hint:'它足够连着现实里真实的人' },
+    { key:'feasibility', label:'可行', hint:'我足够能把它做出来' }
+  ];
+
+  var FOLLOW_UPS = {
+    feasibility: '这一块哪里让你觉得难？是不会做，还是没资源？',
+    resonance: '这个问题，是你真的在意，还是觉得应该选它？',
+    responsibility: '你是觉得不关你的事，还是觉得管不了？',
+    originality: '你是不想自己想，还是觉得自己的想法不重要？',
+    embeddedness: '这个问题，离你有多远？你身边有人经历过吗？'
+  };
+
+  var TOPIC_COLORS = [
+    { fill:'#F5871F', bg:'#FCE8CE' },  // primary orange
+    { fill:'#7FC4E3', bg:'#DCEFF8' },  // blue
+    { fill:'#C0492E', bg:'#FBEAE5' }   // danger/red
+  ];
+
+  // State
+  var scores = {}; // scores[topicIdx][dimKey] = 0-5
+  var followUpAnswers = {}; // followUpAnswers[topicIdx][dimKey] = string
+  var currentTopic = 0;
+  var currentStep = 1;
+  var recommendedTopic = -1;
+
+  // Init scores
+  TOPICS.forEach(function(_, i){
+    scores[i] = {};
+    followUpAnswers[i] = {};
+    DIMS.forEach(function(d){ scores[i][d.key] = 0; followUpAnswers[i][d.key] = ''; });
+  });
+
+  // ==================== DOM REFS ====================
+  var introEl = document.getElementById('intro');
+  var startBtn = document.getElementById('startBtn');
+  var stepsBar = document.getElementById('stepsBar');
+  var topicCards = document.querySelectorAll('.topic-card');
+  var step2Guide = document.getElementById('step2Guide');
+  var assessArea = document.getElementById('assessArea');
+  var assessTabs = document.getElementById('assessTabs');
+  var assessPanel = document.getElementById('assessPanel');
+  var assessNextBtn = document.getElementById('assessNextBtn');
+  var step3Guide = document.getElementById('step3Guide');
+  var followUpArea = document.getElementById('followUpArea');
+  var followUpNextBtn = document.getElementById('followUpNextBtn');
+  var step4Section = document.getElementById('step4Section');
+  var step5Section = document.getElementById('step5Section');
+  var dataPanel = document.getElementById('dataPanel');
+  var barChart = document.getElementById('barChart');
+  var chartLegend = document.getElementById('chartLegend');
+  var recBody = document.getElementById('recBody');
+  var recScores = document.getElementById('recScores');
+  var finalCardBody = document.getElementById('finalCardBody');
+  var confirmBtn = document.getElementById('confirmBtn');
+  var swapBtn = document.getElementById('swapBtn');
+  var lockedOverlay = document.getElementById('lockedOverlay');
+  var lockedMsg = document.getElementById('lockedMsg');
+
+  // ==================== STEP MANAGEMENT ====================
+  function setStep(n) {
+    currentStep = n;
+    var steps = stepsBar.querySelectorAll('.step');
+    steps.forEach(function(s) {
+      var sn = parseInt(s.getAttribute('data-step'));
+      s.classList.remove('done','active');
+      if (sn < n) s.classList.add('done');
+      else if (sn === n) s.classList.add('active');
+    });
+  }
+
+  // ==================== INTRO MODAL ====================
+  startBtn.addEventListener('click', function(){
+    introEl.classList.add('hide');
+  });
+
+  // ==================== STEP 1: TOPIC CARDS → STEP 2 ====================
+  topicCards.forEach(function(card){
+    card.addEventListener('click', function(){
+      var idx = parseInt(card.getAttribute('data-topic'));
+      currentTopic = idx;
+      showAssessment(idx);
+    });
+  });
+
+  // Also show step 2 on first card click
+  var step2Shown = false;
+  function showAssessment(idx) {
+    if (!step2Shown) {
+      step2Shown = true;
+      step2Guide.style.display = '';
+      assessArea.style.display = '';
+      setStep(2);
+      step2Guide.classList.add('in');
+    }
+    switchAssessTab(idx);
+    // Scroll to assessment
+    assessArea.scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+
+  // ==================== STEP 2: ASSESSMENT TABS ====================
+  var assessTabBtns = assessTabs.querySelectorAll('.assess-tab');
+  assessTabBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var idx = parseInt(btn.getAttribute('data-tab'));
+      switchAssessTab(idx);
+    });
+  });
+
+  function switchAssessTab(idx) {
+    currentTopic = idx;
+    assessTabBtns.forEach(function(b, i){
+      b.classList.remove('active');
+      if (i === idx) b.classList.add('active');
+    });
+    renderAssessPanel(idx);
+  }
+
+  function renderAssessPanel(idx) {
+    var html = '<div class="dim-list">';
+    DIMS.forEach(function(dim) {
+      var val = scores[idx][dim.key] || 0;
+      html += '<div class="dim-row" data-dim="'+dim.key+'">';
+      html += '<div class="dim-top">';
+      html += '<div><span class="dim-label">'+dim.label+'</span><span class="dim-hint"> — '+dim.hint+'</span></div>';
+      html += '<span class="dim-val" id="val-'+idx+'-'+dim.key+'">'+val+'</span>';
+      html += '</div>';
+      html += '<input type="range" class="dim-slider" min="0" max="5" value="'+val+'" data-topic="'+idx+'" data-dim="'+dim.key+'" />';
+      html += '<div class="scale-labels"><span>0 没感觉</span><span>5 非常强烈</span></div>';
+      // Follow-up (hidden by default, shown if ≤2)
+      html += '<div class="follow-up" id="fu-'+idx+'-'+dim.key+'">';
+      html += '<div class="fu-q">🤔 '+FOLLOW_UPS[dim.key]+'</div>';
+      html += '<textarea class="fu-input" data-topic="'+idx+'" data-dim="'+dim.key+'" placeholder="写下你的想法…">'+(followUpAnswers[idx][dim.key]||'')+'</textarea>';
+      html += '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+    assessPanel.innerHTML = html;
+
+    // Bind slider events
+    assessPanel.querySelectorAll('.dim-slider').forEach(function(slider){
+      slider.addEventListener('input', function(){
+        var ti = parseInt(slider.getAttribute('data-topic'));
+        var dk = slider.getAttribute('data-dim');
+        var v = parseInt(slider.value);
+        scores[ti][dk] = v;
+        document.getElementById('val-'+ti+'-'+dk).textContent = v;
+        // Show/hide follow-up
+        var fuEl = document.getElementById('fu-'+ti+'-'+dk);
+        if (v > 0 && v <= 2) {
+          fuEl.classList.add('show');
+        } else {
+          fuEl.classList.remove('show');
+        }
+        checkAssessComplete();
+      });
+    });
+
+    // Bind follow-up textarea
+    assessPanel.querySelectorAll('.fu-input').forEach(function(ta){
+      ta.addEventListener('input', function(){
+        var ti = parseInt(ta.getAttribute('data-topic'));
+        var dk = ta.getAttribute('data-dim');
+        followUpAnswers[ti][dk] = ta.value;
+      });
+    });
+
+    // Restore visible follow-ups for existing low scores
+    DIMS.forEach(function(dim){
+      var v = scores[idx][dim.key];
+      var fuEl = document.getElementById('fu-'+idx+'-'+dim.key);
+      if (fuEl && v > 0 && v <= 2) fuEl.classList.add('show');
+    });
+
+    // Update tab done states
+    updateTabDoneStates();
+  }
+
+  function isTopicComplete(idx) {
+    return DIMS.every(function(d){ return scores[idx][d.key] > 0; });
+  }
+
+  function updateTabDoneStates() {
+    assessTabBtns.forEach(function(b, i){
+      if (isTopicComplete(i)) b.classList.add('done');
+      else b.classList.remove('done');
+    });
+  }
+
+  function checkAssessComplete() {
+    var allDone = TOPICS.every(function(_, i){ return isTopicComplete(i); });
+    if (allDone) {
+      assessNextBtn.style.display = '';
+    }
+    updateTabDoneStates();
+    updateTopicCardStates();
+  }
+
+  function updateTopicCardStates() {
+    topicCards.forEach(function(card, i){
+      if (isTopicComplete(i)) {
+        card.classList.add('completed');
+      } else {
+        card.classList.remove('completed');
+      }
+    });
+  }
+
+  // ==================== STEP 2 → STEP 3 (FOLLOW-UP) ====================
+  assessNextBtn.addEventListener('click', function(){
+    setStep(3);
+    step3Guide.style.display = '';
+    step3Guide.classList.add('in');
+    followUpArea.style.display = '';
+    renderFollowUps();
+    followUpArea.scrollIntoView({ behavior:'smooth', block:'start' });
+  });
+
+  function renderFollowUps() {
+    var hasAny = false;
+    var html = '';
+    TOPICS.forEach(function(topic, ti){
+      var lowDims = DIMS.filter(function(d){ return scores[ti][d.key] > 0 && scores[ti][d.key] <= 2; });
+      if (lowDims.length === 0) return;
+      hasAny = true;
+      html += '<div style="margin-bottom:18px">';
+      html += '<div style="font-family:var(--serif);font-weight:700;font-size:16px;margin-bottom:10px">'+topic.icon+' '+topic.name+'</div>';
+      lowDims.forEach(function(dim){
+        html += '<div class="card" style="margin-bottom:10px;padding:16px">';
+        html += '<div style="font-weight:600;font-size:14px;color:var(--danger);margin-bottom:8px">🤔 '+FOLLOW_UPS[dim.key]+'</div>';
+        html += '<textarea class="fu-input" data-topic="'+ti+'" data-dim="'+dim.key+'" style="width:100%;border:2px solid var(--ink);border-radius:10px;padding:10px 12px;font-family:var(--sans);font-size:14px;outline:none;resize:none;min-height:60px" placeholder="写下你的想法…">'+(followUpAnswers[ti][dim.key]||'')+'</textarea>';
+        html += '</div>';
+      });
+      html += '</div>';
+    });
+
+    if (!hasAny) {
+      html = '<div class="card" style="padding:18px;text-align:center">';
+      html += '<div style="font-family:var(--fun);font-size:16px;color:var(--primary-deep)">👏 每个维度都在 3 分以上，你对自己很诚实！直接看分析吧。</div>';
+      html += '</div>';
+    }
+
+    followUpArea.innerHTML = html;
+
+    // Bind textareas
+    followUpArea.querySelectorAll('.fu-input').forEach(function(ta){
+      ta.addEventListener('input', function(){
+        var ti = parseInt(ta.getAttribute('data-topic'));
+        var dk = ta.getAttribute('data-dim');
+        followUpAnswers[ti][dk] = ta.value;
+      });
+    });
+
+    followUpNextBtn.style.display = '';
+  }
+
+  // ==================== STEP 3 → STEP 4 (ANALYSIS) ====================
+  followUpNextBtn.addEventListener('click', function(){
+    setStep(4);
+    step4Section.classList.add('visible');
+    renderAnalysis();
+    step4Section.scrollIntoView({ behavior:'smooth', block:'start' });
+    // Re-observe new reveal elements
+    document.querySelectorAll('#step4Section .reveal:not(.in)').forEach(function(el){
+      revealObserver.observe(el);
+    });
+  });
+
+  function renderAnalysis() {
+    // Legend
+    var legHtml = '';
+    TOPICS.forEach(function(t, i){
+      legHtml += '<span class="leg-item"><span class="leg-dot" style="background:'+TOPIC_COLORS[i].fill+'"></span>'+t.icon+' '+t.name+'</span>';
+    });
+    chartLegend.innerHTML = legHtml;
+
+    // Bar chart: one row per dimension, 3 bars per row
+    var chartHtml = '';
+    DIMS.forEach(function(dim){
+      chartHtml += '<div class="bar-row">';
+      chartHtml += '<span class="bar-label">'+dim.label+'</span>';
+      chartHtml += '<div class="bar-group">';
+      TOPICS.forEach(function(topic, ti){
+        var v = scores[ti][dim.key];
+        var pct = (v / 5 * 100);
+        chartHtml += '<div class="bar-track">';
+        chartHtml += '<span class="bar-name">'+topic.name.substring(0,2)+'</span>';
+        chartHtml += '<div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%;background:'+TOPIC_COLORS[ti].fill+'"></div></div>';
+        chartHtml += '<span class="bar-num">'+v+'</span>';
+        chartHtml += '</div>';
+      });
+      chartHtml += '</div>';
+      chartHtml += '</div>';
+    });
+    barChart.innerHTML = chartHtml;
+
+    // Recommendation: resonance × feasibility highest
+    var bestIdx = 0;
+    var bestScore = -1;
+    TOPICS.forEach(function(_, ti){
+      var combo = scores[ti].resonance * scores[ti].feasibility;
+      if (combo > bestScore) {
+        bestScore = combo;
+        bestIdx = ti;
+      }
+    });
+    recommendedTopic = bestIdx;
+    var t = TOPICS[bestIdx];
+    var rScore = scores[bestIdx].resonance;
+    var fScore = scores[bestIdx].feasibility;
+
+    recBody.innerHTML = '🐝 我的建议是<b>【' + t.name + '】</b>。<br>它是你又在意、又做得动的那个——共振 ' + rScore + '、可行 ' + fScore + '。<br>想做但太难，容易半路卡住；能做但不在意，容易没劲。<b>' + t.name + ' 最平衡</b>。';
+
+    recScores.innerHTML = '';
+    DIMS.forEach(function(dim){
+      var v = scores[bestIdx][dim.key];
+      var tag = document.createElement('span');
+      tag.className = 'rec-tag';
+      tag.textContent = dim.label + ' ' + v;
+      if (v <= 2) tag.style.borderColor = 'var(--danger)';
+      recScores.appendChild(tag);
+    });
+
+    // Show step 5 trigger after a moment
+    setTimeout(function(){
+      setStep(5);
+      step5Section.classList.add('visible');
+      renderFinalCard();
+      step5Section.scrollIntoView({ behavior:'smooth', block:'start' });
+      document.querySelectorAll('#step5Section .reveal:not(.in)').forEach(function(el){
+        revealObserver.observe(el);
+      });
+    }, 800);
+  }
+
+  // ==================== STEP 5: FINAL CARD & CONFIRM ====================
+  function renderFinalCard() {
+    var t = TOPICS[recommendedTopic];
+    var html = '';
+    html += '<div style="background:var(--primary-soft);border:2px solid var(--primary);border-radius:12px;padding:14px 16px;margin-bottom:14px">';
+    html += '<div style="font-family:var(--serif);font-weight:800;font-size:20px;color:var(--primary-deep)">'+t.icon+' 议题：'+t.name+'</div>';
+    html += '<div style="font-size:13px;color:var(--ink-soft);margin-top:4px">'+t.desc+'</div>';
+    html += '</div>';
+
+    html += '<div style="font-weight:700;margin-bottom:8px">三议题五维分</div>';
+    html += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">';
+    TOPICS.forEach(function(topic, ti){
+      var isRec = ti === recommendedTopic;
+      html += '<div style="background:'+(isRec?'var(--primary-soft)':'var(--surface-warm)')+';border:2px solid '+(isRec?'var(--primary)':'var(--line)')+';border-radius:10px;padding:10px;text-align:center">';
+      html += '<div style="font-weight:700;font-size:13px;margin-bottom:6px">'+topic.icon+' '+topic.name+'</div>';
+      DIMS.forEach(function(dim){
+        var v = scores[ti][dim.key];
+        html += '<div style="font-size:12px;color:var(--ink-soft)">'+dim.label+'：<b style="color:var(--ink)">'+v+'</b></div>';
+      });
+      html += '</div>';
+    });
+    html += '</div>';
+
+    html += '<div style="background:var(--surface-warm);border:2px solid var(--line);border-radius:10px;padding:12px;margin-bottom:8px">';
+    html += '<div style="font-size:12px;font-weight:700;color:var(--ink-mute);margin-bottom:4px">系统推荐</div>';
+    html += '<div style="font-size:14px">🐝 '+t.name+'（共振×可行 = '+scores[recommendedTopic].resonance* scores[recommendedTopic].feasibility+'）</div>';
+    html += '</div>';
+
+    html += '<div style="background:var(--primary);color:#fff;border:2px solid var(--ink);border-radius:10px;padding:12px">';
+    html += '<div style="font-size:12px;font-weight:700;opacity:.85;margin-bottom:4px">最终选择</div>';
+    html += '<div style="font-size:16px;font-weight:800">'+t.icon+' '+t.name+'</div>';
+    html += '</div>';
+
+    finalCardBody.innerHTML = html;
+  }
+
+  // Confirm
+  confirmBtn.addEventListener('click', function(){
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = '🔒 锁定中…';
+    var t = TOPICS[recommendedTopic];
+    setTimeout(function(){
+      lockedMsg.innerHTML = '你选择了「' + t.name + '」作为责任议题。<br>安全力觉醒进度 +1，第 3 关已解锁！';
+      lockedOverlay.classList.add('show');
+    }, 600);
+  });
+
+  // Swap → go back to step 2
+  swapBtn.addEventListener('click', function(){
+    // Reset scores and go back
+    TOPICS.forEach(function(_, i){
+      DIMS.forEach(function(d){ scores[i][d.key] = 0; followUpAnswers[i][d.key] = ''; });
+    });
+    step4Section.classList.remove('visible');
+    step5Section.classList.remove('visible');
+    step3Guide.style.display = 'none';
+    followUpArea.style.display = 'none';
+    followUpNextBtn.style.display = 'none';
+    step2Shown = true;
+    step2Guide.style.display = '';
+    assessArea.style.display = '';
+    setStep(2);
+    updateTopicCardStates();
+    switchAssessTab(0);
+    window.scrollTo({ top: 0, behavior:'smooth' });
+  });
+
+  // ==================== REVEAL ANIMATION ====================
+  var revealObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        revealObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(function(el, i){
+    el.style.transitionDelay = (i % 3 * 50) + 'ms';
+    revealObserver.observe(el);
+  });
+
+})();
+</script>
+<script src="widget.js"></script>
+</body>
+</html>

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>第 1 关 · 小伍风险冒险局 — AI5000天 负责任开发者</title>
+<meta name="description" content="安全力觉醒 · 小伍风险冒险局：看看五种风险你了解多少，找出最让你放不下的三个问题。" />
+<link rel="icon" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@400;500;600;700;900&family=ZCOOL+KuaiLe&family=Press+Start+2P&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+/* --- Level 1 custom styles --- */
+
+/* Path choice buttons */
+.path-choice{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px}
+.path-btn{background:var(--surface);border:3px solid var(--ink);border-radius:18px;padding:28px 20px;cursor:pointer;box-shadow:var(--sh);display:flex;flex-direction:column;align-items:center;gap:8px;transition:transform .15s ease,box-shadow .15s ease,border-color .15s}
+.path-btn:hover{transform:translate(-1px,-2px);box-shadow:6px 7px 0 var(--ink);background:var(--primary-soft)}
+.path-btn.selected{border-color:var(--primary);background:var(--primary-soft);box-shadow:4px 4px 0 var(--primary)}
+.path-btn .path-icon{font-size:36px;line-height:1}
+.path-btn .path-title{font-family:var(--serif);font-weight:700;font-size:20px}
+.path-btn .path-sub{font-family:var(--fun);font-size:13px;color:var(--ink-soft)}
+
+/* Self-assessment sliders */
+.sa-grid{display:flex;flex-direction:column;gap:18px;margin-top:8px}
+.sa-row{background:var(--surface);border:2px solid var(--ink);border-radius:14px;padding:16px 20px;box-shadow:var(--sh-sm);display:flex;align-items:center;gap:16px;transition:border-color .15s}
+.sa-row:hover{border-color:var(--primary)}
+.sa-label{font-family:var(--fun);font-size:15px;min-width:100px;flex:none}
+.sa-slider-wrap{flex:1;display:flex;align-items:center;gap:12px}
+.sa-slider{-webkit-appearance:none;appearance:none;flex:1;height:10px;border-radius:999px;background:var(--line);outline:none;border:2px solid var(--ink);cursor:pointer}
+.sa-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:28px;height:28px;border-radius:50%;background:var(--primary);border:2px solid var(--ink);cursor:pointer;box-shadow:2px 2px 0 var(--ink);transition:transform .12s}
+.sa-slider::-webkit-slider-thumb:hover{transform:scale(1.15)}
+.sa-slider::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--primary);border:2px solid var(--ink);cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+.sa-val{font-family:var(--pixel);font-size:10px;color:var(--primary-deep);background:var(--primary-soft);border:1.5px solid var(--primary);border-radius:999px;padding:5px 10px;min-width:36px;text-align:center}
+.sa-ticks{display:flex;justify-content:space-between;margin-top:4px;padding:0 4px}
+.sa-tick{font-size:9px;color:var(--ink-mute);font-family:var(--sans);min-width:24px;text-align:center}
+
+/* Idea input (point path extra) */
+.idea-input-wrap{margin-top:14px}
+.idea-input{border:2px solid var(--ink);border-radius:14px;padding:14px 16px;font-family:var(--sans);font-size:15px;width:100%;outline:none;resize:none;box-shadow:var(--sh-sm);transition:border-color .15s}
+.idea-input:focus{border-color:var(--primary)}
+
+/* Placeholder sections */
+.placeholder-zone{background:var(--surface-warm);border:3px dashed var(--line);border-radius:18px;padding:48px 24px;text-align:center;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.placeholder-zone .ph-icon{font-size:48px;opacity:.5}
+.placeholder-zone .ph-title{font-family:var(--serif);font-weight:700;font-size:18px;color:var(--ink-soft)}
+.placeholder-zone .ph-sub{font-family:var(--fun);font-size:14px;color:var(--ink-mute)}
+
+/* Issue chips */
+.issue-section{margin-top:8px}
+.issue-cat{margin-bottom:18px}
+.issue-cat-title{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--ink-soft);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.issue-cat-title .cat-dot{width:10px;height:10px;border-radius:3px;flex:none}
+.issue-chips{display:flex;flex-wrap:wrap;gap:8px}
+.ichip{font-family:var(--fun);font-size:13px;border:2px solid var(--ink);background:var(--surface);border-radius:999px;padding:8px 14px;cursor:pointer;box-shadow:var(--sh-sm);transition:transform .12s,background .15s,color .15s;user-select:none}
+.ichip:hover{background:var(--primary-soft);transform:translateY(-2px)}
+.ichip.selected{background:var(--primary);color:#fff;border-color:var(--primary-deep);box-shadow:2px 2px 0 var(--primary-deep)}
+.ichip.disabled{opacity:.4;pointer-events:none}
+
+/* Self-fill issue */
+.self-fill{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.self-fill input{border:2px solid var(--ink);border-radius:999px;padding:9px 16px;font-family:var(--sans);font-size:14px;outline:none;flex:1;min-width:200px}
+.self-fill input:focus{border-color:var(--primary)}
+.self-fill button{font-family:var(--fun);font-size:13px;background:var(--ink);color:#fff;border:none;border-radius:999px;padding:9px 18px;cursor:pointer;transition:transform .12s,box-shadow .12s}
+.self-fill button:hover{transform:translateY(-1px);box-shadow:var(--sh-sm)}
+
+/* Lock button */
+.lock-cta{margin-top:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.lock-btn{font-family:var(--serif);font-weight:700;font-size:17px;border:none;border-radius:999px;padding:15px 30px;cursor:pointer;transition:transform .12s,box-shadow .12s}
+.lock-btn.enabled{background:var(--primary);color:#fff;border:3px solid var(--ink);box-shadow:var(--sh)}
+.lock-btn.enabled:hover{transform:translateY(-2px);box-shadow:6px 6px 0 var(--ink)}
+.lock-btn.enabled:active{transform:translateY(2px);box-shadow:none}
+.lock-btn.disabled{background:var(--line);color:var(--ink-mute);border:2px solid var(--line);cursor:not-allowed;box-shadow:none}
+.lock-status{font-family:var(--fun);font-size:14px;color:var(--ink-soft)}
+
+/* Section visibility */
+.step-section{display:none}
+.step-section.visible{display:block}
+
+/* Completion card */
+.complete-card{background:var(--surface);border:3px solid var(--primary);border-radius:18px;padding:28px;box-shadow:6px 6px 0 var(--primary);text-align:center}
+.complete-card h3{font-family:var(--serif);font-weight:800;font-size:22px;color:var(--primary-deep);margin-bottom:10px}
+.complete-card .top3-list{display:flex;flex-direction:column;gap:8px;margin:16px 0;text-align:left}
+.complete-card .top3-item{display:flex;align-items:center;gap:10px;background:var(--primary-soft);border:2px solid var(--primary);border-radius:12px;padding:10px 14px;font-weight:600;font-size:15px}
+.complete-card .top3-item .num{font-family:var(--pixel);font-size:10px;color:#fff;background:var(--primary);border:2px solid var(--ink);border-radius:50%;width:24px;height:24px;display:grid;place-items:center;flex:none}
+.complete-card .score-row{display:flex;align-items:center;gap:8px;margin-top:6px}
+.complete-card .score-label{font-family:var(--fun);font-size:13px;min-width:80px}
+.complete-card .score-bar{flex:1;height:12px;background:var(--line);border:1.5px solid var(--ink);border-radius:999px;overflow:hidden}
+.complete-card .score-fill{height:100%;background:var(--primary);border-radius:999px;transition:width .4s ease}
+.complete-card .score-val{font-family:var(--pixel);font-size:9px;color:var(--primary-deep);min-width:20px;text-align:right}
+
+@media(max-width:900px){
+  .path-choice{grid-template-columns:1fr}
+  .sa-row{flex-direction:column;align-items:flex-start;gap:8px}
+  .sa-label{min-width:auto}
+  .sa-slider-wrap{width:100%}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="index.html">
+      <img class="logo" src="assets/logo.png" alt="AI5000天 标志" />
+      <div class="title-lock"><span class="n1">AI5000天</span><span class="n2">负责任开发者</span><span class="pill-tag">AI 创客 Tutor</span></div>
+    </a>
+    <div class="tabs">
+      <a href="works.html">创客作品墙</a>
+      <a href="index.html">闯关首页</a>
+      <a href="works.html">我的作品</a>
+      <a href="index.html#content">我的徽章</a>
+      <a href="map.html" class="active">闯关地图</a>
+    </div>
+    <div class="me"><span class="ava">伍</span><span>小伍创客 8023</span></div>
+  </div>
+</nav>
+
+<!-- 进入讲解：居中模态 + 遮罩 -->
+<div class="overlay" id="intro">
+  <div class="modal">
+    <div class="mwu"><img src="assets/wu-13.png" alt="小伍" /></div>
+    <div class="mbubble">
+      <h2>欢迎来到第 1 关 · <b>小伍风险冒险局</b>！</h2>
+      <p style="color:var(--ink-soft);margin-top:8px;line-height:1.7">这一关，我们来聊聊「安全」——不是吓你，是帮你发现：哪些风险你已经在意了，哪些你可能还没想过。</p>
+      <ul class="msteps">
+        <li><span class="no">1</span><span><b>选路</b>：让小伍推荐，还是你自己有想法？</span></li>
+        <li><span class="no">2</span><span><b>自评</b>：五种风险，你各自了解多少？</span></li>
+        <li><span class="no">3</span><span><b>答题</b>：帮小伍闯几关，看看你的直觉～</span></li>
+        <li><span class="no">4</span><span><b>复盘</b>：几关下来，看看你最在意什么。</span></li>
+        <li><span class="no">5</span><span><b>收敛</b>：选出最让你放不下的 3 个问题。</span></li>
+      </ul>
+      <div class="goal">🛡️ 本关目标：了解五种风险，锁定你最关心的 Top 3 问题。</div>
+      <button class="btn btn-ink" id="startBtn">▶ 开始冒险</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="content wrap">
+    <a class="back" href="map.html">← 返回闯关地图</a>
+
+    <div class="lvl-head">
+      <div class="lvl-badge"><img src="assets/power-safety.png" alt="" /><span class="lv">LV 01</span></div>
+      <div>
+        <h1>小伍风险冒险局</h1>
+        <p>安全力觉醒 · 了解五种风险，找出你最在意的</p>
+      </div>
+    </div>
+
+    <div class="steps" id="stepBar">
+      <span class="step active" data-step="1">① 选路</span>
+      <span class="step" data-step="2">② 自评</span>
+      <span class="step" data-step="3">③ 答题</span>
+      <span class="step" data-step="4">④ 复盘</span>
+      <span class="step" data-step="5">⑤ 收敛</span>
+    </div>
+
+    <!-- ① 选路 -->
+    <div class="step-section visible" id="sec1">
+      <div class="guide reveal"><span class="gava"></span><span class="gb">先选一条路——</span></div>
+      <div class="path-choice reveal">
+        <button class="path-btn" data-path="recommend">
+          <span class="path-icon">🎯</span>
+          <span class="path-title">给我推荐</span>
+          <span class="path-sub">我不太确定，帮我挑</span>
+        </button>
+        <button class="path-btn" data-path="idea">
+          <span class="path-icon">💡</span>
+          <span class="path-title">我有点子</span>
+          <span class="path-sub">我已经想到要做什么了</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ② 自评 -->
+    <div class="step-section" id="sec2">
+      <div class="guide reveal"><span class="gava"></span><span class="gb">这五种风险，你各自了解多少？拉一拉～</span></div>
+      <div class="sa-grid reveal" id="saGrid">
+        <div class="sa-row">
+          <span class="sa-label">🩹 身体安全</span>
+          <div class="sa-slider-wrap">
+            <input type="range" min="1" max="5" value="1" class="sa-slider" data-dim="physical" />
+            <span class="sa-val" id="val-physical">1</span>
+          </div>
+        </div>
+        <div class="sa-row">
+          <span class="sa-label">💭 心理安全</span>
+          <div class="sa-slider-wrap">
+            <input type="range" min="1" max="5" value="1" class="sa-slider" data-dim="psychological" />
+            <span class="sa-val" id="val-psychological">1</span>
+          </div>
+        </div>
+        <div class="sa-row">
+          <span class="sa-label">👥 社交安全</span>
+          <div class="sa-slider-wrap">
+            <input type="range" min="1" max="5" value="1" class="sa-slider" data-dim="social" />
+            <span class="sa-val" id="val-social">1</span>
+          </div>
+        </div>
+        <div class="sa-row">
+          <span class="sa-label">💰 经济安全</span>
+          <div class="sa-slider-wrap">
+            <input type="range" min="1" max="5" value="1" class="sa-slider" data-dim="economic" />
+            <span class="sa-val" id="val-economic">1</span>
+          </div>
+        </div>
+        <div class="sa-row">
+          <span class="sa-label">📱 数字权益</span>
+          <div class="sa-slider-wrap">
+            <input type="range" min="1" max="5" value="1" class="sa-slider" data-dim="digital" />
+            <span class="sa-val" id="val-digital">1</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Idea input (only shown for idea path) -->
+      <div class="idea-input-wrap reveal" id="ideaInputWrap" style="display:none">
+        <label class="cap-label">用一句话说说你的点子…</label>
+        <textarea class="idea-input" rows="2" placeholder="比如：我想做一个帮同学识别假新闻的小工具…" id="ideaInput"></textarea>
+      </div>
+
+      <div style="margin-top:18px" class="reveal">
+        <button class="btn btn-ink" id="saNextBtn">继续 →</button>
+      </div>
+    </div>
+
+    <!-- ③ 答题（占位） -->
+    <div class="step-section" id="sec3">
+      <div class="guide reveal"><span class="gava"></span><span class="gb">来帮小伍闯几关，看看你的直觉～</span></div>
+      <div class="placeholder-zone reveal">
+        <span class="ph-icon">🃏</span>
+        <span class="ph-title">卡牌答题器模块开发中</span>
+        <span class="ph-sub">风险情景卡即将上线，敬请期待！</span>
+      </div>
+      <div style="margin-top:18px" class="reveal">
+        <button class="btn btn-ink" id="cardNextBtn">先跳过，继续 →</button>
+      </div>
+    </div>
+
+    <!-- ④ 复盘（占位） -->
+    <div class="step-section" id="sec4">
+      <div class="guide reveal"><span class="gava"></span><span class="gb">几关下来，看看你最在意什么 👇</span></div>
+      <div class="placeholder-zone reveal">
+        <span class="ph-icon">📊</span>
+        <span class="ph-title">五力复盘模块开发中</span>
+        <span class="ph-sub">风险雷达图即将上线，敬请期待！</span>
+      </div>
+      <div style="margin-top:18px" class="reveal">
+        <button class="btn btn-ink" id="reviewNextBtn">先跳过，继续 →</button>
+      </div>
+    </div>
+
+    <!-- ⑤ 收敛 -->
+    <div class="step-section" id="sec5">
+      <div class="guide reveal"><span class="gava"></span><span class="gb">那——最让你放不下的，是哪 3 个问题？</span></div>
+      <div class="issue-section reveal" id="issueSection">
+        <!-- 身体安全类 -->
+        <div class="issue-cat">
+          <div class="issue-cat-title"><span class="cat-dot" style="background:#C0492E"></span>身体安全类</div>
+          <div class="issue-chips" data-cat="physical">
+            <span class="ichip" data-issue="校园暴力">校园暴力</span>
+            <span class="ichip" data-issue="交通事故">交通事故</span>
+            <span class="ichip" data-issue="食品安全问题">食品安全问题</span>
+            <span class="ichip" data-issue="运动伤害">运动伤害</span>
+          </div>
+        </div>
+        <!-- 心理安全类 -->
+        <div class="issue-cat">
+          <div class="issue-cat-title"><span class="cat-dot" style="background:#8B5CF6"></span>心理安全类</div>
+          <div class="issue-chips" data-cat="psychological">
+            <span class="ichip" data-issue="网络成瘾">网络成瘾</span>
+            <span class="ichip" data-issue="焦虑抑郁">焦虑抑郁</span>
+            <span class="ichip" data-issue="学业压力">学业压力</span>
+            <span class="ichip" data-issue="社交恐惧">社交恐惧</span>
+          </div>
+        </div>
+        <!-- 社交安全类 -->
+        <div class="issue-cat">
+          <div class="issue-cat-title"><span class="cat-dot" style="background:#3F92BC"></span>社交安全类</div>
+          <div class="issue-chips" data-cat="social">
+            <span class="ichip" data-issue="网络欺凌">网络欺凌</span>
+            <span class="ichip" data-issue="隐私泄露">隐私泄露</span>
+            <span class="ichip" data-issue="陌生人危险">陌生人危险</span>
+            <span class="ichip" data-issue="仇恨言论">仇恨言论</span>
+          </div>
+        </div>
+        <!-- 经济安全类 -->
+        <div class="issue-cat">
+          <div class="issue-cat-title"><span class="cat-dot" style="background:#F5871F"></span>经济安全类</div>
+          <div class="issue-chips" data-cat="economic">
+            <span class="ichip" data-issue="网络诈骗">网络诈骗</span>
+            <span class="ichip" data-issue="消费陷阱">消费陷阱</span>
+            <span class="ichip" data-issue="数据贩卖">数据贩卖</span>
+            <span class="ichip" data-issue="虚假广告">虚假广告</span>
+          </div>
+        </div>
+        <!-- 数字权益类 -->
+        <div class="issue-cat">
+          <div class="issue-cat-title"><span class="cat-dot" style="background:#10B981"></span>数字权益类</div>
+          <div class="issue-chips" data-cat="digital">
+            <span class="ichip" data-issue="算法歧视">算法歧视</span>
+            <span class="ichip" data-issue="信息茧房">信息茧房</span>
+            <span class="ichip" data-issue="深度伪造">深度伪造</span>
+            <span class="ichip" data-issue="数据监控">数据监控</span>
+          </div>
+        </div>
+
+        <!-- 自己写一个 -->
+        <div class="self-fill">
+          <input type="text" placeholder="自己写一个…" id="customIssueInput" maxlength="20" />
+          <button id="addCustomIssue">+ 添加</button>
+        </div>
+      </div>
+
+      <div class="lock-cta reveal" id="lockCta">
+        <button class="lock-btn disabled" id="lockBtn" disabled>🔒 锁定我的 Top 3</button>
+        <span class="lock-status" id="lockStatus">已选 0 / 3</span>
+      </div>
+
+      <!-- Completion card (hidden until locked) -->
+      <div class="card converge reveal" id="completeCard" style="display:none;margin-top:20px">
+        <div class="card-head"><h3>🎉 第 1 关完成！</h3></div>
+        <div class="complete-card" id="completeInner"></div>
+        <div class="lvl-cta" style="margin-top:16px">
+          <a class="btn btn-ink" href="level2.html">进入第 2 关 · 议题锁定 →</a>
+          <span class="status">完成后将点亮「安全力觉醒」并解锁第 2 关</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<footer>
+  <div class="foot-in">
+    <span>© 2026 AI5000天 · 负责任开发者 AI 创客 Tutor</span>
+    <div class="foot-links"><a href="map.html">闯关地图</a><a href="states.html">设计 · 状态页</a><a href="#">隐私政策</a></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // ---- State ----
+  var chosenPath = null;
+  var scores = { physical:1, psychological:1, social:1, economic:1, digital:1 };
+  var selectedIssues = [];
+  var MAX_ISSUES = 3;
+
+  // ---- Intro modal ----
+  document.getElementById('startBtn').addEventListener('click', function(){
+    document.getElementById('intro').classList.add('hide');
+  });
+
+  // ---- Step navigation helpers ----
+  function goToStep(n){
+    // Update step bar
+    document.querySelectorAll('#stepBar .step').forEach(function(s){
+      var sn = parseInt(s.getAttribute('data-step'));
+      s.classList.remove('active','done');
+      if(sn < n) s.classList.add('done');
+      if(sn === n) s.classList.add('active');
+    });
+    // Show/hide sections
+    for(var i=1;i<=5;i++){
+      var sec = document.getElementById('sec'+i);
+      if(i === n){
+        sec.classList.add('visible');
+        // Trigger reveal animations for newly visible items
+        sec.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+      } else {
+        sec.classList.remove('visible');
+      }
+    }
+    // Scroll to top of main
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  // ---- ① Path choice ----
+  document.querySelectorAll('.path-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.path-btn').forEach(function(b){ b.classList.remove('selected'); });
+      btn.classList.add('selected');
+      chosenPath = btn.getAttribute('data-path');
+      // Show/hide idea input
+      document.getElementById('ideaInputWrap').style.display = (chosenPath === 'idea') ? 'block' : 'none';
+      // Auto-advance after a short delay
+      setTimeout(function(){ goToStep(2); }, 400);
+    });
+  });
+
+  // ---- ② Sliders ----
+  document.querySelectorAll('.sa-slider').forEach(function(slider){
+    slider.addEventListener('input', function(){
+      var dim = slider.getAttribute('data-dim');
+      var val = parseInt(slider.value);
+      scores[dim] = val;
+      document.getElementById('val-' + dim).textContent = val;
+    });
+  });
+
+  document.getElementById('saNextBtn').addEventListener('click', function(){
+    goToStep(3);
+  });
+
+  // ---- ③ Card placeholder next ----
+  document.getElementById('cardNextBtn').addEventListener('click', function(){
+    goToStep(4);
+  });
+
+  // ---- ④ Review placeholder next ----
+  document.getElementById('reviewNextBtn').addEventListener('click', function(){
+    goToStep(5);
+  });
+
+  // ---- ⑤ Issue chips ----
+  function updateLockBtn(){
+    var lockBtn = document.getElementById('lockBtn');
+    var lockStatus = document.getElementById('lockStatus');
+    lockStatus.textContent = '已选 ' + selectedIssues.length + ' / ' + MAX_ISSUES;
+
+    if(selectedIssues.length === MAX_ISSUES){
+      lockBtn.disabled = false;
+      lockBtn.classList.remove('disabled');
+      lockBtn.classList.add('enabled');
+      lockBtn.textContent = '🔒 锁定我的 Top 3';
+    } else {
+      lockBtn.disabled = true;
+      lockBtn.classList.add('disabled');
+      lockBtn.classList.remove('enabled');
+    }
+
+    // Disable unselected chips when max reached
+    document.querySelectorAll('.ichip').forEach(function(chip){
+      if(selectedIssues.length >= MAX_ISSUES && !chip.classList.contains('selected')){
+        chip.classList.add('disabled');
+      } else {
+        chip.classList.remove('disabled');
+      }
+    });
+  }
+
+  document.querySelectorAll('.ichip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      var issue = chip.getAttribute('data-issue');
+      if(chip.classList.contains('selected')){
+        chip.classList.remove('selected');
+        selectedIssues = selectedIssues.filter(function(i){ return i !== issue; });
+      } else {
+        if(selectedIssues.length >= MAX_ISSUES) return;
+        chip.classList.add('selected');
+        selectedIssues.push(issue);
+      }
+      updateLockBtn();
+    });
+  });
+
+  // ---- Custom issue ----
+  document.getElementById('addCustomIssue').addEventListener('click', function(){
+    var input = document.getElementById('customIssueInput');
+    var val = input.value.trim();
+    if(!val) return;
+    if(selectedIssues.length >= MAX_ISSUES) return;
+    // Check duplicate
+    if(selectedIssues.indexOf(val) !== -1) return;
+    // Add a chip to the issue section
+    var cat = document.createElement('div');
+    cat.className = 'issue-cat';
+    // Actually add it as an extra chip in a "自定义" row
+    var customCat = document.querySelector('.issue-section .custom-cat');
+    if(!customCat){
+      customCat = document.createElement('div');
+      customCat.className = 'issue-cat custom-cat';
+      customCat.innerHTML = '<div class="issue-cat-title"><span class="cat-dot" style="background:var(--ink)"></span>我写的</div><div class="issue-chips"></div>';
+      document.querySelector('.self-fill').parentNode.insertBefore(customCat, document.querySelector('.self-fill'));
+    }
+    var chipsContainer = customCat.querySelector('.issue-chips');
+    var newChip = document.createElement('span');
+    newChip.className = 'ichip selected';
+    newChip.setAttribute('data-issue', val);
+    newChip.textContent = val;
+    chipsContainer.appendChild(newChip);
+    selectedIssues.push(val);
+    // Wire click handler
+    newChip.addEventListener('click', function(){
+      if(newChip.classList.contains('selected')){
+        newChip.classList.remove('selected');
+        selectedIssues = selectedIssues.filter(function(i){ return i !== val; });
+        newChip.remove();
+        // Remove empty custom category
+        if(chipsContainer.children.length === 0) customCat.remove();
+      }
+      updateLockBtn();
+    });
+    input.value = '';
+    updateLockBtn();
+  });
+
+  document.getElementById('customIssueInput').addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      document.getElementById('addCustomIssue').click();
+    }
+  });
+
+  // ---- Lock Top 3 ----
+  document.getElementById('lockBtn').addEventListener('click', function(){
+    if(selectedIssues.length < MAX_ISSUES) return;
+    // Build completion card
+    var inner = document.getElementById('completeInner');
+    var scoreLabels = {
+      physical:'身体安全', psychological:'心理安全',
+      social:'社交安全', economic:'经济安全', digital:'数字权益'
+    };
+    var html = '<h3>🛡️ 安全力觉醒 · Top 3</h3>';
+    html += '<div class="top3-list">';
+    selectedIssues.forEach(function(issue, idx){
+      html += '<div class="top3-item"><span class="num">' + (idx+1) + '</span><span>' + issue + '</span></div>';
+    });
+    html += '</div>';
+    html += '<div style="margin-top:16px;text-align:left">';
+    Object.keys(scores).forEach(function(dim){
+      var pct = (scores[dim] / 5 * 100);
+      html += '<div class="score-row"><span class="score-label">' + scoreLabels[dim] + '</span><div class="score-bar"><div class="score-fill" style="width:' + pct + '%"></div></div><span class="score-val">' + scores[dim] + '</span></div>';
+    });
+    html += '</div>';
+    inner.innerHTML = html;
+    document.getElementById('completeCard').style.display = 'block';
+    // Animate it in
+    setTimeout(function(){
+      document.getElementById('completeCard').classList.add('in');
+      document.getElementById('completeCard').scrollIntoView({behavior:'smooth',block:'center'});
+    }, 50);
+    // Disable lock button after locking
+    var lockBtn = document.getElementById('lockBtn');
+    lockBtn.disabled = true;
+    lockBtn.textContent = '✅ 已锁定';
+    lockBtn.classList.remove('enabled');
+    lockBtn.classList.add('disabled');
+    // Disable all chips
+    document.querySelectorAll('.ichip').forEach(function(c){ c.classList.add('disabled'); });
+  });
+
+  // ---- Reveal animation (IntersectionObserver) ----
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(function(el, i){
+    el.style.transitionDelay = (i % 3 * 50) + 'ms';
+    io.observe(el);
+  });
+
+})();
+</script>
+<script src="widget.js"></script>
+</body>
+</html>

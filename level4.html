@@ -3,13 +3,186 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>第 4 关 · 灵感捕手 — AI5000天 负责任开发者</title>
-<meta name="description" content="脑波力启蒙 · 灵感捕手：把发散的脑洞，收成抓得住的灵感。" />
+<title>第 4 关 · 问题侦探局 — AI5000天 负责任开发者</title>
+<meta name="description" content="脑波力启蒙 · 问题侦探局：深挖问题冰山，找到你的切入窗口。" />
 <link rel="icon" href="assets/logo.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@400;500;600;700;900&family=ZCOOL+KuaiLe&family=Press+Start+2P&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="styles.css" />
+<style>
+/* ============================================
+   Level 4 · 问题侦探局 — Iceberg Detective
+   ============================================ */
+
+/* ---------- Step Bar ---------- */
+.step-bar{display:flex;gap:8px;margin:28px 0 8px;flex-wrap:wrap}
+.step-bar .s{font-size:13px;font-weight:600;color:var(--ink-mute);background:var(--surface);border:2px solid var(--line);border-radius:999px;padding:8px 16px;cursor:pointer;transition:all .2s;user-select:none}
+.step-bar .s:hover{border-color:var(--primary);color:var(--primary-deep)}
+.step-bar .s.done{color:var(--primary-deep);border-color:var(--primary);background:var(--primary-soft)}
+.step-bar .s.done::before{content:'✓ ';font-size:11px}
+.step-bar .s.active{color:#fff;background:var(--ink);border-color:var(--ink);box-shadow:var(--sh-sm)}
+
+/* ---------- Story Echo Card ---------- */
+.story-echo{background:var(--blue-soft);border:2px solid var(--ink);border-radius:18px;padding:22px 26px;box-shadow:var(--sh);margin:22px 0 0;position:relative;overflow:hidden}
+.story-echo::before{content:'';position:absolute;top:-24px;right:-24px;width:90px;height:90px;background:var(--blue);opacity:.15;border-radius:50%}
+.story-echo::after{content:'';position:absolute;bottom:-16px;left:12px;width:40px;height:40px;background:var(--blue);opacity:.08;border-radius:50%}
+.story-echo .se-label{font-family:var(--pixel);font-size:8px;color:var(--blue-deep);letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.story-echo .se-label .se-icon{font-size:14px}
+.story-echo .se-grid{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;align-items:baseline}
+.story-echo .se-k{font-size:12px;font-weight:700;color:var(--blue-deep);white-space:nowrap;display:flex;align-items:center;gap:4px}
+.story-echo .se-k .dot{width:8px;height:8px;border-radius:3px;flex:none}
+.story-echo .se-v{font-size:15px;color:var(--ink);line-height:1.6}
+
+/* ---------- Step Sections ---------- */
+.step-section{display:none;padding:28px 0 8px}
+.step-section.active{display:block;animation:stepFade .4s ease}
+@keyframes stepFade{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* ---------- Wu Bubble per Step ---------- */
+.wu-step{display:flex;align-items:flex-start;gap:12px;margin-bottom:22px}
+.wu-step .gava{width:44px;height:44px;border-radius:50%;border:2px solid var(--ink);background:url('assets/wu-13.png') center top/170% no-repeat,var(--primary-soft);flex:none;flex-shrink:0}
+.wu-step .gb{background:var(--surface);border:2px solid var(--ink);border-radius:14px;padding:14px 20px;box-shadow:var(--sh-sm);font-family:var(--fun);font-size:16px;line-height:1.6}
+
+/* ---------- Tag Input (Step 1) ---------- */
+.tag-input-wrap{margin-top:16px}
+.tag-area{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;min-height:48px}
+.tag-pill{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;background:var(--primary-soft);border:2px solid var(--primary);border-radius:999px;padding:7px 16px;animation:tagPop .25s ease}
+.tag-pill .tag-x{width:18px;height:18px;border-radius:50%;background:var(--primary-deep);color:#fff;display:grid;place-items:center;font-size:11px;cursor:pointer;line-height:1;transition:background .15s}
+.tag-pill .tag-x:hover{background:var(--danger)}
+@keyframes tagPop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+.tag-add{display:flex;gap:8px;align-items:center}
+.tag-add input{border:2px solid var(--line);border-radius:999px;padding:10px 18px;font-family:var(--sans);font-size:14px;outline:none;width:220px;max-width:100%;transition:border-color .2s,box-shadow .2s}
+.tag-add input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
+.tag-add button{font-family:var(--fun);font-size:14px;font-weight:600;background:var(--primary);color:#fff;border:2px solid var(--ink);border-radius:999px;padding:9px 18px;cursor:pointer;box-shadow:var(--sh-sm);transition:transform .12s,box-shadow .12s}
+.tag-add button:hover{transform:translateY(-2px);box-shadow:var(--sh)}
+.tag-add button:active{transform:translateY(1px);box-shadow:none}
+.tag-hint{font-size:12px;color:var(--ink-mute);margin-top:8px}
+
+/* ---------- Textarea (Step 2) ---------- */
+.text-area-wrap{margin-top:16px}
+.text-area-wrap textarea{width:100%;min-height:110px;border:2px solid var(--line);border-radius:14px;padding:16px 18px;font-family:var(--sans);font-size:15px;outline:none;resize:vertical;transition:border-color .2s,box-shadow .2s;background:var(--surface);line-height:1.75}
+.text-area-wrap textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
+
+/* ---------- Who-Tried Grid (Step 3) ---------- */
+.tried-section{margin-top:16px}
+.tried-row{display:grid;grid-template-columns:1fr 1.3fr 1.3fr;gap:12px;margin-bottom:14px;animation:tagPop .25s ease}
+.tried-cell{background:var(--surface);border:2px solid var(--ink);border-radius:14px;padding:14px;box-shadow:var(--sh-sm);display:flex;flex-direction:column;gap:8px}
+.tried-cell .tc-label{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--primary-deep);display:flex;align-items:center;gap:4px}
+.tried-cell .tc-label .tc-ico{font-size:14px}
+.tried-cell input,.tried-cell textarea{width:100%;border:2px solid var(--line);border-radius:8px;padding:8px 10px;font-family:var(--sans);font-size:14px;outline:none;resize:none;background:var(--surface-warm);transition:border-color .2s,box-shadow .2s}
+.tried-cell input:focus,.tried-cell textarea:focus{border-color:var(--primary);box-shadow:0 0 0 2px var(--primary-soft)}
+.tried-add{display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--fun);font-size:14px;color:var(--primary-deep);background:var(--primary-soft);border:2px dashed var(--primary);border-radius:14px;padding:14px;cursor:pointer;transition:all .2s}
+.tried-add:hover{background:var(--primary);color:#fff;border-style:solid}
+
+/* ---------- Next Step Button ---------- */
+.next-step{display:inline-flex;align-items:center;gap:8px;font-family:var(--serif);font-weight:600;font-size:16px;background:var(--ink);color:#fff;border:none;border-radius:999px;padding:12px 26px;cursor:pointer;box-shadow:var(--sh-sm);margin-top:22px;transition:transform .12s,box-shadow .12s}
+.next-step:hover{transform:translateY(-2px);box-shadow:var(--sh)}
+.next-step:active{transform:translateY(1px);box-shadow:none}
+
+/* ============================================
+   ICEBERG DIAGRAM — Hero Component
+   ============================================ */
+.iceberg-wrap{margin-top:28px;position:relative}
+
+.iceberg-scene{position:relative;width:100%;max-width:720px;margin:0 auto;aspect-ratio:5/6;overflow:visible;border-radius:24px;border:3px solid var(--ink);box-shadow:var(--sh-lg)}
+
+/* --- Sky Layer --- */
+.iceberg-sky{position:absolute;top:0;left:0;right:0;height:38%;background:linear-gradient(180deg,#C9E8F8 0%,#9BD4EE 40%,#6BBDE0 75%,#7FC4E3 100%);border-radius:21px 21px 0 0;overflow:hidden}
+.iceberg-sky .cloud{position:absolute;background:#fff;border-radius:999px;opacity:.65;animation:cloudDrift 20s ease-in-out infinite}
+.iceberg-sky .c1{width:90px;height:28px;top:16%;left:8%;animation-duration:22s}
+.iceberg-sky .c2{width:65px;height:22px;top:8%;left:52%;animation-duration:26s;animation-direction:reverse}
+.iceberg-sky .c3{width:48px;height:16px;top:26%;left:74%;animation-duration:18s}
+.iceberg-sky .c4{width:35px;height:12px;top:20%;left:34%;animation-duration:24s;animation-delay:-8s;opacity:.4}
+.iceberg-sky .sun{position:absolute;top:8%;right:14%;width:44px;height:44px;background:radial-gradient(circle,#FFF4CC 30%,#FFE082 70%,transparent 100%);border-radius:50%;box-shadow:0 0 30px 8px rgba(255,224,130,.35);animation:sunGlow 4s ease-in-out infinite}
+@keyframes cloudDrift{0%,100%{transform:translateX(0)}50%{transform:translateX(24px)}}
+@keyframes sunGlow{0%,100%{box-shadow:0 0 30px 8px rgba(255,224,130,.35)}50%{box-shadow:0 0 40px 14px rgba(255,224,130,.5)}}
+
+/* --- Ocean Deep Layer --- */
+.ocean-deep{position:absolute;top:38%;left:0;right:0;bottom:0;background:linear-gradient(180deg,#3A98BF 0%,#2678A0 25%,#18597A 50%,#0E3B55 80%,#082840 100%);border-radius:0 0 21px 21px;overflow:hidden}
+.ocean-deep .bubble{position:absolute;background:rgba(255,255,255,.18);border-radius:50%;animation:bubbleUp 6s ease-in-out infinite}
+.ocean-deep .b1{width:8px;height:8px;left:18%;bottom:20%;animation-duration:7s;animation-delay:0s}
+.ocean-deep .b2{width:12px;height:12px;left:65%;bottom:15%;animation-duration:9s;animation-delay:-3s}
+.ocean-deep .b3{width:6px;height:6px;left:42%;bottom:30%;animation-duration:8s;animation-delay:-5s}
+.ocean-deep .b4{width:10px;height:10px;left:80%;bottom:25%;animation-duration:10s;animation-delay:-2s}
+.ocean-deep .b5{width:5px;height:5px;left:30%;bottom:40%;animation-duration:6s;animation-delay:-4s}
+@keyframes bubbleUp{0%{transform:translateY(0);opacity:.4}50%{opacity:.7}100%{transform:translateY(-80px);opacity:0}}
+
+/* --- Water Line --- */
+.waterline{position:absolute;top:36.5%;left:0;right:0;height:3%;z-index:10;overflow:hidden}
+.waterline-inner{width:200%;height:100%;background:repeating-linear-gradient(90deg,rgba(255,255,255,.5) 0,rgba(255,255,255,.5) 16px,transparent 16px,transparent 28px);animation:waveSlide 4s linear infinite}
+.waterline-label{position:absolute;top:-20px;right:14px;font-family:var(--pixel);font-size:7px;color:var(--blue-deep);background:rgba(255,255,255,.8);padding:3px 10px;border-radius:4px;letter-spacing:1px}
+@keyframes waveSlide{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* --- Iceberg SVG Shape --- */
+.iceberg-shape{position:absolute;top:10%;left:50%;transform:translateX(-50%);width:60%;height:88%;z-index:5;pointer-events:none}
+.iceberg-shape svg{width:100%;height:100%;filter:drop-shadow(5px 8px 0 rgba(44,32,23,.22))}
+
+/* --- Zone Overlays --- */
+.iceberg-zone{position:absolute;left:50%;transform:translateX(-50%);z-index:6;display:flex;flex-direction:column;gap:5px;padding:8px 14px;overflow-y:auto;max-height:100%}
+.iceberg-zone.above{top:14%;width:46%;max-height:20%;text-align:center}
+.iceberg-zone.below{top:42%;width:50%;max-height:28%}
+.iceberg-zone.deep{top:72%;width:40%;max-height:22%}
+
+.zone-label{font-family:var(--pixel);font-size:7px;color:rgba(255,255,255,.9);letter-spacing:1.5px;text-shadow:1px 1px 2px rgba(0,0,0,.5);margin-bottom:4px;text-transform:uppercase}
+.zone-item{font-size:12px;color:#fff;font-weight:600;background:rgba(255,255,255,.2);border-radius:8px;padding:4px 10px;backdrop-filter:blur(2px);text-shadow:0 1px 3px rgba(0,0,0,.35);animation:tagPop .35s ease;line-height:1.5}
+.zone-empty{font-size:12px;color:rgba(255,255,255,.45);font-style:italic}
+
+/* --- Draggable Entry Marker --- */
+.entry-marker{position:absolute;z-index:20;width:44px;height:44px;cursor:grab;touch-action:none;transition:filter .15s;display:none;filter:drop-shadow(2px 3px 0 var(--ink))}
+.entry-marker.visible{display:block;animation:markerAppear .5s ease}
+.entry-marker:hover{filter:drop-shadow(2px 3px 0 var(--ink)) brightness(1.1)}
+.entry-marker.dragging{cursor:grabbing;filter:drop-shadow(2px 3px 0 var(--ink)) brightness(1.2)}
+.entry-marker .pulse-ring{position:absolute;inset:-8px;border-radius:50%;border:3px solid var(--primary);opacity:0;animation:markerPulse 2s ease-out infinite}
+@keyframes markerAppear{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:scale(1)}}
+@keyframes markerPulse{0%{transform:scale(.8);opacity:.8}100%{transform:scale(1.8);opacity:0}}
+
+/* --- Entry Label (follows marker) --- */
+.entry-label{position:absolute;z-index:21;background:var(--primary);color:#fff;font-family:var(--fun);font-size:13px;padding:6px 14px;border:2px solid var(--ink);border-radius:999px;box-shadow:var(--sh-sm);white-space:nowrap;pointer-events:none;display:none;transform:translateX(-50%)}
+.entry-label.visible{display:block;animation:tagPop .3s ease}
+
+/* --- Iceberg Result Card --- */
+.iceberg-result{background:var(--surface);border:2px solid var(--ink);border-radius:18px;padding:28px;box-shadow:var(--sh);margin-top:28px;animation:stepFade .5s ease}
+.iceberg-result h3{font-family:var(--serif);font-weight:800;font-size:22px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.ir-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.ir-block{background:var(--surface-warm);border:2px solid var(--line);border-radius:12px;padding:16px}
+.ir-block.full{grid-column:1/-1}
+.ir-block .irk{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--blue-deep);margin-bottom:8px;display:flex;align-items:center;gap:4px}
+.ir-block .irk .irk-ico{font-size:14px}
+.ir-block .irv{font-size:14px;color:var(--ink);line-height:1.7}
+.ir-block .irv .tag-pill{font-size:12px;padding:3px 10px;margin:2px}
+
+/* --- Submit CTA --- */
+.iceberg-cta{margin-top:22px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.iceberg-cta .btn-ink{font-family:var(--serif);font-weight:600;font-size:16px;display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;border-radius:999px;padding:15px 30px;background:var(--ink);color:#fff;box-shadow:var(--sh-sm);transition:transform .12s,box-shadow .12s}
+.iceberg-cta .btn-ink:hover{transform:translateY(-2px);box-shadow:var(--sh)}
+.iceberg-cta .btn-ink:active{transform:translateY(1px);box-shadow:none}
+
+/* --- Celebration overlay --- */
+.celebrate-overlay{position:fixed;inset:0;z-index:200;background:rgba(44,32,23,.6);display:flex;align-items:center;justify-content:center;padding:24px;animation:fade .3s ease}
+.celebrate-card{background:var(--surface);border:3px solid var(--primary);border-radius:22px;padding:36px 40px;box-shadow:8px 10px 0 var(--primary);text-align:center;max-width:480px;width:100%;animation:tagPop .4s ease}
+.celebrate-card h2{font-family:var(--serif);font-weight:800;font-size:26px;color:var(--primary-deep);margin-bottom:12px}
+.celebrate-card p{font-size:15px;color:var(--ink-soft);line-height:1.7;margin-bottom:20px}
+.celebrate-card .output-json{background:var(--surface-warm);border:2px solid var(--line);border-radius:12px;padding:14px 18px;font-family:monospace;font-size:12px;color:var(--ink);text-align:left;line-height:1.7;max-height:200px;overflow-y:auto;margin-bottom:20px}
+.celebrate-card .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+/* ---------- Responsive ---------- */
+@media(max-width:900px){
+  .tried-row{grid-template-columns:1fr;gap:10px}
+  .iceberg-scene{aspect-ratio:4/6}
+  .ir-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .iceberg-scene{aspect-ratio:3/5}
+  .iceberg-zone.above{width:52%;padding:6px 10px}
+  .iceberg-zone.below{width:56%;padding:6px 10px}
+  .iceberg-zone.deep{width:44%;padding:6px 10px}
+  .zone-item{font-size:11px;padding:3px 8px}
+  .tag-add input{width:160px}
+}
+</style>
 </head>
 <body>
 
@@ -30,21 +203,21 @@
   </div>
 </nav>
 
-<!-- 进入讲解：居中模态 + 遮罩 -->
+<!-- ========== Intro Modal ========== -->
 <div class="overlay" id="intro">
   <div class="modal">
     <div class="mwu"><img src="assets/wu-13.png" alt="小伍" /></div>
     <div class="mbubble">
-      <h2>欢迎来到第 4 关 · <b>灵感捕手</b>！</h2>
-      <p style="color:var(--ink-soft);margin-top:8px;line-height:1.7">上一关你在「脑洞发射台」蹦出好多点子。这一关，我陪你把它们收成抓得住的灵感——</p>
+      <h2>欢迎来到第 4 关 · <b>问题侦探局</b>！</h2>
+      <p style="color:var(--ink-soft);margin-top:8px;line-height:1.7">上一关你锁定了议题，这一关我们要当侦探——把问题一层一层剥开，画出你的<b>问题冰山</b>，找到你能切进去的窗口！</p>
       <ul class="msteps">
-        <li><span class="no">1</span><span><b>回顾脑洞</b>：挑出你最有感觉的点子。</span></li>
-        <li><span class="no">2</span><span><b>捕捉灵感卡</b>：从生活里补满 3 张卡（我看到的 + 我希望）。</span></li>
-        <li><span class="no">3</span><span><b>挑选</b>：哪个最想做、又最做得出来？</span></li>
-        <li><span class="no">4</span><span><b>凝练点子</b>：变成一句话，喂给你的第一个 AI 作品。</span></li>
+        <li><span class="no">1</span><span><b>牵涉了谁</b>：这件事，还牵动着谁？</span></li>
+        <li><span class="no">2</span><span><b>为何没解决</b>：为什么一直没被解决？</span></li>
+        <li><span class="no">3</span><span><b>谁试过 / 为何没成</b>：别人尝试过吗？</span></li>
+        <li><span class="no">4</span><span><b>切入窗口</b>：在冰山上圈出你的切入口！</span></li>
       </ul>
-      <div class="goal">🎯 本关目标：集齐 3 张灵感卡，凝练出你的作品点子。</div>
-      <button class="btn btn-ink" id="startBtn">▶ 开始捕捉</button>
+      <div class="goal">🧊 本关目标：画出问题冰山，找到你的切入窗口。</div>
+      <button class="btn btn-ink" id="startBtn">▶ 开始调查</button>
     </div>
   </div>
 </div>
@@ -53,86 +226,624 @@
   <section class="content wrap">
     <a class="back" href="map.html">← 返回闯关地图</a>
 
+    <!-- Level Header -->
     <div class="lvl-head">
       <div class="lvl-badge"><img src="assets/power-brain.png" alt="" /><span class="lv">LV 04</span></div>
       <div>
-        <h1>灵感捕手</h1>
-        <p>脑波力启蒙 · 把发散的脑洞，收成抓得住的灵感</p>
+        <h1>问题侦探局</h1>
+        <p>脑波力启蒙 · 深挖问题冰山，找到你的切入窗口</p>
       </div>
     </div>
 
-    <div class="steps">
-      <span class="step done">① 回顾脑洞</span>
-      <span class="step active">② 捕捉灵感卡</span>
-      <span class="step">③ 挑选</span>
-      <span class="step">④ 凝练点子</span>
+    <!-- Step Bar -->
+    <div class="step-bar" id="stepBar">
+      <span class="s active" data-step="1">① 牵涉了谁</span>
+      <span class="s" data-step="2">② 为何没解决</span>
+      <span class="s" data-step="3">③ 谁试过</span>
+      <span class="s" data-step="4">④ 我的切入窗口</span>
     </div>
 
-    <!-- ① 回顾脑洞 -->
-    <div class="guide reveal"><span class="gava"></span><span class="gb">先回顾你在脑洞发射台蹦出的点子，点一个有感觉的，把它变成灵感卡 👇</span></div>
-    <div class="recall reveal">
-      <span class="rchip">给流浪猫搭避雨的窝</span>
-      <span class="rchip picked">帮奶奶念药盒上的字</span>
-      <span class="rchip">提醒全家多喝水</span>
-      <span class="rchip">把旧物改造成新玩具</span>
-      <span class="rchip">帮同学找丢失的文具</span>
-      <span class="rchip">给古诗配一幅画</span>
-    </div>
-
-    <!-- ② 捕捉灵感卡 -->
-    <div class="guide reveal"><span class="gava"></span><span class="gb">灵感卡 = 「我看到的」+「我希望」。已经抓到 2 张，再来 1 张就齐啦！</span></div>
-    <div class="icards reveal">
-      <div class="icard">
-        <span class="cnum">灵感卡 01</span>
-        <div class="row"><div class="k">我看到的</div><div class="v">楼下的流浪猫，下雨天没地方躲。</div></div>
-        <div class="row"><div class="k">我希望</div><div class="v">有个东西能提醒大家给它搭个避雨的角落。</div></div>
-      </div>
-      <div class="icard">
-        <span class="cnum">灵感卡 02</span>
-        <div class="row"><div class="k">我看到的</div><div class="v">奶奶看不清药盒上的小字。</div></div>
-        <div class="row"><div class="k">我希望</div><div class="v">有个东西能把药名念给她听。</div></div>
-      </div>
-      <div class="icard active">
-        <span class="cnum">灵感卡 03 · 捕捉中</span>
-        <div><label class="cap-label">我看到的</label><textarea class="cap-input" rows="2" placeholder="最近哪个小瞬间让你觉得『要是有个东西能…就好了』？"></textarea></div>
-        <div><label class="cap-label">我希望</label><textarea class="cap-input" rows="2" placeholder="你希望它能帮上什么忙？"></textarea></div>
+    <!-- Story Echo Card (from Level 3) -->
+    <div class="story-echo reveal" id="storyEcho">
+      <div class="se-label"><span class="se-icon">🔊</span> LV 03 故事回声</div>
+      <div class="se-grid">
+        <span class="se-k"><span class="dot" style="background:#3F92BC"></span>主角</span><span class="se-v" id="seProtagonist">被网络欺凌的同学</span>
+        <span class="se-k"><span class="dot" style="background:#F5871F"></span>情节</span><span class="se-v" id="sePlot">在网上被恶意评论和造谣</span>
+        <span class="se-k"><span class="dot" style="background:#C0492E"></span>证据</span><span class="se-v" id="seEvidence">亲眼看到同学的社交账号被恶意评论淹没</span>
       </div>
     </div>
 
-    <!-- ③ 挑选 + ④ 凝练 -->
-    <div class="guide reveal"><span class="gava"></span><span class="gb">三张都抓到啦！哪一个你最想做、又最做得出来？我帮你把它变成一句话 ✨</span></div>
-    <div class="card converge reveal">
-      <div class="card-head"><h3>🎯 你的作品点子</h3></div>
-      <div class="picked-card">✅ 已选中：灵感卡 02 · 帮奶奶认药</div>
-      <div class="oneliner">我想做一个 <span class="blank">会念药名的语音小助手</span>，帮助 <span class="blank">看不清字的老人</span>，解决 <span class="blank">认错药</span> 的问题。</div>
-      <div class="lvl-cta">
-        <a class="btn btn-ink" href="index.html">完成本关 · 生成 Demo →</a>
-        <span class="status">完成后将点亮「脑波力」并解锁第 5 关</span>
+    <!-- ============================================================ -->
+    <!-- STEP 1: 牵涉了谁                                              -->
+    <!-- ============================================================ -->
+    <div class="step-section active" id="step1">
+      <div class="wu-step reveal">
+        <span class="gava"></span>
+        <span class="gb">这件事，除了主角，还牵动着谁？想想看——家人？老师？旁观者？平台？</span>
+      </div>
+      <div class="tag-input-wrap reveal">
+        <div class="tag-area" id="tagArea"></div>
+        <div class="tag-add">
+          <input type="text" id="tagInput" placeholder="再加一个牵涉的人或群体…" maxlength="20" />
+          <button id="tagAddBtn">+ 加上</button>
+        </div>
+        <div class="tag-hint">按 Enter 快速添加，点击 × 可删除</div>
+      </div>
+      <button class="next-step reveal" id="toStep2">下一步 →</button>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- STEP 2: 为何没解决                                            -->
+    <!-- ============================================================ -->
+    <div class="step-section" id="step2">
+      <div class="wu-step reveal">
+        <span class="gava"></span>
+        <span class="gb">这个问题存在这么久，为什么一直没被解决？</span>
+      </div>
+      <div class="text-area-wrap reveal">
+        <textarea id="whyNotSolved" placeholder="我觉得是因为……（比如：大家觉得网上的事不好管、平台只想赚钱、受害者不敢说出来……）"></textarea>
+      </div>
+      <button class="next-step reveal" id="toStep3">下一步 →</button>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- STEP 3: 谁试过 / 为何没成                                     -->
+    <!-- ============================================================ -->
+    <div class="step-section" id="step3">
+      <div class="wu-step reveal">
+        <span class="gava"></span>
+        <span class="gb">有没有人想解决过？他们做了什么，又为什么没成？</span>
+      </div>
+      <div class="tried-section reveal" id="triedSection">
+        <!-- First row -->
+        <div class="tried-row" id="triedRow-0">
+          <div class="tried-cell">
+            <span class="tc-label"><span class="tc-ico">👤</span> 谁</span>
+            <input type="text" class="tried-who" placeholder="比如：班主任" maxlength="20" />
+          </div>
+          <div class="tried-cell">
+            <span class="tc-label"><span class="tc-ico">🔧</span> 做了什么</span>
+            <textarea class="tried-what" rows="2" placeholder="比如：找当事人谈话"></textarea>
+          </div>
+          <div class="tried-cell">
+            <span class="tc-label"><span class="tc-ico">❌</span> 为什么没成</span>
+            <textarea class="tried-why" rows="2" placeholder="比如：网上匿名管不到"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="tried-add reveal" id="addTriedBtn">+ 再加一组</div>
+      <button class="next-step reveal" id="toStep4">下一步 · 画冰山 →</button>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- STEP 4: Iceberg Diagram + Entry Point                        -->
+    <!-- ============================================================ -->
+    <div class="step-section" id="step4">
+      <div class="wu-step reveal">
+        <span class="gava"></span>
+        <span class="gb">把它们叠起来看——一座问题冰山就出来了 🧊 在冰山上，圈出你能切进去的那个点。</span>
+      </div>
+
+      <div class="iceberg-wrap reveal">
+        <div class="iceberg-scene" id="icebergScene">
+          <!-- Sky -->
+          <div class="iceberg-sky">
+            <div class="cloud c1"></div>
+            <div class="cloud c2"></div>
+            <div class="cloud c3"></div>
+            <div class="cloud c4"></div>
+            <div class="sun"></div>
+          </div>
+          <!-- Ocean Deep -->
+          <div class="ocean-deep">
+            <div class="bubble b1"></div>
+            <div class="bubble b2"></div>
+            <div class="bubble b3"></div>
+            <div class="bubble b4"></div>
+            <div class="bubble b5"></div>
+          </div>
+          <!-- Water Line -->
+          <div class="waterline">
+            <div class="waterline-inner"></div>
+            <span class="waterline-label">WATER LINE</span>
+          </div>
+          <!-- Iceberg SVG Shape -->
+          <div class="iceberg-shape">
+            <svg viewBox="0 0 300 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Above water: white ice peak -->
+              <path d="M120 5 L180 5 L195 20 L205 45 L218 65 L195 110 L210 140 L195 148 L170 148 L145 148 L130 148 L105 110 L82 65 L95 45 L105 20 Z" fill="white" stroke="#2C2017" stroke-width="2.5" stroke-linejoin="round"/>
+              <!-- Light blue tint on above-water ice -->
+              <path d="M120 5 L180 5 L195 20 L205 45 L218 65 L195 110 L210 140 L195 148 L170 148 L145 148 L130 148 L105 110 L82 65 L95 45 L105 20 Z" fill="url(#aboveTint)" opacity=".4"/>
+              <!-- Ice cracks above water -->
+              <path d="M150 12 L148 55 L155 80 L152 120" stroke="#C9E8F8" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+              <path d="M170 25 L165 60 L172 95" stroke="#D4EDFB" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+              <path d="M135 30 L138 70 L132 100" stroke="#D4EDFB" stroke-width="1" stroke-linecap="round" fill="none"/>
+              <!-- Snow cap highlight -->
+              <path d="M130 10 L170 10 L178 18 L155 15 L140 22 Z" fill="rgba(255,255,255,.6)"/>
+
+              <!-- Below water: main underwater mass -->
+              <path d="M130 148 L145 148 L170 148 L195 148 L215 160 L240 195 L260 240 L255 290 L240 330 L210 370 L170 400 L130 415 L90 400 L60 370 L45 330 L40 290 L50 240 L70 195 L95 160 Z" fill="url(#underwaterGrad)" stroke="#2C2017" stroke-width="2.5" stroke-linejoin="round"/>
+              <!-- Mid-depth highlight -->
+              <path d="M130 148 L195 148 L215 160 L240 195 L255 240 L250 280 L220 270 L180 250 L140 260 L100 280 L55 260 L50 240 L70 195 L95 160 Z" fill="#4FA8D0" opacity=".45"/>
+              <!-- Deep bottom -->
+              <path d="M130 415 L170 400 L210 370 L240 330 L255 290 L240 310 L210 350 L170 385 L130 400 L90 385 L60 350 L45 310 L40 290 L50 330 L60 370 L90 400 Z" fill="#0C3350" opacity=".7"/>
+              <!-- Underwater ice cracks -->
+              <path d="M155 165 L148 220 L160 280 L150 340" stroke="rgba(255,255,255,.25)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+              <path d="M190 170 L200 230 L195 290 L205 350" stroke="rgba(255,255,255,.15)" stroke-width="1" stroke-linecap="round" fill="none"/>
+              <path d="M110 175 L100 240 L108 310 L95 370" stroke="rgba(255,255,255,.1)" stroke-width="1" stroke-linecap="round" fill="none"/>
+
+              <!-- Gradient definitions -->
+              <defs>
+                <linearGradient id="aboveTint" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="rgba(127,196,227,0)"/>
+                  <stop offset="100%" stop-color="rgba(127,196,227,.35)"/>
+                </linearGradient>
+                <linearGradient id="underwaterGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#3A98BF"/>
+                  <stop offset="30%" stop-color="#2B7BA3"/>
+                  <stop offset="60%" stop-color="#1B5E82"/>
+                  <stop offset="100%" stop-color="#0E3B55"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+
+          <!-- Zone: Above Water (symptoms / protagonist's story) -->
+          <div class="iceberg-zone above" id="zoneAbove">
+            <span class="zone-label">表象 · Surface</span>
+            <div id="zoneAboveItems"></div>
+          </div>
+          <!-- Zone: Below Water (stakeholders) -->
+          <div class="iceberg-zone below" id="zoneBelow">
+            <span class="zone-label">水面下 · Underwater</span>
+            <div id="zoneBelowItems"></div>
+          </div>
+          <!-- Zone: Deep (root causes) -->
+          <div class="iceberg-zone deep" id="zoneDeep">
+            <span class="zone-label">根源 · Root</span>
+            <div id="zoneDeepItems"></div>
+          </div>
+
+          <!-- Draggable Entry Point Marker -->
+          <div class="entry-marker" id="entryMarker">
+            <div class="pulse-ring"></div>
+            <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="22" cy="22" r="17" fill="#F5871F" stroke="#2C2017" stroke-width="2.5"/>
+              <circle cx="22" cy="22" r="11" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="4 3"/>
+              <circle cx="22" cy="22" r="5" fill="#fff"/>
+            </svg>
+          </div>
+          <!-- Entry label (follows marker) -->
+          <div class="entry-label" id="entryLabel">🎯 切入窗口</div>
+        </div>
+      </div>
+
+      <!-- Result Card (shown after marker is placed) -->
+      <div class="iceberg-result" id="icebergResult" style="display:none">
+        <h3>🧊 你的问题冰山图</h3>
+        <div class="ir-grid">
+          <div class="ir-block">
+            <div class="irk"><span class="irk-ico">🌊</span> 表象 · Surface</div>
+            <div class="irv" id="irSurface"></div>
+          </div>
+          <div class="ir-block">
+            <div class="irk"><span class="irk-ico">🎯</span> 切入窗口</div>
+            <div class="irv" id="irEntry" style="color:var(--primary-deep);font-weight:700"></div>
+          </div>
+          <div class="ir-block full">
+            <div class="irk"><span class="irk-ico">👥</span> 水面下 · Stakeholders</div>
+            <div class="irv" id="irUnderwater"></div>
+          </div>
+          <div class="ir-block full">
+            <div class="irk"><span class="irk-ico">🔎</span> 根源 · Root Causes</div>
+            <div class="irv" id="irRoot"></div>
+          </div>
+        </div>
+        <div class="iceberg-cta">
+          <button class="btn-ink" id="submitIceberg">提交冰山图 · 解锁第 5 关 →</button>
+          <span style="font-size:14px;color:var(--ink-soft)">完成后将点亮「脑波力」并解锁第 5 关</span>
+        </div>
       </div>
     </div>
+
   </section>
 </main>
 
 <footer>
   <div class="foot-in">
-    <span>© 2026 AI5000天 · 负责任开发者 AI 创客 Tutor</span>
+    <span>&copy; 2026 AI5000天 · 负责任开发者 AI 创客 Tutor</span>
     <div class="foot-links"><a href="map.html">闯关地图</a><a href="states.html">设计 · 状态页</a><a href="#">隐私政策</a></div>
   </div>
 </footer>
 
 <script>
-  document.getElementById('startBtn').addEventListener('click',function(){
-    document.getElementById('intro').classList.add('hide');
+(function(){
+  // ==================== State ====================
+  var state = {
+    currentStep: 1,
+    stakeholders: [],    // Step 1
+    whyNotSolved: '',    // Step 2
+    triedEntries: [],    // Step 3: [{who, what, why}]
+    entryPoint: null     // Step 4: {x, y, zone}
+  };
+
+  function el(id){ return document.getElementById(id); }
+
+  // ==================== Intro Modal ====================
+  el('startBtn').addEventListener('click', function(){
+    el('intro').classList.add('hide');
   });
-  // 回顾脑洞 chip 选择
-  document.querySelectorAll('.recall .rchip').forEach(function(c){
-    c.addEventListener('click',function(){
-      document.querySelectorAll('.recall .rchip').forEach(function(x){x.classList.remove('picked');});
-      c.classList.add('picked');
+
+  // ==================== Step Navigation ====================
+  function goToStep(n){
+    if(n < 1 || n > 4) return;
+    state.currentStep = n;
+
+    // Update sections
+    for(var i = 1; i <= 4; i++){
+      var sec = el('step' + i);
+      if(i === n){
+        sec.classList.add('active');
+        // Trigger reveal for elements inside
+        sec.querySelectorAll('.reveal').forEach(function(r){ r.classList.add('in'); });
+      } else {
+        sec.classList.remove('active');
+      }
+    }
+
+    // Update step bar
+    el('stepBar').querySelectorAll('.s').forEach(function(b){
+      var s = parseInt(b.getAttribute('data-step'));
+      b.classList.remove('active','done');
+      if(s < n) b.classList.add('done');
+      else if(s === n) b.classList.add('active');
     });
+
+    // Populate iceberg on step 4
+    if(n === 4) populateIceberg();
+
+    // Scroll to top of content area
+    var sec = el('step' + n);
+    if(sec) sec.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  // Step bar click (only go to completed/current)
+  el('stepBar').addEventListener('click', function(e){
+    var s = e.target.closest('.s');
+    if(s){
+      var n = parseInt(s.getAttribute('data-step'));
+      if(n <= state.currentStep) goToStep(n);
+    }
   });
-  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:0.1});
-  document.querySelectorAll('.reveal').forEach(function(el,i){el.style.transitionDelay=(i%3*50)+'ms';io.observe(el);});
+
+  // ==================== Validation + Shake ====================
+  function shakeEl(elem){
+    elem.style.animation = 'none';
+    elem.offsetHeight;
+    elem.style.animation = 'shake .4s ease';
+    setTimeout(function(){ elem.style.animation = ''; }, 500);
+  }
+  var shakeCSS = document.createElement('style');
+  shakeCSS.textContent = '@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}';
+  document.head.appendChild(shakeCSS);
+
+  // ==================== STEP 1: Tag Input ====================
+  var tagArea = el('tagArea');
+  var tagInput = el('tagInput');
+
+  function renderTags(){
+    tagArea.innerHTML = '';
+    state.stakeholders.forEach(function(tag, i){
+      var pill = document.createElement('span');
+      pill.className = 'tag-pill';
+      pill.innerHTML = tag + '<span class="tag-x" data-idx="'+i+'">&times;</span>';
+      tagArea.appendChild(pill);
+    });
+  }
+
+  function addTag(text){
+    text = text.trim();
+    if(!text || text.length > 20) return;
+    if(state.stakeholders.indexOf(text) !== -1) return;
+    state.stakeholders.push(text);
+    renderTags();
+  }
+
+  el('tagAddBtn').addEventListener('click', function(){
+    addTag(tagInput.value);
+    tagInput.value = '';
+    tagInput.focus();
+  });
+
+  tagInput.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      addTag(tagInput.value);
+      tagInput.value = '';
+    }
+  });
+
+  tagArea.addEventListener('click', function(e){
+    if(e.target.classList.contains('tag-x')){
+      var idx = parseInt(e.target.getAttribute('data-idx'));
+      state.stakeholders.splice(idx, 1);
+      renderTags();
+    }
+  });
+
+  el('toStep2').addEventListener('click', function(){
+    if(state.stakeholders.length === 0){
+      shakeEl(tagArea);
+      return;
+    }
+    goToStep(2);
+  });
+
+  // ==================== STEP 2: Why Not Solved ====================
+  el('whyNotSolved').addEventListener('input', function(){
+    state.whyNotSolved = this.value.trim();
+  });
+
+  el('toStep3').addEventListener('click', function(){
+    if(!el('whyNotSolved').value.trim()){
+      shakeEl(el('whyNotSolved'));
+      return;
+    }
+    state.whyNotSolved = el('whyNotSolved').value.trim();
+    goToStep(3);
+  });
+
+  // ==================== STEP 3: Who Tried ====================
+  var triedCount = 1;
+
+  el('addTriedBtn').addEventListener('click', function(){
+    var section = el('triedSection');
+    var row = document.createElement('div');
+    row.className = 'tried-row';
+    row.id = 'triedRow-' + triedCount;
+    triedCount++;
+    row.innerHTML =
+      '<div class="tried-cell"><span class="tc-label"><span class="tc-ico">👤</span> 谁</span><input type="text" class="tried-who" placeholder="比如：平台管理员" maxlength="20" /></div>' +
+      '<div class="tried-cell"><span class="tc-label"><span class="tc-ico">🔧</span> 做了什么</span><textarea class="tried-what" rows="2" placeholder="比如：设置了举报按钮"></textarea></div>' +
+      '<div class="tried-cell"><span class="tc-label"><span class="tc-ico">❌</span> 为什么没成</span><textarea class="tried-why" rows="2" placeholder="比如：举报处理太慢"></textarea></div>';
+    section.appendChild(row);
+    row.scrollIntoView({behavior:'smooth', block:'nearest'});
+  });
+
+  function collectTried(){
+    state.triedEntries = [];
+    el('triedSection').querySelectorAll('.tried-row').forEach(function(row){
+      var who = (row.querySelector('.tried-who') || {}).value;
+      var what = (row.querySelector('.tried-what') || {}).value;
+      var why = (row.querySelector('.tried-why') || {}).value;
+      who = (who || '').trim();
+      what = (what || '').trim();
+      why = (why || '').trim();
+      if(who || what || why) state.triedEntries.push({who:who, what:what, why:why});
+    });
+  }
+
+  el('toStep4').addEventListener('click', function(){
+    collectTried();
+    goToStep(4);
+  });
+
+  // ==================== STEP 4: Iceberg ====================
+  var scene = el('icebergScene');
+  var marker = el('entryMarker');
+  var label = el('entryLabel');
+  var markerPlaced = false;
+
+  function populateIceberg(){
+    // --- Above water: symptoms from story ---
+    var aboveItems = el('zoneAboveItems');
+    aboveItems.innerHTML = '';
+    var protagonist = el('seProtagonist').textContent;
+    var plot = el('sePlot').textContent;
+    [protagonist + '的遭遇', plot].forEach(function(text){
+      var d = document.createElement('div');
+      d.className = 'zone-item';
+      d.textContent = text;
+      aboveItems.appendChild(d);
+    });
+
+    // --- Below water: stakeholders ---
+    var belowItems = el('zoneBelowItems');
+    belowItems.innerHTML = '';
+    if(state.stakeholders.length > 0){
+      state.stakeholders.forEach(function(tag){
+        var d = document.createElement('div');
+        d.className = 'zone-item';
+        d.textContent = tag;
+        belowItems.appendChild(d);
+      });
+    } else {
+      belowItems.innerHTML = '<div class="zone-empty">（还没添加）</div>';
+    }
+
+    // --- Deep: root causes from step 2 + 3 ---
+    var deepItems = el('zoneDeepItems');
+    deepItems.innerHTML = '';
+    var rootCauses = [];
+    if(state.whyNotSolved){
+      state.whyNotSolved.split(/[，,；;、\n]/).forEach(function(s){
+        if(s.trim()) rootCauses.push(s.trim());
+      });
+    }
+    state.triedEntries.forEach(function(e){
+      if(e.why) rootCauses.push(e.who + '尝试过但：' + e.why);
+    });
+    if(rootCauses.length > 0){
+      rootCauses.forEach(function(c){
+        var d = document.createElement('div');
+        d.className = 'zone-item';
+        d.textContent = c;
+        deepItems.appendChild(d);
+      });
+    } else {
+      deepItems.innerHTML = '<div class="zone-empty">（还没填写）</div>';
+    }
+
+    // Show and position marker
+    marker.classList.add('visible');
+    marker.style.left = (scene.offsetWidth / 2 - 22) + 'px';
+    marker.style.top = (scene.offsetHeight * 0.45 - 22) + 'px';
+  }
+
+  // --- Draggable marker ---
+  var dragging = false, offX = 0, offY = 0;
+
+  function getBounds(){
+    var w = scene.offsetWidth, h = scene.offsetHeight;
+    return { minX: w*0.14, maxX: w*0.82, minY: h*0.1, maxY: h*0.88 };
+  }
+
+  function getZone(y, h){
+    var r = y / h;
+    if(r < 0.36) return '表象 (Surface)';
+    if(r < 0.66) return '水面下 (Underwater)';
+    return '根源 (Root)';
+  }
+
+  function startDrag(cx, cy){
+    dragging = true;
+    var rect = marker.getBoundingClientRect();
+    offX = cx - rect.left;
+    offY = cy - rect.top;
+    marker.classList.add('dragging');
+    document.body.style.userSelect = 'none';
+  }
+
+  function moveDrag(cx, cy){
+    if(!dragging) return;
+    var cr = scene.getBoundingClientRect();
+    var b = getBounds();
+    var nx = cx - cr.left - offX;
+    var ny = cy - cr.top - offY;
+    nx = Math.max(b.minX, Math.min(b.maxX, nx));
+    ny = Math.max(b.minY, Math.min(b.maxY, ny));
+    marker.style.left = nx + 'px';
+    marker.style.top = ny + 'px';
+
+    // Update label
+    label.style.left = (nx + 22) + 'px';
+    label.style.top = (ny - 34) + 'px';
+    var zone = getZone(ny + 22, scene.offsetHeight);
+    label.textContent = '🎯 ' + zone;
+    label.classList.add('visible');
+
+    state.entryPoint = {x:nx, y:ny, zone:zone};
+  }
+
+  function endDrag(){
+    if(!dragging) return;
+    dragging = false;
+    marker.classList.remove('dragging');
+    document.body.style.userSelect = '';
+    if(state.entryPoint) showResult();
+  }
+
+  marker.addEventListener('mousedown', function(e){ startDrag(e.clientX, e.clientY); e.preventDefault(); });
+  marker.addEventListener('touchstart', function(e){ startDrag(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }, {passive:false});
+  window.addEventListener('mousemove', function(e){ moveDrag(e.clientX, e.clientY); });
+  window.addEventListener('touchmove', function(e){ if(dragging){ e.preventDefault(); moveDrag(e.touches[0].clientX, e.touches[0].clientY); }}, {passive:false});
+  window.addEventListener('mouseup', endDrag);
+  window.addEventListener('touchend', endDrag);
+
+  // --- Show Result Card ---
+  function showResult(){
+    var result = el('icebergResult');
+    result.style.display = 'block';
+    setTimeout(function(){ result.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 100);
+
+    var protagonist = el('seProtagonist').textContent;
+    var plot = el('sePlot').textContent;
+    el('irSurface').textContent = protagonist + '的遭遇：' + plot;
+
+    el('irUnderwater').innerHTML = state.stakeholders.map(function(s){
+      return '<span class="tag-pill" style="font-size:12px;padding:3px 10px;margin:2px">' + s + '</span>';
+    }).join('') || '（未添加）';
+
+    var rootCauses = [];
+    if(state.whyNotSolved){
+      state.whyNotSolved.split(/[，,；;、\n]/).forEach(function(s){ if(s.trim()) rootCauses.push(s.trim()); });
+    }
+    state.triedEntries.forEach(function(e){
+      if(e.why) rootCauses.push(e.who + '尝试过但：' + e.why);
+    });
+    el('irRoot').innerHTML = rootCauses.map(function(c){
+      return '<span class="tag-pill" style="font-size:12px;padding:3px 10px;margin:2px;background:var(--blue-soft);border-color:var(--blue)">' + c + '</span>';
+    }).join('') || '（未填写）';
+
+    el('irEntry').textContent = state.entryPoint ? state.entryPoint.zone : '（未选择）';
+  }
+
+  // ==================== Submit ====================
+  el('submitIceberg').addEventListener('click', function(){
+    var btn = el('submitIceberg');
+    btn.textContent = '✅ 已提交！';
+    btn.style.background = 'var(--primary)';
+    btn.style.pointerEvents = 'none';
+
+    // Mark all steps done
+    el('stepBar').querySelectorAll('.s').forEach(function(b){
+      b.classList.remove('active');
+      b.classList.add('done');
+    });
+
+    // Build output JSON
+    var protagonist = el('seProtagonist').textContent;
+    var plot = el('sePlot').textContent;
+    var rootCauses = [];
+    if(state.whyNotSolved){
+      state.whyNotSolved.split(/[，,；;、\n]/).forEach(function(s){ if(s.trim()) rootCauses.push(s.trim()); });
+    }
+    state.triedEntries.forEach(function(e){
+      if(e.why) rootCauses.push(e.who + '尝试过但：' + e.why);
+    });
+    var output = {
+      '表象': protagonist + '的遭遇：' + plot,
+      '水面下': state.stakeholders,
+      '根源': rootCauses,
+      '切入窗口': state.entryPoint ? state.entryPoint.zone : ''
+    };
+
+    // Show celebration overlay
+    setTimeout(function(){
+      var overlay = document.createElement('div');
+      overlay.className = 'celebrate-overlay';
+      overlay.innerHTML =
+        '<div class="celebrate-card">' +
+          '<h2>🎉 问题冰山图完成！</h2>' +
+          '<p>你成功画出了自己的问题冰山，找到了切入窗口。脑波力启蒙 +1！</p>' +
+          '<div class="output-json">' + JSON.stringify(output, null, 2).replace(/</g,'&lt;') + '</div>' +
+          '<div class="cta-row">' +
+            '<a class="btn btn-ink" href="level5.html">进入第 5 关 →</a>' +
+            '<button class="btn btn-ink" style="background:var(--primary)" onclick="this.closest(\'.celebrate-overlay\').remove()">留在这里看看</button>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(overlay);
+      overlay.addEventListener('click', function(e){
+        if(e.target === overlay) overlay.remove();
+      });
+    }, 400);
+  });
+
+  // ==================== IntersectionObserver ====================
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold: 0.1});
+  document.querySelectorAll('.reveal').forEach(function(elem, i){
+    elem.style.transitionDelay = (i % 3 * 60) + 'ms';
+    io.observe(elem);
+  });
+
+})();
 </script>
 <script src="widget.js"></script>
 </body>

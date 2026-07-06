@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>第 10 关 · 小伍创客发布会 — AI5000天 负责任开发者</title>
+<meta name="description" content="沟通力绽放 · 小伍创客发布会：把你的作品讲给世界听！" />
+<link rel="icon" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@400;500;600;700;900&family=ZCOOL+KuaiLe&family=Press+Start+2P&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+/* ============ Level 10: Creator Launch ============ */
+
+/* Step bar */
+.step-bar{display:flex;gap:6px;margin:28px 0 8px;flex-wrap:wrap}
+.step-bar .s{font-size:13px;font-weight:600;color:var(--ink-mute);background:var(--surface);border:2px solid var(--line);border-radius:999px;padding:8px 16px;cursor:pointer;transition:all .2s;user-select:none}
+.step-bar .s:hover{border-color:var(--primary);color:var(--primary-deep)}
+.step-bar .s.done{color:var(--primary-deep);border-color:var(--primary);background:var(--primary-soft)}
+.step-bar .s.done::before{content:'✓ ';font-size:11px}
+.step-bar .s.active{color:#fff;background:var(--ink);border-color:var(--ink);box-shadow:var(--sh-sm)}
+
+/* Step sections */
+.step-section{display:none;padding:24px 0 8px}
+.step-section.active{display:block;animation:stepIn .35s ease}
+@keyframes stepIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* Wu bubble for each step */
+.wu-step{display:flex;align-items:flex-start;gap:12px;margin-bottom:20px}
+.wu-step .gava{width:40px;height:40px;border-radius:50%;border:2px solid var(--ink);background:url('assets/wu-13.png') center top/170% no-repeat,var(--primary-soft);flex:none}
+.wu-step .gb{background:var(--surface);border:2px solid var(--ink);border-radius:14px;padding:12px 18px;box-shadow:var(--sh-sm);font-family:var(--fun);font-size:16px;line-height:1.5}
+
+/* Demo + Impact echo */
+.echo-strip{display:flex;gap:14px;margin:20px 0 0;flex-wrap:wrap}
+.echo-card{flex:1;min-width:260px;background:var(--surface);border:2px solid var(--ink);border-radius:14px;padding:14px 18px;box-shadow:var(--sh-sm)}
+.echo-card .ec-label{font-family:var(--pixel);font-size:8px;color:var(--ink-mute);letter-spacing:1px;margin-bottom:6px}
+.echo-card .ec-v{font-size:14px;color:var(--ink);line-height:1.5}
+
+/* === ① Presentation script card === */
+.script-card{background:var(--surface);border:2px solid var(--ink);border-radius:18px;padding:28px;box-shadow:var(--sh);margin-top:18px}
+.script-card h3{font-family:var(--serif);font-weight:700;font-size:18px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.script-template{font-family:var(--serif);font-size:22px;line-height:2;color:var(--ink);background:var(--surface-warm);border:2px dashed var(--primary);border-radius:14px;padding:20px 24px}
+.script-template .blank{display:inline-block;background:var(--primary-soft);border:2px solid var(--primary);border-radius:8px;padding:2px 14px;margin:0 2px;font-weight:700;color:var(--primary-deep);min-width:60px;text-align:center;cursor:pointer;transition:background .15s,border-color .15s}
+.script-template .blank.filled{background:var(--primary);color:#fff;border-color:var(--primary-deep)}
+.script-edit{margin-top:16px;display:grid;gap:12px}
+.script-field{display:flex;align-items:flex-start;gap:10px}
+.script-field label{font-size:12px;font-weight:700;letter-spacing:1px;color:var(--primary-deep);min-width:70px;padding-top:10px;flex:none}
+.script-field input{flex:1;border:2px solid var(--line);border-radius:10px;padding:10px 14px;font-family:var(--sans);font-size:15px;outline:none;transition:border-color .2s}
+.script-field input:focus{border-color:var(--primary)}
+
+/* === ② Recording UI === */
+.record-zone{margin-top:18px;text-align:center}
+.record-panel{background:var(--ink);border:3px solid var(--ink);border-radius:22px;padding:32px 24px;color:#fff;max-width:420px;margin:0 auto;position:relative;overflow:hidden}
+.record-panel::before{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;background:var(--primary);opacity:.15;border-radius:50%}
+.record-panel .rp-top{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:20px}
+.record-dot{width:16px;height:16px;border-radius:50%;background:var(--danger);opacity:.3;transition:opacity .3s}
+.record-dot.active{opacity:1;animation:blink 1s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.record-status{font-family:var(--fun);font-size:16px}
+.record-timer{font-family:var(--pixel);font-size:36px;letter-spacing:3px;margin-bottom:24px}
+.record-btn{font-family:var(--serif);font-weight:700;font-size:16px;border:3px solid #fff;border-radius:999px;padding:14px 36px;cursor:pointer;transition:transform .12s,box-shadow .12s,background .15s,color .15s}
+.record-btn.start{background:var(--danger);color:#fff}
+.record-btn.start:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(192,73,46,.5)}
+.record-btn.stop{background:#fff;color:var(--ink)}
+.record-btn.stop:hover{transform:translateY(-2px)}
+.record-btn.done{background:var(--primary);color:#fff;border-color:var(--primary);cursor:default;pointer-events:none}
+
+/* === ③ Work Card === */
+.work-card-wrap{margin-top:24px;display:flex;justify-content:center}
+.work-card{width:100%;max-width:480px;background:var(--surface);border:3px solid var(--ink);border-radius:22px;box-shadow:var(--sh-lg);overflow:hidden}
+.wc-header{background:var(--primary);border-bottom:3px solid var(--ink);padding:18px 24px;display:flex;align-items:center;gap:14px}
+.wc-header .wc-ava{width:48px;height:48px;border-radius:50%;border:2px solid var(--ink);background:url('assets/wu-13.png') 50% 8%/310% no-repeat,#fff;flex:none}
+.wc-header .wc-name{font-family:var(--serif);font-weight:700;color:#fff;font-size:16px}
+.wc-header .wc-tag{font-family:var(--pixel);font-size:8px;background:rgba(255,255,255,.25);color:#fff;border-radius:999px;padding:3px 10px}
+.wc-body{padding:20px 24px;display:flex;flex-direction:column;gap:14px}
+.wc-body .wc-title{font-family:var(--serif);font-weight:800;font-size:22px;color:var(--ink)}
+.wc-body .wc-slogan{font-family:var(--fun);font-size:15px;color:var(--primary-deep);background:var(--primary-soft);border-radius:999px;padding:8px 16px;display:inline-block}
+.wc-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.wc-meta-item{background:var(--surface-warm);border:2px solid var(--line);border-radius:10px;padding:10px 12px}
+.wc-meta-item .wmk{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--ink-mute)}
+.wc-meta-item .wmv{font-size:13px;font-weight:600;color:var(--ink);margin-top:3px;line-height:1.4}
+.wc-footer{border-top:2px solid var(--line);padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+.wc-footer .wc-powers{display:flex;gap:6px}
+.wc-footer .wc-pow{width:28px;height:28px;border-radius:6px;border:2px solid var(--ink);display:grid;place-items:center;font-size:14px;background:var(--surface-warm)}
+.wc-footer .wc-pow.lit{background:var(--primary);color:#fff}
+.wc-footer .wc-date{font-size:12px;color:var(--ink-mute)}
+
+/* === ④ Compliance Gate === */
+.gate-card{background:var(--surface);border:2px solid var(--ink);border-radius:18px;padding:24px;box-shadow:var(--sh);margin-top:18px}
+.gate-card h3{font-family:var(--serif);font-weight:700;font-size:18px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.gate-list{display:flex;flex-direction:column;gap:10px}
+.gate-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--surface-warm);border:2px solid var(--line);border-radius:12px;transition:border-color .2s,background .2s}
+.gate-item.pass{border-color:#10B981;background:#ECFDF5}
+.gate-item.fail{border-color:var(--danger);background:var(--danger-soft)}
+.gate-item .gi-icon{font-size:20px;flex:none}
+.gate-item .gi-text{flex:1;font-size:14px;font-weight:600}
+.gate-item .gi-toggle{width:44px;height:24px;border-radius:999px;background:var(--line);border:2px solid var(--ink);cursor:pointer;position:relative;transition:background .2s}
+.gate-item .gi-toggle.on{background:#10B981}
+.gate-item .gi-toggle::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;border:1.5px solid var(--ink);transition:left .2s}
+.gate-item .gi-toggle.on::after{left:22px}
+
+/* === ⑤ Badges + Celebration === */
+.badges-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:24px;max-width:480px;margin-left:auto;margin-right:auto}
+.badge-slot{display:flex;flex-direction:column;align-items:center;gap:8px;transition:transform .3s}
+.badge-slot .bs-icon{width:72px;height:72px;border:3px solid var(--ink);border-radius:16px;display:grid;place-items:center;font-size:32px;background:var(--surface-warm);box-shadow:var(--sh-sm);transition:all .4s;position:relative;overflow:hidden}
+.badge-slot.locked .bs-icon{opacity:.4;filter:grayscale(1)}
+.badge-slot.unlocked .bs-icon{background:var(--primary);color:#fff;animation:badgePop .5s ease}
+.badge-slot.unlocked .bs-icon::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.3) 0%,transparent 50%);border-radius:13px}
+.badge-slot.completion.unlocked .bs-icon{background:linear-gradient(135deg,var(--primary-bright),var(--primary-deep))}
+@keyframes badgePop{0%{transform:scale(.5);opacity:0}50%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
+.badge-slot .bs-name{font-size:11px;font-weight:700;color:var(--ink-mute);text-align:center}
+.badge-slot.unlocked .bs-name{color:var(--ink)}
+.badge-slot.completion .bs-name{color:var(--primary-deep)}
+
+/* Publish button */
+.publish-btn{font-family:var(--serif);font-weight:700;font-size:20px;display:inline-flex;align-items:center;gap:10px;border:3px solid var(--ink);border-radius:999px;padding:18px 40px;cursor:pointer;transition:transform .12s,box-shadow .12s,background .15s;margin-top:24px}
+.publish-btn.ready{background:var(--primary);color:#fff;box-shadow:var(--sh)}
+.publish-btn.ready:hover{transform:translateY(-3px);box-shadow:8px 8px 0 var(--ink)}
+.publish-btn.ready:active{transform:translateY(2px);box-shadow:none}
+.publish-btn.done{background:var(--primary);color:#fff;box-shadow:none;cursor:default;pointer-events:none}
+
+/* Celebration overlay */
+.celebration{position:fixed;inset:0;z-index:200;pointer-events:none;overflow:hidden}
+.confetti-piece{position:absolute;width:12px;height:12px;border-radius:2px;opacity:0;animation:confettiFall linear forwards}
+@keyframes confettiFall{
+  0%{opacity:1;transform:translateY(-20px) rotate(0deg) scale(1)}
+  80%{opacity:1}
+  100%{opacity:0;transform:translateY(100vh) rotate(720deg) scale(.5)}
+}
+
+/* Completion message */
+.complete-msg{text-align:center;margin-top:24px;padding:24px;background:var(--primary-soft);border:3px solid var(--primary);border-radius:22px;box-shadow:6px 6px 0 var(--primary);display:none}
+.complete-msg.show{display:block;animation:stepIn .5s ease}
+.complete-msg h3{font-family:var(--serif);font-weight:800;font-size:24px;color:var(--primary-deep);margin-bottom:8px}
+.complete-msg p{font-size:15px;color:var(--ink-soft);line-height:1.7;max-width:50ch;margin:0 auto 16px}
+
+/* Next step button */
+.next-step{display:inline-flex;align-items:center;gap:8px;font-family:var(--serif);font-weight:600;font-size:16px;background:var(--ink);color:#fff;border:none;border-radius:999px;padding:12px 24px;cursor:pointer;box-shadow:var(--sh-sm);margin-top:20px;transition:transform .12s,box-shadow .12s}
+.next-step:hover{transform:translateY(-2px);box-shadow:var(--sh)}
+.next-step:active{transform:translateY(1px);box-shadow:none}
+.next-step:disabled{background:var(--line);color:var(--ink-mute);box-shadow:none;cursor:not-allowed;transform:none}
+
+@media(max-width:900px){
+  .echo-strip{flex-direction:column}
+  .wc-meta{grid-template-columns:1fr}
+  .badges-grid{grid-template-columns:repeat(3,1fr);gap:12px}
+  .badge-slot .bs-icon{width:60px;height:60px;font-size:26px}
+}
+@media(max-width:600px){
+  .script-template{font-size:18px;padding:16px}
+  .badges-grid{grid-template-columns:repeat(3,1fr);gap:10px}
+  .badge-slot .bs-icon{width:52px;height:52px;font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="index.html">
+      <img class="logo" src="assets/logo.png" alt="AI5000天 标志" />
+      <div class="title-lock"><span class="n1">AI5000天</span><span class="n2">负责任开发者</span><span class="pill-tag">AI 创客 Tutor</span></div>
+    </a>
+    <div class="tabs">
+      <a href="works.html">创客作品墙</a>
+      <a href="index.html">闯关首页</a>
+      <a href="works.html">我的作品</a>
+      <a href="index.html#content">我的徽章</a>
+      <a href="map.html" class="active">闯关地图</a>
+    </div>
+    <div class="me"><span class="ava">伍</span><span>小伍创客 8023</span></div>
+  </div>
+</nav>
+
+<!-- Intro modal -->
+<div class="overlay" id="intro">
+  <div class="modal">
+    <div class="mwu"><img src="assets/wu-13.png" alt="小伍" /></div>
+    <div class="mbubble">
+      <h2>欢迎来到第 10 关 · <b>小伍创客发布会</b>！</h2>
+      <p style="color:var(--ink-soft);margin-top:8px;line-height:1.7">最后一步，把你的作品讲给世界听！我帮你搭个稿子，录一段发布，通过安全审核，然后——发布！</p>
+      <ul class="msteps">
+        <li><span class="no">1</span><span><b>演讲稿</b>：我帮你搭个稿子，填完就是你的发布会台词！</span></li>
+        <li><span class="no">2</span><span><b>录制</b>：对着稿子，录一段你的发布会！</span></li>
+        <li><span class="no">3</span><span><b>作品卡</b>：自动生成你的作品名片～</span></li>
+        <li><span class="no">4</span><span><b>安全审核</b>：系统帮你检查，确保发布合规。</span></li>
+        <li><span class="no">5</span><span><b>发布 + 徽章</b>：点亮所有五力徽章，庆祝完成！</span></li>
+      </ul>
+      <div class="goal">🎤 本关目标：完成发布会，发布你的作品，点亮全部徽章！</div>
+      <button class="btn btn-ink" id="startBtn">▶ 开始发布会</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="content wrap">
+    <a class="back" href="map.html">← 返回闯关地图</a>
+
+    <div class="lvl-head">
+      <div class="lvl-badge"><img src="assets/power-comm.png" alt="" /><span class="lv">LV 10</span></div>
+      <div>
+        <h1>小伍创客发布会</h1>
+        <p>沟通力绽放 · 把你的作品讲给世界听</p>
+      </div>
+    </div>
+
+    <!-- Step bar -->
+    <div class="step-bar" id="stepBar">
+      <span class="s active" data-step="1">① 演讲稿</span>
+      <span class="s" data-step="2">② 录制</span>
+      <span class="s" data-step="3">③ 作品卡</span>
+      <span class="s" data-step="4">④ 安全审核</span>
+      <span class="s" data-step="5">⑤ 发布</span>
+    </div>
+
+    <!-- Echo strip: Demo + Impact from level 9 -->
+    <div class="echo-strip reveal">
+      <div class="echo-card">
+        <div class="ec-label">LV 07-08 DEMO</div>
+        <div class="ec-v" id="echoDemo">一个帮助被欺凌同学识别恶意评论并自动提醒信任大人的浏览器插件</div>
+      </div>
+      <div class="echo-card">
+        <div class="ec-label">LV 09 影响力方案</div>
+        <div class="ec-v" id="echoImpact">Slogan: "让每一次恶意评论，都有一道温暖的防线" · 帮到：被欺凌的同学 · 靠学校合作持续</div>
+      </div>
+    </div>
+
+    <!-- ============ STEP 1: Presentation Script ============ -->
+    <div class="step-section active" id="step1">
+      <div class="wu-step">
+        <span class="gava"></span>
+        <span class="gb">最后一步，把你的作品讲给世界听！我帮你搭个稿子 🎤</span>
+      </div>
+
+      <div class="script-card reveal">
+        <h3>📝 我的发布会稿</h3>
+        <div class="script-template" id="scriptTemplate">
+          我看到<span class="blank" data-field="saw" id="blankSaw">__</span>，<br/>
+          所以我做了<span class="blank" data-field="made" id="blankMade">__</span>，<br/>
+          它能帮<span class="blank" data-field="help" id="blankHelp">__</span>。
+        </div>
+        <div class="script-edit">
+          <div class="script-field">
+            <label>我看到</label>
+            <input type="text" id="inputSaw" placeholder="比如：很多同学在网上被恶意评论伤害" maxlength="50" />
+          </div>
+          <div class="script-field">
+            <label>所以我做了</label>
+            <input type="text" id="inputMade" placeholder="比如：一个识别恶意评论并提醒大人的浏览器插件" maxlength="50" />
+          </div>
+          <div class="script-field">
+            <label>它能帮</label>
+            <input type="text" id="inputHelp" placeholder="比如：被欺凌的同学及时保护自己，减少心理伤害" maxlength="50" />
+          </div>
+        </div>
+      </div>
+
+      <button class="next-step" id="toStep2">下一步 →</button>
+    </div>
+
+    <!-- ============ STEP 2: Recording ============ -->
+    <div class="step-section" id="step2">
+      <div class="wu-step">
+        <span class="gava"></span>
+        <span class="gb">对着稿子，来一段你的发布会吧！点击开始录制～</span>
+      </div>
+
+      <div class="record-zone reveal">
+        <div class="record-panel">
+          <div class="rp-top">
+            <span class="record-dot" id="recDot"></span>
+            <span class="record-status" id="recStatus">准备录制</span>
+          </div>
+          <div class="record-timer" id="recTimer">00:00</div>
+          <button class="record-btn start" id="recBtn">● 开始录制</button>
+        </div>
+        <div style="margin-top:14px;font-size:13px;color:var(--ink-mute)">💡 看着你的演讲稿，想象面前坐满了人，自信地讲出来！</div>
+      </div>
+
+      <button class="next-step" id="toStep3" style="display:none">下一步 →</button>
+    </div>
+
+    <!-- ============ STEP 3: Work Card ============ -->
+    <div class="step-section" id="step3">
+      <div class="wu-step">
+        <span class="gava"></span>
+        <span class="gb">自动生成你的作品名片！看看多漂亮～</span>
+      </div>
+
+      <div class="work-card-wrap reveal">
+        <div class="work-card">
+          <div class="wc-header">
+            <div class="wc-ava"></div>
+            <div>
+              <div class="wc-name" id="wcName">小伍创客 8023</div>
+              <div class="wc-tag">作品发布</div>
+            </div>
+          </div>
+          <div class="wc-body">
+            <div class="wc-title" id="wcTitle">—</div>
+            <div class="wc-slogan" id="wcSlogan">—</div>
+            <div class="wc-meta">
+              <div class="wc-meta-item">
+                <div class="wmk">帮到的人</div>
+                <div class="wmv" id="wcHelpWho">—</div>
+              </div>
+              <div class="wc-meta-item">
+                <div class="wmk">解决的问题</div>
+                <div class="wmv" id="wcSolveWhat">—</div>
+              </div>
+              <div class="wc-meta-item">
+                <div class="wmk">持续方式</div>
+                <div class="wmv" id="wcSustain">—</div>
+              </div>
+              <div class="wc-meta-item">
+                <div class="wmk">录制时长</div>
+                <div class="wmv" id="wcDuration">—</div>
+              </div>
+            </div>
+          </div>
+          <div class="wc-footer">
+            <div class="wc-powers">
+              <span class="wc-pow" title="安全力觉醒">🛡️</span>
+              <span class="wc-pow" title="脑波力启蒙">🧠</span>
+              <span class="wc-pow" title="实感力锻造">🔨</span>
+              <span class="wc-pow" title="创心力迸发">✨</span>
+              <span class="wc-pow" title="沟通力绽放">💬</span>
+            </div>
+            <span class="wc-date" id="wcDate"></span>
+          </div>
+        </div>
+      </div>
+
+      <button class="next-step" id="toStep4">下一步 · 安全审核 →</button>
+    </div>
+
+    <!-- ============ STEP 4: Compliance Gate ============ -->
+    <div class="step-section" id="step4">
+      <div class="wu-step">
+        <span class="gava"></span>
+        <span class="gb">发布前，系统帮你做个安全检查！确保你的作品合规、安全 🛡️</span>
+      </div>
+
+      <div class="gate-card reveal">
+        <h3>🛡️ 发布合规检查</h3>
+        <div class="gate-list" id="gateList">
+          <div class="gate-item pass" data-gate="privacy">
+            <span class="gi-icon">🔒</span>
+            <span class="gi-text">隐私脱敏 — 没有真实姓名、学校、地址</span>
+            <div class="gi-toggle on" data-gate="privacy"></div>
+          </div>
+          <div class="gate-item pass" data-gate="noface">
+            <span class="gi-icon">🙅</span>
+            <span class="gi-text">不露脸优先 — 录制不包含面部画面</span>
+            <div class="gi-toggle on" data-gate="noface"></div>
+          </div>
+          <div class="gate-item pass" data-gate="noleak">
+            <span class="gi-icon">🚫</span>
+            <span class="gi-text">拦截真实姓名/学校/地址/API Key</span>
+            <div class="gi-toggle on" data-gate="noleak"></div>
+          </div>
+          <div class="gate-item pass" data-gate="parent">
+            <span class="gi-icon">👨‍👩‍👧</span>
+            <span class="gi-text">家长确认 — 家长已同意发布</span>
+            <div class="gi-toggle on" data-gate="parent"></div>
+          </div>
+        </div>
+      </div>
+
+      <button class="next-step" id="toStep5">下一步 · 发布 →</button>
+    </div>
+
+    <!-- ============ STEP 5: Publish + Badges ============ -->
+    <div class="step-section" id="step5">
+      <div class="wu-step">
+        <span class="gava"></span>
+        <span class="gb">一切就绪！点下发布按钮，让你的作品被世界看见！🐝</span>
+      </div>
+
+      <div class="badges-grid reveal" id="badgesGrid">
+        <div class="badge-slot locked" data-badge="safety">
+          <div class="bs-icon">🛡️</div>
+          <span class="bs-name">安全力觉醒</span>
+        </div>
+        <div class="badge-slot locked" data-badge="brain">
+          <div class="bs-icon">🧠</div>
+          <span class="bs-name">脑波力启蒙</span>
+        </div>
+        <div class="badge-slot locked" data-badge="sense">
+          <div class="bs-icon">🔨</div>
+          <span class="bs-name">实感力锻造</span>
+        </div>
+        <div class="badge-slot locked" data-badge="create">
+          <div class="bs-icon">✨</div>
+          <span class="bs-name">创心力迸发</span>
+        </div>
+        <div class="badge-slot locked" data-badge="comm">
+          <div class="bs-icon">💬</div>
+          <span class="bs-name">沟通力绽放</span>
+        </div>
+        <div class="badge-slot locked completion" data-badge="complete">
+          <div class="bs-icon">🏆</div>
+          <span class="bs-name">负责任创客</span>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:20px" class="reveal">
+        <button class="publish-btn ready" id="publishBtn">🚀 发布作品</button>
+      </div>
+
+      <div class="complete-msg" id="completeMsg">
+        <h3>🎉 恭喜！你完成了一次真正负责任的创造！</h3>
+        <p>从发现风险到发布作品，你走过了全部 10 关，五力徽章全部点亮！<br/>负责任开发者，就是你了！</p>
+        <a class="btn btn-ink" href="map.html">返回闯关地图 →</a>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<footer>
+  <div class="foot-in">
+    <span>© 2026 AI5000天 · 负责任开发者 AI 创客 Tutor</span>
+    <div class="foot-links"><a href="map.html">闯关地图</a><a href="states.html">设计 · 状态页</a><a href="#">隐私政策</a></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // ============ State ============
+  var state = {
+    currentStep: 1,
+    saw: '',
+    made: '',
+    help: '',
+    recSeconds: 0,
+    recStarted: false,
+    recStopped: false,
+    recInterval: null,
+    gates: { privacy: true, noface: true, noleak: true, parent: true },
+    published: false
+  };
+
+  var el = function(id){ return document.getElementById(id); };
+
+  // ============ Intro Modal ============
+  el('startBtn').addEventListener('click', function(){
+    el('intro').classList.add('hide');
+  });
+
+  // ============ Step Navigation ============
+  var totalSteps = 5;
+
+  function goToStep(n) {
+    if (n < 1 || n > totalSteps) return;
+    state.currentStep = n;
+    // Update step sections
+    for (var i = 1; i <= totalSteps; i++) {
+      var sec = el('step' + i);
+      if (sec) sec.classList.toggle('active', i === n);
+    }
+    // Update step bar
+    var bars = el('stepBar').querySelectorAll('.s');
+    bars.forEach(function(b){
+      var s = parseInt(b.getAttribute('data-step'));
+      b.classList.remove('active','done');
+      if (s < n) b.classList.add('done');
+      else if (s === n) b.classList.add('active');
+    });
+    // On entering step 3, populate work card
+    if (n === 3) populateWorkCard();
+    // On entering step 5, check gates
+    if (n === 5) checkGatesForPublish();
+    // Trigger reveal animations in new section
+    var sec = el('step' + n);
+    if (sec) {
+      sec.querySelectorAll('.reveal').forEach(function(r){ r.classList.add('in'); });
+      sec.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  }
+
+  // Click step bar
+  el('stepBar').addEventListener('click', function(e){
+    var s = e.target.closest('.s');
+    if (s) {
+      var n = parseInt(s.getAttribute('data-step'));
+      if (n <= state.currentStep) goToStep(n);
+    }
+  });
+
+  // ============ Validation helpers ============
+  function shakeElement(elem) {
+    elem.style.animation = 'none';
+    elem.offsetHeight;
+    elem.style.animation = 'shake .4s ease';
+    setTimeout(function(){ elem.style.animation = ''; }, 500);
+  }
+
+  var shakeStyle = document.createElement('style');
+  shakeStyle.textContent = '@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}';
+  document.head.appendChild(shakeStyle);
+
+  // ============ STEP 1: Script live update ============
+  var inputSaw = el('inputSaw');
+  var inputMade = el('inputMade');
+  var inputHelp = el('inputHelp');
+  var blankSaw = el('blankSaw');
+  var blankMade = el('blankMade');
+  var blankHelp = el('blankHelp');
+
+  function updateBlank(input, blank) {
+    var v = input.value.trim();
+    blank.textContent = v || '__';
+    blank.classList.toggle('filled', !!v);
+    // Update state
+    state.saw = inputSaw.value.trim();
+    state.made = inputMade.value.trim();
+    state.help = inputHelp.value.trim();
+  }
+
+  inputSaw.addEventListener('input', function(){ updateBlank(inputSaw, blankSaw); });
+  inputMade.addEventListener('input', function(){ updateBlank(inputMade, blankMade); });
+  inputHelp.addEventListener('input', function(){ updateBlank(inputHelp, blankHelp); });
+
+  el('toStep2').addEventListener('click', function(){
+    if (!state.saw) { shakeElement(inputSaw); return; }
+    if (!state.made) { shakeElement(inputMade); return; }
+    if (!state.help) { shakeElement(inputHelp); return; }
+    goToStep(2);
+  });
+
+  // ============ STEP 2: Recording ============
+  var recDot = el('recDot');
+  var recStatus = el('recStatus');
+  var recTimer = el('recTimer');
+  var recBtn = el('recBtn');
+
+  function formatTime(sec) {
+    var m = Math.floor(sec / 60);
+    var s = sec % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  recBtn.addEventListener('click', function(){
+    if (!state.recStarted) {
+      // Start recording
+      state.recStarted = true;
+      state.recSeconds = 0;
+      recDot.classList.add('active');
+      recStatus.textContent = '录制中…';
+      recBtn.textContent = '■ 停止录制';
+      recBtn.className = 'record-btn stop';
+      recTimer.textContent = '00:00';
+
+      state.recInterval = setInterval(function(){
+        state.recSeconds++;
+        recTimer.textContent = formatTime(state.recSeconds);
+      }, 1000);
+
+    } else if (!state.recStopped) {
+      // Stop recording
+      state.recStopped = true;
+      clearInterval(state.recInterval);
+      recDot.classList.remove('active');
+      recStatus.textContent = '录制完成 ✓';
+      recBtn.textContent = '✅ 已录制';
+      recBtn.className = 'record-btn done';
+
+      el('toStep3').style.display = 'inline-flex';
+    }
+  });
+
+  el('toStep3').addEventListener('click', function(){
+    goToStep(3);
+  });
+
+  // ============ STEP 3: Work Card ============
+  function populateWorkCard() {
+    // Title from "made"
+    el('wcTitle').textContent = state.made || '我的作品';
+    // Slogan (from level 9 echo, use placeholder)
+    el('wcSlogan').textContent = '"让每一次恶意评论，都有一道温暖的防线"';
+    // Help who
+    el('wcHelpWho').textContent = state.help || '—';
+    // Solve what (from saw)
+    el('wcSolveWhat').textContent = state.saw || '—';
+    // Sustain (placeholder from level 9)
+    el('wcSustain').textContent = '学校合作推广';
+    // Duration
+    el('wcDuration').textContent = formatTime(state.recSeconds);
+    // Date
+    var now = new Date();
+    el('wcDate').textContent = now.getFullYear() + '.' + (now.getMonth()+1 < 10 ? '0' : '') + (now.getMonth()+1) + '.' + (now.getDate() < 10 ? '0' : '') + now.getDate();
+  }
+
+  el('toStep4').addEventListener('click', function(){
+    goToStep(4);
+  });
+
+  // ============ STEP 4: Compliance Gate ============
+  el('gateList').addEventListener('click', function(e){
+    var toggle = e.target.closest('.gi-toggle');
+    if (!toggle) return;
+    var gate = toggle.getAttribute('data-gate');
+    var isOn = toggle.classList.contains('on');
+
+    if (isOn) {
+      toggle.classList.remove('on');
+      state.gates[gate] = false;
+      // Find parent gate-item and set to fail
+      var item = toggle.closest('.gate-item');
+      item.classList.remove('pass');
+      item.classList.add('fail');
+    } else {
+      toggle.classList.add('on');
+      state.gates[gate] = true;
+      var item = toggle.closest('.gate-item');
+      item.classList.remove('fail');
+      item.classList.add('pass');
+    }
+  });
+
+  el('toStep5').addEventListener('click', function(){
+    goToStep(5);
+  });
+
+  // ============ STEP 5: Publish + Badges ============
+  function checkGatesForPublish() {
+    var allPass = Object.keys(state.gates).every(function(k){ return state.gates[k]; });
+    var pubBtn = el('publishBtn');
+    if (allPass && !state.published) {
+      pubBtn.className = 'publish-btn ready';
+      pubBtn.textContent = '🚀 发布作品';
+    } else if (!allPass) {
+      pubBtn.className = 'publish-btn ready';
+      pubBtn.textContent = '🚀 发布作品（有待通过项）';
+    }
+  }
+
+  el('publishBtn').addEventListener('click', function(){
+    if (state.published) return;
+
+    state.published = true;
+
+    // Change button
+    var pubBtn = el('publishBtn');
+    pubBtn.className = 'publish-btn done';
+    pubBtn.textContent = '✅ 已发布！';
+
+    // Mark all steps done
+    var bars = el('stepBar').querySelectorAll('.s');
+    bars.forEach(function(b){ b.classList.remove('active'); b.classList.add('done'); });
+
+    // Unlock badges one by one
+    var badges = el('badgesGrid').querySelectorAll('.badge-slot');
+    var badgeOrder = ['safety','brain','sense','create','comm','complete'];
+    badgeOrder.forEach(function(key, idx){
+      setTimeout(function(){
+        var slot = el('badgesGrid').querySelector('.badge-slot[data-badge="'+key+'"]');
+        if (slot) {
+          slot.classList.remove('locked');
+          slot.classList.add('unlocked');
+        }
+      }, 300 + idx * 350);
+    });
+
+    // Celebration confetti
+    setTimeout(function(){
+      launchConfetti();
+    }, 300);
+
+    // Show completion message after badges
+    setTimeout(function(){
+      el('completeMsg').classList.add('show');
+      el('completeMsg').scrollIntoView({behavior:'smooth', block:'center'});
+    }, 300 + 6 * 350 + 400);
+
+    // Light up work card power icons
+    document.querySelectorAll('.wc-pow').forEach(function(p){ p.classList.add('lit'); });
+  });
+
+  // ============ Confetti ============
+  function launchConfetti() {
+    var container = document.createElement('div');
+    container.className = 'celebration';
+    document.body.appendChild(container);
+
+    var colors = ['#F5871F','#7FC4E3','#C0492E','#10B981','#8B5CF6','#FCE8CE','#FFA94D','#B85C09'];
+    var totalPieces = 80;
+
+    for (var i = 0; i < totalPieces; i++) {
+      (function(idx){
+        setTimeout(function(){
+          var piece = document.createElement('div');
+          piece.className = 'confetti-piece';
+          piece.style.left = (Math.random() * 100) + '%';
+          piece.style.top = '-20px';
+          piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+          piece.style.width = (8 + Math.random() * 10) + 'px';
+          piece.style.height = (8 + Math.random() * 10) + 'px';
+          piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+          piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+          piece.style.animationDelay = '0s';
+          container.appendChild(piece);
+        }, idx * 30);
+      })(i);
+    }
+
+    // Remove after animation
+    setTimeout(function(){
+      container.remove();
+    }, 6000);
+  }
+
+  // ============ Intersection Observer for reveal animations ============
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold: 0.1});
+  document.querySelectorAll('.reveal').forEach(function(elem, i){
+    elem.style.transitionDelay = (i % 3 * 60) + 'ms';
+    io.observe(elem);
+  });
+
+})();
+</script>
+<script src="widget.js"></script>
+</body>
+</html>
