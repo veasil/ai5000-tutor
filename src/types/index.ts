@@ -279,6 +279,7 @@ export const Level9OutputSchema = z.object({
   slogan: z.string(),                          // slogan
   sustainedImpact: z.string().optional(),      // 持续影响力（商业闭环，少年版可省）
   stakeholderAnalysis: z.string().optional(),  // 利益相关方分析
+  safetyReport: z.record(z.unknown()).optional(), // 责任检查报告（系统生成）
 });
 export type Level9Output = z.infer<typeof Level9OutputSchema>;
 

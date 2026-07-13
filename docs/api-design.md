@@ -792,15 +792,25 @@ NextAuth v5 catch-all 路由，覆盖家长/运营登录、注册、登出、ses
 
 **所属五力**：沟通力绽放 ｜ **模板**：C ｜ **解锁**：完成第8关 ｜ **特殊**：发布前强制安全检查
 
-**请求体**（`Level9OutputSchema` partial）：
+**MVP 当前实现**：
+- 页面：`/journey/[journeyId]/level/9`
+- 端点：`POST /api/journey/[journeyId]/level/9`
+- 当前最小表单收集 `realImpact`、`spreadImpact`、`slogan`、可选 `sustainedImpact` 与 `stakeholderAnalysis`
+- 前端强制勾选 `safetyCommitment`，服务端生成 `safetyReport.mode = "mvp_self_check"` 写入 Journey
+- 提交后继续走统一 `advanceLevel`，完成第9关时触发 `publishStatus: DRAFT -> REVIEWING`
+- 页面内提供最小 AI Tutor 提问框，调用 `POST /api/tutor/[journeyId]`
+
+**MVP 请求体**（`Level9CompleteRequestSchema`）：
 
 ```typescript
 {
-  realImpact?: string,                        // 真实影响力（>= 5 字）
-  spreadImpact?: string,                      // 传播影响力
-  slogan?: string,                            // slogan
+  demoUrl?: string,                           // Demo URL（用于责任检查报告回溯）
+  realImpact: string,                         // 真实影响力（>= 5 字）
+  spreadImpact: string,                       // 传播影响力
+  slogan: string,                             // slogan
   sustainedImpact?: string,                   // 持续影响力（商业闭环，少年版可省）
-  stakeholderAnalysis?: string                // 利益相关方分析（可选）
+  stakeholderAnalysis?: string,               // 利益相关方分析（可选）
+  safetyCommitment: true                      // 创作者责任确认；后端据此生成 safetyReport
 }
 ```
 
