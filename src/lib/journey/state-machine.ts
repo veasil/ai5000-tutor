@@ -3,15 +3,14 @@
 // 与 CLAUDE.md 约定对齐：不可跳关、第9关强制安全检查、publishStatus 状态转移
 
 import { prisma } from "@/lib/db";
-import type { Journey } from "@prisma/client";
-import { FivePowerSchema, PublishStatusSchema } from "@/types";
+import type { Journey, $Enums } from "@prisma/client";
 import { getLevelConfig, validateLevelOutput } from "./level-configs";
 
 // ═══════════════════════════════════════════════════════════════════
 // 关卡 → 五力映射（与 spec 对齐）
 // ═══════════════════════════════════════════════════════════════════
 
-export const LEVEL_TO_POWER: Record<number, string> = {
+export const LEVEL_TO_POWER: Record<number, $Enums.FivePower> = {
   1: "SAFETY",        // 安全力觉醒
   2: "SAFETY",        // 安全力觉醒
   3: "SENSING",       // 实感力锻造
@@ -190,7 +189,7 @@ export async function advanceLevel(
   const nextPower = LEVEL_TO_POWER[nextLevel];
 
   // 5. publishStatus 转移
-  let publishStatus: string = journey.publishStatus;
+  let publishStatus: $Enums.PublishStatus = journey.publishStatus;
   if (completedLevel === 9) {
     // 第9关通过后，从 DRAFT → REVIEWING（安全审核通过才能发布）
     if (journey.publishStatus === "DRAFT") {
@@ -205,8 +204,8 @@ export async function advanceLevel(
       data: {
         completedLevels: { push: completedLevel },
         currentLevel: nextLevel,
-        currentPower: nextPower as keyof typeof FivePowerSchema,
-        publishStatus: publishStatus as keyof typeof PublishStatusSchema,
+        currentPower: nextPower,
+        publishStatus,
         ...output,
         updatedAt: new Date(),
       },
@@ -269,7 +268,7 @@ export async function saveLevelOutput(
  *   DRAFT ──→ APPROVED     （必须先过第9关审核）
  *   APPROVED ──→ *         （终态，不可回退）
  */
-const ALLOWED_PUBLISH_TRANSITIONS: Record<string, string[]> = {
+const ALLOWED_PUBLISH_TRANSITIONS: Record<$Enums.PublishStatus, $Enums.PublishStatus[]> = {
   DRAFT: ["REVIEWING"],
   REVIEWING: ["APPROVED", "REJECTED"],
   REJECTED: ["REVIEWING", "DRAFT"],
@@ -280,8 +279,8 @@ const ALLOWED_PUBLISH_TRANSITIONS: Record<string, string[]> = {
  * 检查 publishStatus 转移是否合法
  */
 export function canTransitionPublishStatus(
-  from: string,
-  to: string
+  from: $Enums.PublishStatus,
+  to: $Enums.PublishStatus
 ): { allowed: boolean; reason?: string } {
   const allowed = ALLOWED_PUBLISH_TRANSITIONS[from];
   if (!allowed || !allowed.includes(to)) {
@@ -305,7 +304,7 @@ export function canTransitionPublishStatus(
  */
 export async function transitionPublishStatus(
   journeyId: string,
-  newStatus: string
+  newStatus: $Enums.PublishStatus
 ): Promise<Journey> {
   const journey = await prisma.journey.findUniqueOrThrow({
     where: { id: journeyId },
@@ -334,7 +333,7 @@ export async function transitionPublishStatus(
     prisma.journey.update({
       where: { id: journeyId },
       data: {
-        publishStatus: newStatus as keyof typeof PublishStatusSchema,
+        publishStatus: newStatus,
         updatedAt: new Date(),
       },
     }),

@@ -18,24 +18,24 @@ datasource db {
 /// 年龄段
 enum AgeStage {
   ENLIGHTENMENT // 启蒙期 6-8岁
-  GROWTH        // 成长期 9-12岁
-  YOUTH         // 青春期 13-15岁
+  GROWTH // 成长期 9-12岁
+  YOUTH // 青春期 13-15岁
 }
 
 /// 游玩模式
 enum PlayMode {
-  OBSERVER   // 小小观察员 6-8岁
-  CREATOR    // AI创想家 9-12岁
-  DEVELOPER  // 负责任开发者 13-15岁
-  FAMILY     // 家庭共创
+  OBSERVER // 小小观察员 6-8岁
+  CREATOR // AI创想家 9-12岁
+  DEVELOPER // 负责任开发者 13-15岁
+  FAMILY // 家庭共创
 }
 
 /// 五力框架
 enum FivePower {
-  SAFETY        // 安全力觉醒
-  SENSING       // 实感力锻造
-  BRAINWAVE     // 脑波力启蒙
-  CREATIVITY    // 创心力迸发
+  SAFETY // 安全力觉醒
+  SENSING // 实感力锻造
+  BRAINWAVE // 脑波力启蒙
+  CREATIVITY // 创心力迸发
   COMMUNICATION // 沟通力绽放
 }
 
@@ -43,16 +43,16 @@ enum FivePower {
 /// 转移路径：DRAFT → REVIEWING → APPROVED / REJECTED
 /// REJECTED → REVIEWING（重新提交）/ DRAFT（回到草稿）
 enum PublishStatus {
-  DRAFT      // 草稿
-  REVIEWING  // 审核中（第9关通过后才能进入）
-  APPROVED   // 审核通过（终态）
-  REJECTED   // 审核驳回（可重新提交）
+  DRAFT // 草稿
+  REVIEWING // 审核中（第9关通过后才能进入）
+  APPROVED // 审核通过（终态）
+  REJECTED // 审核驳回（可重新提交）
 }
 
 /// 孩子身份（能量判定用）
 enum ChildIdentity {
   MEMBER // 创客营成员
-  GUEST  // 游客
+  GUEST // 游客
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -61,14 +61,14 @@ enum ChildIdentity {
 
 /// 家长账号（实名，手机号注册）
 model Parent {
-  id             String              @id @default(cuid())
-  phone          String              @unique // 手机号
-  passwordHash   String                     // 加密后的密码
-  name           String?                     // 家长姓名（可选）
-  children       Child[]                     // 绑定的孩子
-  confirmations  ParentConfirmation[]        // 确认记录
-  createdAt      DateTime            @default(now())
-  updatedAt      DateTime            @updatedAt
+  id            String               @id @default(cuid())
+  phone         String               @unique // 手机号
+  passwordHash  String // 加密后的密码
+  name          String? // 家长姓名（可选）
+  children      Child[] // 绑定的孩子
+  confirmations ParentConfirmation[] // 确认记录
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
 
   @@index([phone])
 }
@@ -76,23 +76,23 @@ model Parent {
 /// 孩子账号（匿名优先，可绑定家长）
 model Child {
   id             String        @id @default(cuid())
-  anonymousName  String        // 系统生成，格式：小伍创客XXXX
-  ageStage       AgeStage               // 年龄段
+  anonymousName  String // 系统生成，格式：小伍创客XXXX
+  ageStage       AgeStage // 年龄段
   mode           PlayMode      @default(CREATOR) // 游玩模式
-  identity       ChildIdentity @default(GUEST)    // 身份：成员/游客
-  organizationId String?               // 软关联 wqt-auth-backend 的 organizations.id
+  identity       ChildIdentity @default(GUEST) // 身份：成员/游客
+  organizationId String? // 软关联 wqt-auth-backend 的 organizations.id
 
   // 家长绑定
-  parentId       String?
-  parent         Parent?       @relation(fields: [parentId], references: [id])
+  parentId String?
+  parent   Parent? @relation(fields: [parentId], references: [id])
 
   // 关联
-  journeys       Journey[]
-  energyLogs     EnergyLog[]
-  badges         Badge[]
+  journeys   Journey[]
+  energyLogs EnergyLog[]
+  badges     Badge[]
 
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([anonymousName]) // 匿名名唯一
   @@index([organizationId])
@@ -107,91 +107,91 @@ model Child {
 model Journey {
   id              String        @id @default(cuid())
   childId         String
-  currentPower    FivePower     @default(SAFETY)   // 当前五力阶段
-  currentLevel    Int           @default(1)         // 当前关卡 1-10
-  completedLevels Int[]         @default([])        // 已完成关卡列表
-  publishStatus   PublishStatus @default(DRAFT)     // 发布状态
-  safetyFlags     Json          @default("[]")      // 红灯触发记录
-  parentConfirm   Boolean       @default(false)     // 家长是否确认发布
+  currentPower    FivePower     @default(SAFETY) // 当前五力阶段
+  currentLevel    Int           @default(1) // 当前关卡 1-10
+  completedLevels Int[]         @default([]) // 已完成关卡列表
+  publishStatus   PublishStatus @default(DRAFT) // 发布状态
+  safetyFlags     Json          @default("[]") // 红灯触发记录
+  parentConfirm   Boolean       @default(false) // 家长是否确认发布
 
   // ── 第1关 · 小伍风险冒险局 ──────────────────────────────────────
-  entryChoice     String?       // "RECOMMEND" | "IDEA"
-  ideaText        String?       // 自带点子内容
-  powerScores     Json?         // {bodySafety, mentalSafety, socialSafety, economicSafety, digitalRights}
-  cardsPlayed     Json?         // [{cardId, selectedOption, customOption, powerChanges}]
-  top3Concerns    String[]      @default([])        // 关心问题 Top 3
+  entryChoice  String? // "RECOMMEND" | "IDEA"
+  ideaText     String? // 自带点子内容
+  powerScores  Json? // {bodySafety, mentalSafety, socialSafety, economicSafety, digitalRights}
+  cardsPlayed  Json? // [{cardId, selectedOption, customOption, powerChanges}]
+  top3Concerns String[] @default([]) // 关心问题 Top 3
 
   // ── 第2关 · 责任议题锁定 ──────────────────────────────────────
-  threeIssueEvals    Json?      // [{issue, fiveDim, followUps}]
-  systemRecommendation String?  // 系统推荐
-  selectedIssue      String?    // 锁定的责任议题
-  selectedIssueIndex Int?       // 选择的议题索引
+  threeIssueEvals      Json? // [{issue, fiveDim, followUps}]
+  systemRecommendation String? // 系统推荐
+  selectedIssue        String? // 锁定的责任议题
+  selectedIssueIndex   Int? // 选择的议题索引
 
   // ── 第3关 · 实感力启动 ────────────────────────────────────────
-  protagonist     String?       // 主角
-  plot            String?       // 情节
-  evidence        String?       // 证据
-  materialSources Json?         // [{method, content, followUps}]
+  protagonist     String? // 主角
+  plot            String? // 情节
+  evidence        String? // 证据
+  materialSources Json? // [{method, content, followUps}]
 
   // ── 第4关 · 问题侦探局 ────────────────────────────────────────
-  surfaceDescription  String?   // 表象
-  stakeholders        Json?     // 牵涉了谁 []
-  rootCauses          Json?     // 根源 []
-  previousAttempts    Json?     // [{who, what, whyFailed}]
-  entryWindow         String?   // 切入窗口
+  surfaceDescription String? // 表象
+  stakeholders       Json? // 牵涉了谁 []
+  rootCauses         Json? // 根源 []
+  previousAttempts   Json? // [{who, what, whyFailed}]
+  entryWindow        String? // 切入窗口
 
   // ── 第5关 · AI机制拆解局 ──────────────────────────────────────
-  mechanismDescription String?  // 议题机制描述
-  aiCanDo             Json?     // AI 能做的 []
-  aiCannotDo          Json?     // AI 不能做的 []
-  analogyDescription  String?   // 少年版比喻描述
+  mechanismDescription String? // 议题机制描述
+  aiCanDo              Json? // AI 能做的 []
+  aiCannotDo           Json? // AI 不能做的 []
+  analogyDescription   String? // 少年版比喻描述
 
   // ── 第6关 · AI共创准备站 ──────────────────────────────────────
-  modules              Json?    // 五模块作业 [{moduleId, content}]
-  simplifiedModules    Json?    // 少年版三模块
-  collaborationChecklist Json?  // 协作流程 []
-  safetyItems          Json?    // 安全项 []
-  ethicsItems          Json?    // 伦理项 []
+  modules                Json? // 五模块作业 [{moduleId, content}]
+  simplifiedModules      Json? // 少年版三模块
+  collaborationChecklist Json? // 协作流程 []
+  safetyItems            Json? // 安全项 []
+  ethicsItems            Json? // 伦理项 []
 
   // ── 第7关 · 愿景与方法站 ──────────────────────────────────────
-  vision             String?    // 愿景句
-  aiAction           String?    // AI Action
-  abcCanvas          Json?      // {A_awareness, B_behavior, C_result}
-  demoPlan           String?    // Demo 规划
-  effectVerification String?    // 效果验证标准
+  vision                 String? // 愿景句
+  aiAction               String? // AI Action
+  abcCanvas              Json? // {A_awareness, B_behavior, C_result}
+  demoPlan               String? // Demo 规划
+  effectVerification     String? // 效果验证标准
   responsibilityDecision String? // 中途责任决策点
 
   // ── 第8关 · Demo工坊 ──────────────────────────────────────────
-  demoUrl               String?  // Demo URL（EdgeOne 部署后）
-  iterations            Json?    // [{version, changes, testResult}]
-  responsibilityReview  String?  // 责任审查记录
-  engineeringCheckpoint Boolean  @default(false) // 工程审查完成
-  bodyRelaxCheckpoint   Boolean  @default(false) // 身体放松完成
-  edgeOneAssetId        String?  // EdgeOne 资产 ID
+  demoUrl               String? // Demo URL（EdgeOne 部署后）
+  iterations            Json? // [{version, changes, testResult}]
+  responsibilityReview  String? // 责任审查记录
+  engineeringCheckpoint Boolean @default(false) // 工程审查完成
+  bodyRelaxCheckpoint   Boolean @default(false) // 身体放松完成
+  edgeOneAssetId        String? // EdgeOne 资产 ID
 
   // ── 第9关 · 影响力 ────────────────────────────────────────────
-  realImpact           String?   // 真实影响力
-  spreadImpact         String?   // 传播影响力
-  slogan               String?   // slogan
-  sustainedImpact      String?   // 持续影响力（商业闭环）
-  stakeholderAnalysis  String?   // 利益相关方分析
-  safetyReport         Json?     // 责任检查报告（系统生成）
+  realImpact          String? // 真实影响力
+  spreadImpact        String? // 传播影响力
+  slogan              String? // slogan
+  sustainedImpact     String? // 持续影响力（商业闭环）
+  stakeholderAnalysis String? // 利益相关方分析
+  safetyReport        Json? // 责任检查报告（系统生成）
 
   // ── 第10关 · 小伍创客发布会 ───────────────────────────────────
-  publishScript        Json?     // {problem, solution, audience}
-  videoUrl             String?   // 录制视频 URL
-  workCardGenerated    Boolean   @default(false) // 作品卡已生成
-  allChecksPassed      Boolean   @default(false) // 发布闸口全部通过
+  publishScript     Json? // {problem, solution, audience}
+  videoUrl          String? // 录制视频 URL
+  workCardGenerated Boolean @default(false) // 作品卡已生成
+  allChecksPassed   Boolean @default(false) // 发布闸口全部通过
 
   // ── 关联 ─────────────────────────────────────────────────────
-  child          Child          @relation(fields: [childId], references: [id])
-  stateHistory   JourneyLog[]
-  conversations  Conversation[]
-  work           Work?
-  badge          Badge?
+  child         Child          @relation(fields: [childId], references: [id])
+  stateHistory  JourneyLog[]
+  conversations Conversation[]
+  work          Work?
+  badge         Badge?
 
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([childId])
   @@index([currentLevel])
@@ -200,16 +200,16 @@ model Journey {
 
 /// 状态转移日志（调试 + 家长端查看用）
 model JourneyLog {
-  id         String   @id @default(cuid())
-  journeyId  String
-  fromLevel  Int                        // 原关卡
-  toLevel    Int                        // 目标关卡
-  fromPower  String                     // 原五力（用String存enum名，便于日志）
-  toPower    String                     // 目标五力
-  trigger    String                     // 触发原因："level_complete" | "safety_flag" | "parent_confirm" | "publish_status_change:*"
-  metadata   Json?                      // 额外上下文
-  journey    Journey  @relation(fields: [journeyId], references: [id])
-  createdAt  DateTime @default(now())
+  id        String   @id @default(cuid())
+  journeyId String
+  fromLevel Int // 原关卡
+  toLevel   Int // 目标关卡
+  fromPower String // 原五力（用String存enum名，便于日志）
+  toPower   String // 目标五力
+  trigger   String // 触发原因："level_complete" | "safety_flag" | "parent_confirm" | "publish_status_change:*"
+  metadata  Json? // 额外上下文
+  journey   Journey  @relation(fields: [journeyId], references: [id])
+  createdAt DateTime @default(now())
 
   @@index([journeyId, createdAt])
 }
@@ -218,11 +218,11 @@ model JourneyLog {
 model Conversation {
   id               String   @id @default(cuid())
   journeyId        String
-  level            Int                         // 所属关卡 1-10
-  role             String                      // "user" | "assistant"
-  content          String                      // 对话内容
-  structuredOutput Json?                       // AI 从本轮提取的结构化字段
-  tokenCount       Int?                        // 本轮 token 消耗
+  level            Int // 所属关卡 1-10
+  role             String // "user" | "assistant"
+  content          String // 对话内容
+  structuredOutput Json? // AI 从本轮提取的结构化字段
+  tokenCount       Int? // 本轮 token 消耗
   journey          Journey  @relation(fields: [journeyId], references: [id])
   createdAt        DateTime @default(now())
 
@@ -235,19 +235,19 @@ model Conversation {
 
 /// 风险情景卡（第1关答题器使用，运营管理）
 model RiskCard {
-  id              String    @id @default(cuid())
-  ageStage        AgeStage                 // 适配年龄段
-  riskType        String                   // 身体安全/心理安全/社交安全/经济安全/数字权益
-  scenario        String                   // 情景描述（顶部引导语）
-  eventDescription String                  // 事件描述正文
-  question        String                   // 提问
-  options         Json                     // [{label, text, consequence, powerChanges}]
-  recommendedDemo String?                  // 推荐的 Demo 模板名
-  version         String      @default("youth") // "youth" | "junior" 版本
-  status          String      @default("active") // active | archived
-  createdBy       String?                  // 创建人（运营 ID）
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id               String   @id @default(cuid())
+  ageStage         AgeStage // 适配年龄段
+  riskType         String // 身体安全/心理安全/社交安全/经济安全/数字权益
+  scenario         String // 情景描述（顶部引导语）
+  eventDescription String // 事件描述正文
+  question         String // 提问
+  options          Json // [{label, text, consequence, powerChanges}]
+  recommendedDemo  String? // 推荐的 Demo 模板名
+  version          String   @default("youth") // "youth" | "junior" 版本
+  status           String   @default("active") // active | archived
+  createdBy        String? // 创建人（运营 ID）
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   @@index([ageStage, riskType, status])
   @@index([version])
@@ -259,16 +259,16 @@ model RiskCard {
 
 /// Demo 模板（第7/8关使用，运营管理）
 model DemoTemplate {
-  id          String   @id @default(cuid())
-  name        String                     // 模板名称
-  riskTypes   String[]                   // 适配的风险类型
-  description String                     // 模板描述
-  params      Json                       // 可配置参数及默认值
-  promptTemplate String?                 // 给 AI 的模板提示词
-  previewUrl  String?                    // 预览链接
-  status      String   @default("active") // active | archived
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String   @id @default(cuid())
+  name           String // 模板名称
+  riskTypes      String[] // 适配的风险类型
+  description    String // 模板描述
+  params         Json // 可配置参数及默认值
+  promptTemplate String? // 给 AI 的模板提示词
+  previewUrl     String? // 预览链接
+  status         String   @default("active") // active | archived
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@index([status])
 }
@@ -280,25 +280,25 @@ model DemoTemplate {
 /// 审核通过后生成的官方作品卡
 model Work {
   id                      String    @id @default(cuid())
-  journeyId               String    @unique              // 一对一关联旅程
-  title                   String                         // 作品标题
-  creatorNickname         String                         // 创作者昵称（匿名）
-  ageStage                String                         // 年龄段
-  riskTypes               String[]                       // 涉及的风险类型
-  usedPowers              String[]                       // 完成的五力列表
-  demoUrl                 String?                        // Demo 链接
-  videoUrl                String?                        // 发布会视频链接
-  responsibilityStatement String                         // 责任声明
-  slogan                  String?                        // slogan
+  journeyId               String    @unique // 一对一关联旅程
+  title                   String // 作品标题
+  creatorNickname         String // 创作者昵称（匿名）
+  ageStage                String // 年龄段
+  riskTypes               String[] // 涉及的风险类型
+  usedPowers              String[] // 完成的五力列表
+  demoUrl                 String? // Demo 链接
+  videoUrl                String? // 发布会视频链接
+  responsibilityStatement String // 责任声明
+  slogan                  String? // slogan
   publishStatus           String    @default("under_review") // under_review | approved | rejected
-  reviewNote              String?                        // 驳回原因
-  reviewedBy              String?                        // 审核人（运营 ID）
-  reviewedAt              DateTime?                      // 审核时间
-  publishedAt             DateTime?                      // 发布时间
+  reviewNote              String? // 驳回原因
+  reviewedBy              String? // 审核人（运营 ID）
+  reviewedAt              DateTime? // 审核时间
+  publishedAt             DateTime? // 发布时间
   createdAt               DateTime  @default(now())
   updatedAt               DateTime  @updatedAt
 
-  journey                 Journey   @relation(fields: [journeyId], references: [id])
+  journey Journey @relation(fields: [journeyId], references: [id])
 
   @@index([publishStatus, createdAt])
   @@index([creatorNickname])
@@ -308,10 +308,11 @@ model Work {
 model Badge {
   id        String   @id @default(cuid())
   journeyId String   @unique
-  childId   String                         // 所属孩子
+  childId   String // 所属孩子
   type      String   @default("负责任开发者") // 徽章类型
-  power     String?                         // 五力类型（五力徽章时有值）
+  power     String? // 五力类型（五力徽章时有值）
   journey   Journey  @relation(fields: [journeyId], references: [id])
+  child     Child    @relation(fields: [childId], references: [id])
   issuedAt  DateTime @default(now())
 
   @@index([childId])
@@ -325,16 +326,16 @@ model Badge {
 /// 伍力能量值变动日志
 /// 答疑/共创D选项扣1点；运营补充/开营发放增加
 model EnergyLog {
-  id          String   @id @default(cuid())
-  childId     String                        // 所属孩子
-  amount      Int                           // 变动量（正=增加，负=扣除）
-  balance     Int                           // 变动后余额
-  reason      String                        // 变动原因
-  relatedId   String?                       // 关联 ID（如 conversationId / 操作人 ID）
-  operatorId  String?                       // 操作人（运营补充时记录）
-  createdAt   DateTime @default(now())
+  id         String   @id @default(cuid())
+  childId    String // 所属孩子
+  amount     Int // 变动量（正=增加，负=扣除）
+  balance    Int // 变动后余额
+  reason     String // 变动原因
+  relatedId  String? // 关联 ID（如 conversationId / 操作人 ID）
+  operatorId String? // 操作人（运营补充时记录）
+  createdAt  DateTime @default(now())
 
-  child       Child    @relation(fields: [childId], references: [id])
+  child Child @relation(fields: [childId], references: [id])
 
   @@index([childId, createdAt])
   @@index([reason])
@@ -347,14 +348,14 @@ model EnergyLog {
 /// 家长确认记录（第10关发布闸口需要）
 model ParentConfirmation {
   id        String   @id @default(cuid())
-  parentId  String                        // 家长 ID
-  journeyId String                        // 旅程 ID
-  workId    String?                       // 作品 ID
-  approved  Boolean                       // 是否同意发布
-  note      String?                       // 家长备注
+  parentId  String // 家长 ID
+  journeyId String // 旅程 ID
+  workId    String? // 作品 ID
+  approved  Boolean // 是否同意发布
+  note      String? // 家长备注
   createdAt DateTime @default(now())
 
-  parent    Parent   @relation(fields: [parentId], references: [id])
+  parent Parent @relation(fields: [parentId], references: [id])
 
   @@unique([parentId, journeyId]) // 每个家长对每条旅程只确认一次
   @@index([parentId])
@@ -367,7 +368,7 @@ model ParentConfirmation {
 /// 系统配置键值对
 model SystemSetting {
   key         String   @id
-  value       String                        // 敏感值在应用层加密
+  value       String // 敏感值在应用层加密
   description String?
   updatedAt   DateTime @updatedAt
 }

@@ -214,10 +214,10 @@ export const LEVEL_CONFIGS: Record<number, LevelConfig> = {
     validationSchema: z.object({
       vision: z.string().min(1, "必须写愿景"),
       abcCanvas: z.object({
-        A_awareness: z.string().min(1),
-        B_behavior: z.string().min(1),
-        C_result: z.string().min(1),
-      }, "ABC三格必须填满"),
+        A_awareness: z.string().min(1, "ABC三格必须填满"),
+        B_behavior: z.string().min(1, "ABC三格必须填满"),
+        C_result: z.string().min(1, "ABC三格必须填满"),
+      }),
       demoPlan: z.string().min(1, "必须有Demo规划"),
     }),
     unlockCondition: "完成第6关",
