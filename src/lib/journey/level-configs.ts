@@ -297,7 +297,7 @@ export const LEVEL_CONFIGS: Record<number, LevelConfig> = {
       "videoUrl",              // 录制视频
       "workCardGenerated",     // 作品卡已生成
       "allChecksPassed",       // 发布闸口通过
-      "parentConfirmed",       // 家长确认
+      "parentConfirm",         // 家长确认
     ],
     validationSchema: z.object({
       publishScript: z.object({
@@ -307,7 +307,7 @@ export const LEVEL_CONFIGS: Record<number, LevelConfig> = {
       }),
       videoUrl: z.string().min(1, "必须录制视频"),
       allChecksPassed: z.literal(true, { message: "发布闸口必须全部通过" }),
-      parentConfirmed: z.literal(true, { message: "必须获得家长确认" }),
+      parentConfirm: z.literal(true, { message: "必须获得家长确认" }),
     }),
     unlockCondition: "完成第9关且通过安全审核",
     hasYouthDiff: false,

@@ -297,7 +297,7 @@ export const Level10OutputSchema = z.object({
   videoUrl: z.string(),                // 录制视频 URL
   workCardGenerated: z.boolean(),      // 作品卡已生成
   allChecksPassed: z.boolean(),        // 发布闸口通过
-  parentConfirmed: z.boolean(),        // 家长确认
+  parentConfirm: z.boolean(),          // 家长确认
 });
 export type Level10Output = z.infer<typeof Level10OutputSchema>;
 

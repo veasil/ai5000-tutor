@@ -834,19 +834,44 @@ NextAuth v5 catch-all 路由，覆盖家长/运营登录、注册、登出、ses
 
 **所属五力**：沟通力绽放 ｜ **模板**：D ｜ **解锁**：完成第9关且通过安全审核
 
-**请求体**（`Level10OutputSchema` partial）：
+**MVP 当前实现**：
+- 页面：`/journey/[journeyId]/level/10`
+- 端点：`POST /api/journey/[journeyId]/level/10`
+- 当前最小表单收集作品卡标题、三段发布会脚本、视频链接、责任声明
+- MVP 临时发布闸口要求 `workCardReady === true`、`allChecksPassed === true`、`parentConfirm === true`
+- 服务端完成第10关后生成/更新 `Work` 作品卡，发放 `Badge(type="负责任开发者")`
+- 若 Journey 仍是 `REVIEWING`，服务端将 `publishStatus` 推进到 `APPROVED`
+- 页面内提供最小 AI Tutor 提问框，调用 `POST /api/tutor/[journeyId]`
+
+**MVP 请求体**（`Level10CompleteRequestSchema`）：
 
 ```typescript
 {
-  publishScript?: {                           // 发布会脚本
+  title: string,                              // 作品卡标题（1-50字）
+  problem: string,                            // 我看到__
+  solution: string,                           // 所以我做了__
+  audience: string,                           // 它能帮__
+  videoUrl: string,                           // 录制视频 URL / 内部记录链接
+  responsibilityStatement: string,            // 责任声明（>= 10 字）
+  workCardReady: true,                        // 作品卡信息已准备好
+  allChecksPassed: true,                      // MVP 发布闸口全部通过
+  parentConfirm: true                         // MVP 临时家长确认
+}
+```
+
+**领域输出**（`Level10OutputSchema`）：
+
+```typescript
+{
+  publishScript: {                            // 发布会脚本
     problem: string,         // 我看到__
     solution: string,        // 所以我做了__
     audience: string         // 它能帮__
   },
-  videoUrl?: string,                          // 录制视频 URL
-  workCardGenerated?: boolean,                // 作品卡已生成
-  allChecksPassed?: boolean,                  // 发布闸口全部通过
-  parentConfirmed?: boolean                   // 家长确认（来自 ParentConfirmation）
+  videoUrl: string,                           // 录制视频 URL
+  workCardGenerated: boolean,                 // 作品卡已生成
+  allChecksPassed: boolean,                   // 发布闸口全部通过
+  parentConfirm: boolean                      // 家长确认
 }
 ```
 
@@ -854,13 +879,13 @@ NextAuth v5 catch-all 路由，覆盖家长/运营登录、注册、登出、ses
 - `publishScript.problem/solution/audience` 都非空
 - `videoUrl` 非空
 - `allChecksPassed === true`
-- `parentConfirmed === true`
+- `parentConfirm === true`
 
 **业务规则**：
 - 注入第8关 Demo + 第9关影响力方案（`injectsFrom: [8, 9]`）
-- `parentConfirmed` 不能由孩子端直接写入，必须通过 `POST /api/parent/confirm/[workId]`（见 §10.2）由家长确认后回填
-- `allChecksPassed` 由后端在 advance 时综合校验：Demo 可访问 + 视频存在 + 家长已确认 + 安全审核通过
-- 完成本关 -> 写入 `Badge(type="负责任开发者")`、生成 `Work` 记录、`publishStatus: REVIEWING -> APPROVED`（在运营审核 + 家长确认都满足后）
+- MVP 阶段 `parentConfirm` 由第10关临时确认勾选写入 Journey；正式版必须替换为 `POST /api/parent/confirm/[workId]`（见 §10.2）
+- MVP 阶段 `allChecksPassed` 由前端确认 + 后端 schema 校验；正式版应改为后端综合校验：Demo 可访问 + 视频存在 + 家长已确认 + 安全审核通过
+- 完成本关 -> 写入 `Badge(type="负责任开发者")`、生成/更新 `Work` 记录、`publishStatus: REVIEWING -> APPROVED`
 
 **错误码**（额外）：
 
