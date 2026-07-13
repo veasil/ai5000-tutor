@@ -664,6 +664,14 @@ NextAuth v5 catch-all 路由，覆盖家长/运营登录、注册、登出、ses
 
 **所属五力**：脑波力启蒙 ｜ **模板**：A ｜ **解锁**：完成第5关
 
+**MVP 当前实现**：
+- 页面：`/journey/[journeyId]/level/6`
+- 端点：`POST /api/journey/[journeyId]/level/6`
+- 当前最小表单收集五模块：`promptTemplate`、`testPlan`、`modularPlan`、`securityRule`、`ethicsReminder`
+- 同时收集三类清单：`collaborationText`、`safetyText`、`ethicsText`
+- 服务端生成 `modules`、`simplifiedModules`、`collaborationChecklist`、`safetyItems`、`ethicsItems`，提交后推进状态机到第7关
+- 页面内提供最小 AI Tutor 提问框，调用 `POST /api/tutor/[journeyId]`
+
 **请求体**（`Level6OutputSchema` partial）：
 
 ```typescript
