@@ -813,6 +813,12 @@ NextAuth v5 catch-all 路由，覆盖家长/运营登录、注册、登出、ses
 
 孩子在小伍答疑窗提问时调用，返回 SSE 流，含对话文本 + 结构化输出。
 
+**MVP 当前实现**：
+- 已实现 `POST /api/tutor/[journeyId]` 的 JSON 版本，先打通 `Journey -> Conversation -> lib/ai/client.ts`
+- 所有模型调用集中在 `src/lib/ai/client.ts`；Route Handler 不直接 new SDK
+- 未配置 `ANTHROPIC_API_KEY` 时返回本地 fallback 引导语，方便开发环境验证
+- 后续再把同一路径升级为 SSE 流式响应
+
 **路径参数**：`journeyId`
 
 **请求体**（`TutorChatRequestSchema`）：
