@@ -1,3 +1,5 @@
+import { StartMvpButton } from "./StartMvpButton";
+
 export default function HomePage() {
   return (
     <main
@@ -19,6 +21,7 @@ export default function HomePage() {
           Next.js 应用壳已接入早期状态机和数据库模型。第1关先嵌入 WQT
           卡牌系统，WQT 继续负责卡牌、计分和复盘，AI Tutor 负责保存旅程进度。
         </p>
+        <StartMvpButton />
         <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 28 }}>
           <a href="/journey/demo-journey/level/1">打开第1关 WQT 嵌入页</a>
           <a href="/api/health">查看 health API</a>

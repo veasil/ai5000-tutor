@@ -149,6 +149,10 @@ HTTP 端点对应的 HTTP 状态码：
 - JWT 有效期 30 天，payload 含 `childId`、`ageStage`、`identity`
 - Cookie 属性：`HttpOnly; Secure; SameSite=Lax; Max-Age=2592000`
 
+**MVP 当前实现**：
+- 已实现最小 `POST /api/auth/anonymous`，创建 `Child` 并返回 `childId`、`anonymousName`
+- `token` 暂为 `dev-child:{childId}` 占位；正式上线前替换为 JWT + HttpOnly Cookie
+
 **错误码**：
 
 | code | HTTP | 触发条件 |
@@ -225,6 +229,10 @@ NextAuth v5 catch-all 路由，覆盖家长/运营登录、注册、登出、ses
 - 调用 `createJourney(childId)`（state-machine.ts），初始化：`currentLevel=1`、`currentPower=SAFETY`、`completedLevels=[]`、`publishStatus=DRAFT`、`safetyFlags=[]`、`parentConfirm=false`
 - 同一 child 允许有未完成旅程时新建（用于"再来一局"），但 UI 应提示
 - 写一条 `JourneyLog`：`trigger="journey_created"`
+
+**MVP 当前实现**：
+- 已实现最小 `POST /api/journey/start`
+- 当前只创建 `Journey`，状态机推进日志从第1关完成后开始记录
 
 **错误码**：
 
