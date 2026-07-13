@@ -62,6 +62,11 @@ npm run dev
 
 第 1 关完成后，WQT 可以通过浏览器 `postMessage` 或 server callback 通知 AI Tutor。
 
+AI Tutor 的 iframe 嵌入页会给 WQT URL 自动追加：
+
+- `journeyId`：当前 AI Tutor 旅程 ID
+- `aitutor_origin`：父页面 origin，供 WQT `postMessage` 指定目标 origin
+
 AI Tutor 端点：
 
 ```http

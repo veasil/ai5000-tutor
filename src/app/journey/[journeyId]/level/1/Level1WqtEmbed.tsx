@@ -18,6 +18,11 @@ type WqtCompleteMessage = {
 
 export function Level1WqtEmbed({ journeyId, wqtUrl }: Level1WqtEmbedProps) {
   const [status, setStatus] = useState("请在下方完成小伍风险卡牌局。");
+  const [iframeSrc, setIframeSrc] = useState(wqtUrl);
+
+  useEffect(() => {
+    setIframeSrc(buildWqtUrl(wqtUrl, journeyId));
+  }, [journeyId, wqtUrl]);
 
   useEffect(() => {
     async function handleMessage(event: MessageEvent<WqtCompleteMessage>) {
@@ -74,7 +79,7 @@ export function Level1WqtEmbed({ journeyId, wqtUrl }: Level1WqtEmbedProps) {
       </div>
       <iframe
         title="小伍风险冒险局"
-        src={wqtUrl}
+        src={iframeSrc}
         style={{
           width: "100%",
           minHeight: "760px",
@@ -85,4 +90,15 @@ export function Level1WqtEmbed({ journeyId, wqtUrl }: Level1WqtEmbedProps) {
       />
     </section>
   );
+}
+
+function buildWqtUrl(wqtUrl: string, journeyId: string) {
+  try {
+    const url = new URL(wqtUrl, window.location.href);
+    url.searchParams.set("journeyId", journeyId);
+    url.searchParams.set("aitutor_origin", window.location.origin);
+    return url.toString();
+  } catch (_) {
+    return wqtUrl;
+  }
 }
