@@ -23,6 +23,12 @@ cp .env.example .env.local
 
 ## 3. 初始化 Prisma
 
+如果本机有 Docker，可以先启动本地 PostgreSQL：
+
+```bash
+docker compose up -d postgres
+```
+
 ```bash
 npm run prisma:generate
 npm run prisma:validate

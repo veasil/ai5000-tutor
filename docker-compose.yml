@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: ai5000-tutor-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ai5000
+      POSTGRES_PASSWORD: ai5000
+      POSTGRES_DB: ai5000_tutor
+    ports:
+      - "5432:5432"
+    volumes:
+      - ai5000_tutor_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ai5000 -d ai5000_tutor"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  ai5000_tutor_pgdata:

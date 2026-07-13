@@ -248,6 +248,11 @@ NextAuth v5 catch-all 路由，覆盖家长/运营登录、注册、登出、ses
 
 获取旅程完整状态，含最近 20 条对话、作品、徽章。
 
+**MVP 当前实现**：
+- 已实现 `GET /api/journey/[journeyId]`
+- 返回 Journey、匿名 child 基本信息、最近 20 条 conversations
+- 当前尚未接入权限中间件，正式上线前必须校验 child/parent/admin 权限
+
 **路径参数**：`id` = journeyId
 
 **查询参数**：
