@@ -589,6 +589,13 @@ NextAuth v5 catch-all 路由，覆盖家长/运营登录、注册、登出、ses
 
 **所属五力**：实感力锻造 ｜ **模板**：A ｜ **解锁**：完成第3关
 
+**MVP 当前实现**：
+- 页面：`/journey/[journeyId]/level/4`
+- 端点：`POST /api/journey/[journeyId]/level/4`
+- 当前最小表单收集 `surfaceDescription`、`stakeholdersText`、`rootCausesText`、`previousWho`、`previousWhat`、`previousWhyFailed`、`entryWindow`
+- 服务端将多行/逗号文本规范为 `stakeholders` 和 `rootCauses` 数组，提交后推进状态机到第5关
+- 页面内提供最小 AI Tutor 提问框，调用 `POST /api/tutor/[journeyId]`
+
 **请求体**（`Level4OutputSchema` partial）：
 
 ```typescript
