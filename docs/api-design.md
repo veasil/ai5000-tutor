@@ -748,6 +748,14 @@ NextAuth v5 catch-all 路由，覆盖家长/运营登录、注册、登出、ses
 
 **所属五力**：创心力迸发 ｜ **模板**：B ｜ **解锁**：完成第7关
 
+**MVP 当前实现**：
+- 页面：`/journey/[journeyId]/level/8`
+- 端点：`POST /api/journey/[journeyId]/level/8`
+- 当前最小表单收集 `demoUrl`、`iterationChanges`、`iterationTestResult`、`responsibilityReview`、可选 `edgeOneAssetId`
+- 强制勾选 `engineeringCheckpoint` 与 `bodyRelaxCheckpoint` 后才能推进
+- 服务端生成一次 `iterations` 记录，提交后推进状态机到第9关
+- 页面内提供最小 AI Tutor 提问框，调用 `POST /api/tutor/[journeyId]`
+
 **请求体**（`Level8OutputSchema` partial）：
 
 ```typescript
