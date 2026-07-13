@@ -60,8 +60,13 @@ export const LEVEL_CONFIGS: Record<number, LevelConfig> = {
       "powerScores",      // 五力了解度自评
       "cardsPlayed",      // 答题记录
       "top3Concerns",     // 关心问题 Top 3
+      "wqtSessionId",     // WQT game_sessions.id
+      "wqtReviewSnapshot", // WQT 复盘快照
+      "wqtReviewReportUrl", // WQT 复盘网页
     ],
     validationSchema: z.object({
+      wqtSessionId: z.string().min(1, "必须关联 WQT 对局"),
+      wqtReviewSnapshot: z.unknown(),
       cardsPlayed: z.array(z.unknown()).min(6, "至少完成6张答题卡"),
       top3Concerns: z.array(z.string()).length(3, "必须选定3个关心问题"),
     }),

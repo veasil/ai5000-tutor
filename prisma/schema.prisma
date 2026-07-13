@@ -115,11 +115,14 @@ model Journey {
   parentConfirm   Boolean       @default(false) // 家长是否确认发布
 
   // ── 第1关 · 小伍风险冒险局 ──────────────────────────────────────
-  entryChoice  String? // "RECOMMEND" | "IDEA"
-  ideaText     String? // 自带点子内容
-  powerScores  Json? // {bodySafety, mentalSafety, socialSafety, economicSafety, digitalRights}
-  cardsPlayed  Json? // [{cardId, selectedOption, customOption, powerChanges}]
-  top3Concerns String[] @default([]) // 关心问题 Top 3
+  entryChoice        String? // "RECOMMEND" | "IDEA"
+  ideaText           String? // 自带点子内容
+  powerScores        Json? // {bodySafety, mentalSafety, socialSafety, economicSafety, digitalRights}
+  cardsPlayed        Json? // [{cardId, selectedOption, customOption, powerChanges}]
+  top3Concerns       String[] @default([]) // 关心问题 Top 3
+  wqtSessionId       String? // wqt-auth-backend game_sessions.id
+  wqtReviewSnapshot  Json? // WQT 复盘快照（session/cards/skills/durationMs）
+  wqtReviewReportUrl String? // WQT 生成的复盘网页
 
   // ── 第2关 · 责任议题锁定 ──────────────────────────────────────
   threeIssueEvals      Json? // [{issue, fiveDim, followUps}]

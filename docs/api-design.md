@@ -449,20 +449,36 @@ NextAuth v5 catch-all 路由，覆盖家长/运营登录、注册、登出、ses
     customOption?: string,                    // D 选项自创内容
     powerChanges: Record<string, number>      // 如 { "安全力": 1, "实感力": -1 }
   }>,
-  top3Concerns?: string[]                     // 关心问题 Top 3（长度 3 时满足完成条件）
+  top3Concerns?: string[],                    // 关心问题 Top 3（长度 3 时满足完成条件）
+  wqtSessionId?: string,                      // WQT game_sessions.id
+  wqtReviewSnapshot?: {                       // WQT 复盘快照
+    session: Record<string, unknown>,
+    cards: Array<Record<string, unknown>>,
+    skills?: Array<Record<string, unknown>>,
+    durationMs?: number | null
+  },
+  wqtReviewReportUrl?: string                 // WQT 生成的复盘网页
 }
 ```
 
 **完成条件**（`validationSchema`）：
+- `wqtSessionId` 存在（引用 WQT 自己的 `game_sessions.id`）
+- `wqtReviewSnapshot` 存在（保留 WQT 原始复盘事实）
 - `cardsPlayed.length >= 6`（至少 6 张答题卡）
 - `top3Concerns.length === 3`（必须选定 3 个关心问题）
 
-**少年版差异**：仅卡池不同（用更简单的风险情景卡），schema 不变。
+**WQT 嵌入约定**：
+- WQT 继续作为第1关卡牌事实源，负责卡牌数据、选择记录、计分反馈、计分界面和复盘网页
+- AI Tutor 保存 `wqtSessionId`、`wqtReviewSnapshot`、`wqtReviewReportUrl`
+- `cardsPlayed`、`top3Concerns` 是从 WQT 快照派生出的状态机兼容字段，不作为 WQT 的事实源
+- MVP 回调端点：`POST /api/wqt/level1/complete`，请求体含 `journeyId`、`wqtSessionId`、`reviewSnapshot`、可选 `reportUrl`
+- 如配置 `WQT_CALLBACK_SECRET`，WQT 回调必须带 `X-WQT-Callback-Secret` 请求头
 
 **业务规则**：
-- `cardsPlayed` 中每张卡的 `cardId` 必须在 `RiskCard` 表中存在且 `ageStage` 匹配
-- `customOption` 仅在 `selectedOption === "D"` 时有意义，会触发能量扣减（见 §9）
-- 写入 Journey 字段：`entryChoice`、`ideaText`、`powerScores`、`cardsPlayed`、`top3Concerns`
+- 第1关页面 `/journey/[journeyId]/level/1` 通过 iframe 嵌入 WQT
+- WQT 若在浏览器侧完成，可发送 `postMessage({ type: "WQT_LEVEL1_COMPLETED", sessionId, reviewSnapshot, reportUrl })`
+- 服务端收到完成回调后调用状态机推进到第2关
+- 写入 Journey 字段：`entryChoice`、`ideaText`、`cardsPlayed`、`top3Concerns`、`wqtSessionId`、`wqtReviewSnapshot`、`wqtReviewReportUrl`
 
 ---
 

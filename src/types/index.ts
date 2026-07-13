@@ -108,12 +108,24 @@ export const CardPlayRecordSchema = z.object({
 });
 export type CardPlayRecord = z.infer<typeof CardPlayRecordSchema>;
 
+/** WQT 复盘快照（来源：wqt-auth-backend game_sessions + game_events） */
+export const WqtReviewSnapshotSchema = z.object({
+  session: z.record(z.string(), z.unknown()),
+  cards: z.array(z.record(z.string(), z.unknown())),
+  skills: z.array(z.record(z.string(), z.unknown())).optional(),
+  durationMs: z.number().nullable().optional(),
+}).passthrough();
+export type WqtReviewSnapshot = z.infer<typeof WqtReviewSnapshotSchema>;
+
 export const Level1OutputSchema = z.object({
   entryChoice: z.enum(["RECOMMEND", "IDEA"]),   // 入口选择
   ideaText: z.string().optional(),                // 自带点子内容
-  powerScores: PowerScoresSchema,                 // 五力了解度自评
+  powerScores: PowerScoresSchema.optional(),      // 旧版自评字段；WQT 接入后可由快照派生
   cardsPlayed: z.array(CardPlayRecordSchema).min(6), // 至少6张答题
   top3Concerns: z.array(z.string()).length(3),    // 关心问题 Top 3
+  wqtSessionId: z.string().min(1),                // WQT game_sessions.id
+  wqtReviewSnapshot: WqtReviewSnapshotSchema,     // WQT 复盘数据快照
+  wqtReviewReportUrl: z.string().url().optional(), // WQT 复盘网页
 });
 export type Level1Output = z.infer<typeof Level1OutputSchema>;
 
