@@ -709,6 +709,13 @@ NextAuth v5 catch-all 路由，覆盖家长/运营登录、注册、登出、ses
 
 **所属五力**：创心力迸发 ｜ **模板**：A ｜ **解锁**：完成第6关
 
+**MVP 当前实现**：
+- 页面：`/journey/[journeyId]/level/7`
+- 端点：`POST /api/journey/[journeyId]/level/7`
+- 当前最小表单收集 `vision`、`aiAction`、ABC 三格（`awareness`、`behavior`、`result`）、`demoPlan`、`effectVerification`、可选 `responsibilityDecision`
+- 服务端生成 `abcCanvas`，提交后推进状态机到第8关
+- 页面内提供最小 AI Tutor 提问框，调用 `POST /api/tutor/[journeyId]`
+
 **请求体**（`Level7OutputSchema` partial）：
 
 ```typescript
