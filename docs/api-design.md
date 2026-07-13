@@ -629,6 +629,13 @@ NextAuth v5 catch-all 路由，覆盖家长/运营登录、注册、登出、ses
 
 **所属五力**：脑波力启蒙 ｜ **模板**：A ｜ **解锁**：完成第4关
 
+**MVP 当前实现**：
+- 页面：`/journey/[journeyId]/level/5`
+- 端点：`POST /api/journey/[journeyId]/level/5`
+- 当前最小表单收集 `mechanismDescription`、`aiCanDoText`、`aiCannotDoText`、可选 `analogyDescription`
+- 服务端将多行/逗号文本规范为 `aiCanDo` 和 `aiCannotDo` 数组，提交后推进状态机到第6关
+- 页面内提供最小 AI Tutor 提问框，调用 `POST /api/tutor/[journeyId]`
+
 **请求体**（`Level5OutputSchema` partial）：
 
 ```typescript
