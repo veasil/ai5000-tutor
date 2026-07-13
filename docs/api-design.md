@@ -494,6 +494,12 @@ NextAuth v5 catch-all 路由，覆盖家长/运营登录、注册、登出、ses
 
 **所属五力**：安全力觉醒 ｜ **模板**：A ｜ **解锁**：完成第1关
 
+**MVP 当前实现**：
+- 页面：`/journey/[journeyId]/level/2`
+- 端点：`POST /api/journey/[journeyId]/level/2`
+- 当前先从第1关 `top3Concerns` 派生三议题五维评估，孩子选择 `selectedIssueIndex` 后推进状态机
+- 页面内提供最小 AI Tutor 提问框，调用 `POST /api/tutor/[journeyId]`
+
 **请求体**（`Level2OutputSchema` partial）：
 
 ```typescript

@@ -1,143 +1,123 @@
-# AI5000天 AI Tutor — 环境搭建指南
+# AI5000天 AI Tutor — MVP 环境搭建指南
 
-## 第一步：新建 Next.js 项目
+本指南对应当前仓库状态：静态原型仍保留，Next.js MVP 应用已经在仓库内初始化。
 
-```bash
-npx create-next-app@latest ai5000-tutor \
-  --typescript \
-  --tailwind \
-  --eslint \
-  --app \
-  --src-dir \
-  --import-alias "@/*"
-
-cd ai5000-tutor
-```
-
-## 第二步：安装依赖
+## 1. 安装依赖
 
 ```bash
-# 核心依赖
-npm install @prisma/client @anthropic-ai/sdk next-auth@beta zod
-
-# 开发依赖
-npm install -D prisma
-
-# UI 组件
-npx shadcn@latest init
+npm install
 ```
 
-## 第三步：初始化 Prisma
-
-```bash
-# 把 prisma/schema.prisma 放入项目根目录后
-npx prisma generate
-```
-
-## 第四步：配置环境变量
+## 2. 配置环境变量
 
 ```bash
 cp .env.example .env.local
-# 编辑 .env.local，填入真实值
 ```
 
-## 第五步：Zeabur 创建服务
+至少需要配置：
 
-在 Zeabur 控制台：
-1. 新建 Project：`ai5000-tutor`
-2. 添加 PostgreSQL 服务 → 复制 `DATABASE_URL` 到 `.env.local`
-3. 添加 Redis 服务 → 复制 `REDIS_URL` 到 `.env.local`
-4. 添加 Next.js 服务（连接 GitHub 仓库，自动部署）
+- `DATABASE_URL`：PostgreSQL 连接串。只跑 `next build` 可以用本地假连接串；真实运行写库必须填真实库。
+- `NEXT_PUBLIC_WQT_LEVEL1_URL`：第 1 关 iframe 嵌入的 WQT 页面。
+- `WQT_CALLBACK_SECRET`：可选。配置后，WQT server callback 必须带 `X-WQT-Callback-Secret`。
+- `ANTHROPIC_API_KEY`：可选。未配置时 AI Tutor 返回本地 fallback 引导语。
 
-## 第六步：首次数据库迁移
+## 3. 初始化 Prisma
 
 ```bash
-# 确认 DATABASE_URL 已填写
-npx prisma migrate dev --name init
+npm run prisma:generate
+npm run prisma:validate
 ```
 
-## 第七步：把骨架文件放入项目
+首次部署到真实 PostgreSQL：
 
-按以下路径放置本目录提供的文件：
-
-```
-项目根目录/
-├── CLAUDE.md                        ← 直接放根目录
-├── prisma/
-│   └── schema.prisma                ← 替换 create-next-app 生成的空文件
-├── .env.example                     ← 放根目录
-└── src/
-    └── lib/
-        ├── ai/
-        │   ├── client.ts
-        │   └── safety.ts
-        ├── db/
-        │   └── index.ts
-        └── journey/
-            └── state-machine.ts
+```bash
+npm run db:migrate
 ```
 
-## 第八步：接下来要创建的文件（按优先级）
+开发期如果只想快速同步 schema：
 
-交给 Claude Code 逐步完成，每次 @ CLAUDE.md：
-
-### P0 本周必须有
-
-```
-src/lib/ai/prompts/
-├── system.ts          # 小伍人格 system prompt
-├── stages/
-│   ├── level-1.ts     # 小伍风险冒险局
-│   ├── level-2.ts     # 责任议题锁定
-│   └── ...
-└── guardrails.ts      # 安全红线 prompt
-
-src/app/api/
-├── journey/
-│   ├── route.ts       # POST 创建旅程
-│   └── [id]/
-│       ├── route.ts   # GET 旅程状态
-│       └── advance/route.ts  # POST 推进关卡
-└── tutor/
-    └── [journeyId]/
-        └── route.ts   # POST 流式对话
-
-src/app/(child)/
-└── journey/
-    └── [journeyId]/
-        └── level/
-            └── [level]/
-                └── page.tsx
+```bash
+npm run db:push
 ```
 
-### P1 下一步
+## 4. 启动开发服务
 
-```
-src/app/(admin)/       # 运营后台
-src/app/(parent)/      # 家长端
-src/app/api/works/     # 作品审核
-src/app/api/safety/    # 发布前检查
+```bash
+npm run dev
 ```
 
----
+访问：
 
-## 给 Claude Code 的工作方式
+- `http://localhost:3000/`：MVP 首页
+- `http://localhost:3000/api/health`：健康检查
+- `http://localhost:3000/journey/{journeyId}/level/1`：第 1 关 WQT 嵌入页
 
-每次新开 session：
+首页的“开始 MVP 闯关”按钮会依次调用：
+
+1. `POST /api/auth/anonymous`
+2. `POST /api/journey/start`
+3. 跳转到 `/journey/{journeyId}/level/1`
+
+## 5. WQT 完成回调
+
+第 1 关完成后，WQT 可以通过浏览器 `postMessage` 或 server callback 通知 AI Tutor。
+
+AI Tutor 端点：
+
+```http
+POST /api/wqt/level1/complete
 ```
-@CLAUDE.md 现在要实现 [具体功能]，请先确认你已读完 CLAUDE.md 再开始。
+
+请求体：
+
+```json
+{
+  "journeyId": "cl...",
+  "wqtSessionId": "123",
+  "reviewSnapshot": {
+    "session": {},
+    "cards": [],
+    "skills": [],
+    "durationMs": null
+  },
+  "reportUrl": "https://..."
+}
 ```
 
-每次修完 bug：
+如果配置了 `WQT_CALLBACK_SECRET`，请求头必须包含：
+
+```http
+X-WQT-Callback-Secret: <secret>
 ```
-记录一下：[现象] [根因] [修复]
+
+## 6. 验证命令
+
+提交前至少运行：
+
+```bash
+npm run prisma:validate
+npm run build
+git diff --check
 ```
 
----
+## 7. 当前 MVP 边界
 
-## 注意事项
+已经实现：
 
-- **SQLite 已被废弃**：第一个项目用了 SQLite，本项目统一用 PostgreSQL
-- **不要用 localStorage 存游戏状态**：第一个项目踩过这个坑（多标签页串号），所有旅程状态存数据库
-- **AI 调用只走 `lib/ai/client.ts`**：禁止在 Route Handler 里直接 `new Anthropic()`
-- **Zod 校验是必须的**：所有 Server Action 入参必须 Zod parse，不要信任前端传的任何数据
+- Next.js App Router 应用壳
+- Prisma schema + 初始 migration
+- 匿名 Child 创建
+- Journey 创建
+- 第 1 关 WQT 嵌入与完成回调
+- 第 1 关完成后保存 WQT session/review 快照并推进状态机
+- 第 2 关责任议题锁定最小页面与推进端点
+- 第 3-10 关通用占位页，避免推进后 404
+- 最小 AI Tutor JSON 接口
+
+仍待实现：
+
+- 完整 JWT/NextAuth 会话与权限中间件
+- 第 3-10 关真实交互页面
+- AI Tutor 流式 SSE 与结构化输出回填
+- WQT 端正式 postMessage/server callback 配合
+- 家长端、运营端、作品发布审核
