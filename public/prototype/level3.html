@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>第 3 关 · 实感力启动 — AI5000天 负责任开发者</title>
+<meta name="description" content="脑波力启蒙 · 实感力启动：从真实经历里取材，让好点子长在真实的事上。" />
+<link rel="icon" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@400;500;600;700;900&family=ZCOOL+KuaiLe&family=Press+Start+2P&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+/* ===== Level 3 specific styles ===== */
+
+/* Topic echo bar */
+.topic-bar {
+  background: var(--primary-soft);
+  border: 2px solid var(--primary);
+  border-radius: 14px;
+  padding: 14px 20px;
+  margin: 0 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--sh-sm);
+}
+.topic-bar .topic-icon {
+  width: 36px; height: 36px; flex: none;
+  border-radius: 50%; border: 2px solid var(--ink);
+  background: var(--primary);
+  display: grid; place-items: center;
+  font-size: 18px;
+}
+.topic-bar .topic-label {
+  font-family: var(--serif); font-weight: 700; font-size: 16px; color: var(--primary-deep);
+}
+.topic-bar .topic-name {
+  font-family: var(--fun); font-size: 20px; color: var(--ink);
+}
+
+/* Research task cards */
+.task-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 18px;
+}
+.tcard {
+  background: var(--surface);
+  border: 2px solid var(--ink);
+  border-radius: 16px;
+  box-shadow: var(--sh);
+  overflow: hidden;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.tcard:hover { transform: translate(-1px, -1px); box-shadow: 6px 6px 0 var(--ink); }
+.tcard-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 2px solid transparent;
+  transition: background .15s;
+}
+.tcard.open .tcard-header { border-bottom-color: var(--ink); }
+.tcard-header:hover { background: var(--surface-warm); }
+.tcard-emoji { font-size: 28px; flex: none; }
+.tcard-title { font-family: var(--serif); font-weight: 700; font-size: 16px; flex: 1; }
+.tcard-toggle {
+  width: 28px; height: 28px; flex: none;
+  border: 2px solid var(--ink); border-radius: 50%;
+  background: var(--surface-warm);
+  display: grid; place-items: center;
+  font-size: 16px; font-weight: 700;
+  transition: transform .2s, background .15s;
+}
+.tcard.open .tcard-toggle { transform: rotate(45deg); background: var(--primary); color: #fff; }
+.tcard-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .35s ease, padding .35s ease;
+  padding: 0 18px;
+}
+.tcard.open .tcard-body {
+  max-height: 800px;
+  padding: 16px 18px 18px;
+}
+.tcard-prompt {
+  background: var(--surface-warm);
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+.tcard-prompt b { color: var(--ink); font-weight: 600; }
+
+/* Interview guide card (inside 同伴交流) */
+.interview-guide {
+  background: var(--blue-soft);
+  border: 2px solid var(--blue-deep);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 14px;
+  position: relative;
+}
+.interview-guide .ig-title {
+  font-size: 12px; font-weight: 700; color: var(--blue-deep);
+  letter-spacing: 1px; margin-bottom: 8px;
+}
+.interview-guide .ig-text {
+  font-size: 14px; color: var(--ink); line-height: 1.7;
+}
+.interview-guide .copy-btn {
+  position: absolute; top: 10px; right: 10px;
+  background: var(--ink); color: #fff;
+  border: none; border-radius: 999px;
+  padding: 5px 12px; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: transform .12s;
+}
+.interview-guide .copy-btn:hover { transform: translateY(-1px); }
+.interview-guide .copy-btn.copied { background: var(--primary); }
+
+/* Textarea for task cards */
+.task-textarea {
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-family: var(--sans);
+  font-size: 14px;
+  width: 100%;
+  outline: none;
+  resize: vertical;
+  min-height: 72px;
+  transition: border-color .2s;
+}
+.task-textarea:focus { border-color: var(--primary); }
+.task-textarea::placeholder { color: var(--ink-mute); }
+.task-label {
+  font-size: 12px; font-weight: 700;
+  color: var(--primary-deep);
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Safety badge for 网络浏览 */
+.safety-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--danger-soft); border: 1.5px solid var(--danger);
+  border-radius: 999px; padding: 3px 10px;
+  font-size: 11px; font-weight: 700; color: var(--danger);
+  margin-top: 8px;
+}
+
+/* Follow-up section */
+.followups {
+  margin-top: 24px;
+}
+.followup-round {
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity .4s ease, transform .4s ease;
+}
+.followup-round.visible {
+  opacity: 1;
+  transform: none;
+}
+.followup-round.answered {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+.followup-question {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin-bottom: 10px;
+}
+.followup-question .fq-ava {
+  width: 32px; height: 32px; flex: none;
+  border-radius: 50%; border: 2px solid var(--ink);
+  background: url('assets/wu-13.png') center top/170% no-repeat, var(--primary-soft);
+}
+.followup-question .fq-text {
+  background: var(--surface-warm);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  border-top-left-radius: 4px;
+  padding: 8px 12px;
+  font-family: var(--fun);
+  font-size: 14px;
+  line-height: 1.6;
+  box-shadow: var(--sh-sm);
+}
+.followup-input {
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-family: var(--sans);
+  font-size: 14px;
+  width: 100%;
+  outline: none;
+  resize: vertical;
+  min-height: 56px;
+}
+.followup-input:focus { border-color: var(--primary); }
+.followup-answer {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1.5px solid var(--primary);
+  border-radius: 10px;
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+/* Submit / story card section */
+.story-section {
+  margin-top: 32px;
+}
+.story-card {
+  background: var(--surface);
+  border: 3px solid var(--ink);
+  border-radius: 20px;
+  box-shadow: var(--sh-lg);
+  overflow: hidden;
+}
+.story-card-header {
+  background: var(--primary);
+  border-bottom: 3px solid var(--ink);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.story-card-header .sc-icon {
+  width: 48px; height: 48px; flex: none;
+  border-radius: 50%; border: 2px solid var(--ink);
+  background: #fff;
+  display: grid; place-items: center;
+  font-size: 24px;
+}
+.story-card-header h3 {
+  font-family: var(--serif); font-weight: 800; font-size: 22px; color: #fff;
+}
+.story-card-body {
+  padding: 24px;
+}
+.story-field {
+  margin-bottom: 18px;
+}
+.story-field .sf-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  color: var(--ink-mute); margin-bottom: 4px;
+}
+.story-field .sf-value {
+  font-size: 16px; font-weight: 600; color: var(--ink); line-height: 1.6;
+}
+.story-field .sf-value.empty {
+  color: var(--ink-mute); font-style: italic; font-weight: 400;
+}
+.story-sources {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.source-tag {
+  font-size: 12px; font-weight: 600;
+  background: var(--primary-soft); border: 1.5px solid var(--primary);
+  border-radius: 999px; padding: 4px 12px; color: var(--primary-deep);
+}
+.source-tag.pending {
+  background: var(--surface-warm); border-color: var(--line); color: var(--ink-mute);
+}
+
+/* CTA area */
+.lvl-cta { margin-top: 20px; }
+.status { font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--ink-soft); margin-left: 12px; }
+
+/* Empty state for story card */
+.story-empty {
+  text-align: center;
+  padding: 32px 24px;
+  color: var(--ink-mute);
+}
+.story-empty .se-icon { font-size: 48px; margin-bottom: 12px; }
+.story-empty p { font-family: var(--fun); font-size: 15px; }
+
+/* Completed state */
+.task-done-indicator {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--primary); color: #fff;
+  border-radius: 999px; padding: 2px 10px;
+  font-size: 12px; font-weight: 700;
+  margin-left: 8px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .task-cards { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="index.html">
+      <img class="logo" src="assets/logo.png" alt="AI5000天 标志" />
+      <div class="title-lock"><span class="n1">AI5000天</span><span class="n2">负责任开发者</span><span class="pill-tag">AI 创客 Tutor</span></div>
+    </a>
+    <div class="tabs">
+      <a href="works.html">创客作品墙</a>
+      <a href="index.html">闯关首页</a>
+      <a href="works.html">我的作品</a>
+      <a href="index.html#content">我的徽章</a>
+      <a href="map.html" class="active">闯关地图</a>
+    </div>
+    <div class="me"><span class="ava">伍</span><span>小伍创客 8023</span></div>
+  </div>
+</nav>
+
+<!-- Intro modal -->
+<div class="overlay" id="intro">
+  <div class="modal">
+    <div class="mwu"><img src="assets/wu-13.png" alt="小伍" /></div>
+    <div class="mbubble">
+      <h2>欢迎来到第 3 关 · <b>实感力启动</b>！</h2>
+      <p style="color:var(--ink-soft);margin-top:8px;line-height:1.7">好点子要长在真实的事上。这一关，我陪你从真实的经历和观察里「取材」——</p>
+      <ul class="msteps">
+        <li><span class="no">1</span><span><b>介绍</b>：想想关于「网络欺凌」——你关注过什么？</span></li>
+        <li><span class="no">2</span><span><b>调研取材</b>：挑几种方式去收集真实素材。</span></li>
+        <li><span class="no">3</span><span><b>深度追问</b>：把每条素材挖得更具体、更有证据。</span></li>
+        <li><span class="no">4</span><span><b>生成故事卡</b>：把素材合在一起，让故事有血有肉！</span></li>
+      </ul>
+      <div class="goal">🎯 本关目标：完成取材 + 追问，生成你的实感故事卡。</div>
+      <button class="btn btn-ink" id="startBtn">▶ 开始取材</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="content wrap">
+    <a class="back" href="map.html">← 返回闯关地图</a>
+
+    <div class="lvl-head">
+      <div class="lvl-badge"><img src="assets/power-brain.png" alt="" /><span class="lv">LV 03</span></div>
+      <div>
+        <h1>实感力启动</h1>
+        <p>脑波力启蒙 · 让好点子长在真实的事上</p>
+      </div>
+    </div>
+
+    <div class="steps" id="stepBar">
+      <span class="step done" data-step="1">① 介绍</span>
+      <span class="step active" data-step="2">② 调研取材</span>
+      <span class="step" data-step="3">③ 深度追问</span>
+      <span class="step" data-step="4">④ 生成故事卡</span>
+    </div>
+
+    <!-- Topic echo bar -->
+    <div class="topic-bar reveal">
+      <div class="topic-icon">🐝</div>
+      <div>
+        <div class="topic-label">你的议题</div>
+        <div class="topic-name" id="topicName">网络欺凌</div>
+      </div>
+    </div>
+
+    <!-- ① Introduction -->
+    <div class="guide reveal"><span class="gava"></span><span class="gb">好点子要长在真实的事上。🐝 先想想：关于「<b id="topicEcho1">网络欺凌</b>」——你关注过什么？经历过什么？见过别人经历什么？</span></div>
+
+    <!-- ② Research Task Cards -->
+    <div class="guide reveal"><span class="gava"></span><span class="gb">想不起来也没关系，挑几种方式去「取材」👇</span></div>
+
+    <div class="task-cards reveal">
+
+      <!-- Card: 自己回忆 -->
+      <div class="tcard" id="cardMemory">
+        <div class="tcard-header" onclick="toggleCard('cardMemory')">
+          <span class="tcard-emoji">🧠</span>
+          <span class="tcard-title">自己回忆</span>
+          <span class="tcard-toggle">+</span>
+        </div>
+        <div class="tcard-body">
+          <div class="tcard-prompt">闭上眼想一想：<b>①</b> 最近一次是什么时候？<b>②</b> 当时你身体/心里什么感觉？<b>③</b> 谁在场？</div>
+          <label class="task-label">写下你的回忆…</label>
+          <textarea class="task-textarea" id="inputMemory" placeholder="那次…我当时感觉…旁边有…" oninput="onTaskInput('memory')"></textarea>
+        </div>
+      </div>
+
+      <!-- Card: 同伴交流 -->
+      <div class="tcard" id="cardInterview">
+        <div class="tcard-header" onclick="toggleCard('cardInterview')">
+          <span class="tcard-emoji">👥</span>
+          <span class="tcard-title">同伴交流</span>
+          <span class="tcard-toggle">+</span>
+        </div>
+        <div class="tcard-body">
+          <div class="interview-guide" id="interviewGuide">
+            <div class="ig-title">📋 采访指南卡</div>
+            <div class="ig-text" id="interviewGuideText">问问同学：你遇到过 <b>网络欺凌</b> 吗？当时怎么办的？后来呢？</div>
+            <button class="copy-btn" id="copyGuideBtn" onclick="copyGuide()">复制</button>
+          </div>
+          <label class="task-label">同伴说了什么…</label>
+          <textarea class="task-textarea" id="inputInterview" placeholder="TA 说…" oninput="onTaskInput('interview')"></textarea>
+        </div>
+      </div>
+
+      <!-- Card: 社区调研 -->
+      <div class="tcard" id="cardSurvey">
+        <div class="tcard-header" onclick="toggleCard('cardSurvey')">
+          <span class="tcard-emoji">🏘️</span>
+          <span class="tcard-title">社区调研</span>
+          <span class="tcard-toggle">+</span>
+        </div>
+        <div class="tcard-body">
+          <div class="tcard-prompt">去观察/问 2-3 个人：这个问题在你身边发生过吗？谁受影响最大？</div>
+          <label class="task-label">观察笔记…</label>
+          <textarea class="task-textarea" id="inputSurvey" placeholder="我问了…他们说…" oninput="onTaskInput('survey')"></textarea>
+        </div>
+      </div>
+
+      <!-- Card: 网络浏览 -->
+      <div class="tcard" id="cardWeb">
+        <div class="tcard-header" onclick="toggleCard('cardWeb')">
+          <span class="tcard-emoji">🌐</span>
+          <span class="tcard-title">网络浏览</span>
+          <span class="tcard-toggle">+</span>
+        </div>
+        <div class="tcard-body">
+          <div class="tcard-prompt">搜这个议题时，看看：谁在讨论？有没有真实的人受影响？记下来源。</div>
+          <div class="safety-badge">🔴 内容安全：不要点开让你不舒服的链接</div>
+          <label class="task-label" style="margin-top:12px">查到什么 + 来源…</label>
+          <textarea class="task-textarea" id="inputWeb" placeholder="我在…上看到…" oninput="onTaskInput('web')"></textarea>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ③ Follow-up Questions -->
+    <div class="followups" id="followupSection">
+      <div class="guide reveal"><span class="gava"></span><span class="gb">素材收到啦！我来帮你挖得更深一点 👇</span></div>
+      <div id="followupContainer"></div>
+    </div>
+
+    <!-- ④ Story Card -->
+    <div class="story-section reveal" id="storySection">
+      <div class="guide"><span class="gava"></span><span class="gb">一个有血有肉的故事就立起来了！🐝</span></div>
+
+      <div class="story-card" id="storyCard">
+        <div class="story-empty" id="storyEmpty">
+          <div class="se-icon">📝</div>
+          <p>先完成取材和追问，你的实感故事卡就在这里生成！</p>
+        </div>
+        <div id="storyContent" style="display:none">
+          <div class="story-card-header">
+            <div class="sc-icon">📖</div>
+            <h3>我的实感故事卡</h3>
+          </div>
+          <div class="story-card-body">
+            <div class="story-field">
+              <div class="sf-label">主角</div>
+              <div class="sf-value" id="storyProtagonist">—</div>
+            </div>
+            <div class="story-field">
+              <div class="sf-label">情节</div>
+              <div class="sf-value" id="storyPlot">—</div>
+            </div>
+            <div class="story-field">
+              <div class="sf-label">证据</div>
+              <div class="sf-value" id="storyEvidence">—</div>
+            </div>
+            <div class="story-field">
+              <div class="sf-label">素材来源</div>
+              <div class="story-sources" id="storySources"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lvl-cta" id="ctaArea" style="display:none">
+        <a class="btn btn-ink" href="level4.html">完成本关 · 解锁第 4 关 →</a>
+        <span class="status">完成后将点亮「脑波力」并解锁第 4 关</span>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<footer>
+  <div class="foot-in">
+    <span>© 2026 AI5000天 · 负责任开发者 AI 创客 Tutor</span>
+    <div class="foot-links"><a href="map.html">闯关地图</a><a href="states.html">设计 · 状态页</a><a href="#">隐私政策</a></div>
+  </div>
+</footer>
+
+<script>
+(function() {
+  // ===== State =====
+  var TOPIC = '网络欺凌';
+
+  var taskData = {
+    memory:   { input: '', followups: [null, null, null] },
+    interview:{ input: '', followups: [null, null, null] },
+    survey:   { input: '', followups: [null, null, null] },
+    web:      { input: '', followups: [null, null, null] }
+  };
+
+  var followupQuestions = [
+    '能再具体点吗？那是在哪、什么时候？',
+    '你怎么知道的？是亲眼见的，还是听说的？',
+    '这件事对当事人来说，最难受/最麻烦的是什么？'
+  ];
+
+  var taskNames = {
+    memory: '🧠 自己回忆',
+    interview: '👥 同伴交流',
+    survey: '🏘️ 社区调研',
+    web: '🌐 网络浏览'
+  };
+
+  // ===== Intro =====
+  document.getElementById('startBtn').addEventListener('click', function() {
+    document.getElementById('intro').classList.add('hide');
+  });
+
+  // ===== Card Toggle =====
+  window.toggleCard = function(cardId) {
+    var card = document.getElementById(cardId);
+    card.classList.toggle('open');
+  };
+
+  // ===== Task Input Handler =====
+  window.onTaskInput = function(taskKey) {
+    var textarea = document.getElementById('input' + capitalize(taskKey));
+    taskData[taskKey].input = textarea.value.trim();
+    updateFollowups();
+    updateStepBar();
+    checkStoryReady();
+  };
+
+  function capitalize(s) {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+  // ===== Copy Interview Guide =====
+  window.copyGuide = function() {
+    var text = document.getElementById('interviewGuideText').textContent;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(function() {
+        showCopied();
+      });
+    } else {
+      // Fallback
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showCopied();
+    }
+  };
+
+  function showCopied() {
+    var btn = document.getElementById('copyGuideBtn');
+    btn.textContent = '已复制 ✓';
+    btn.classList.add('copied');
+    setTimeout(function() {
+      btn.textContent = '复制';
+      btn.classList.remove('copied');
+    }, 1800);
+  }
+
+  // ===== Follow-up Questions =====
+  function updateFollowups() {
+    var container = document.getElementById('followupContainer');
+    container.innerHTML = '';
+
+    var hasAnyInput = false;
+    var keys = ['memory', 'interview', 'survey', 'web'];
+
+    keys.forEach(function(key) {
+      if (!taskData[key].input) return;
+      hasAnyInput = true;
+
+      // Section per task
+      var section = document.createElement('div');
+      section.style.marginBottom = '20px';
+
+      var title = document.createElement('div');
+      title.style.cssText = 'font-family:var(--serif);font-weight:700;font-size:16px;margin-bottom:12px;color:var(--primary-deep);';
+      title.textContent = taskNames[key] + ' · 追问';
+      section.appendChild(title);
+
+      taskData[key].followups.forEach(function(val, i) {
+        var round = document.createElement('div');
+        round.className = 'followup-round visible' + (val ? ' answered' : '');
+
+        // Question bubble
+        var qWrap = document.createElement('div');
+        qWrap.className = 'followup-question';
+        qWrap.innerHTML =
+          '<div class="fq-ava"></div>' +
+          '<div class="fq-text">追问 ' + (i + 1) + '：' + followupQuestions[i] + '</div>';
+        round.appendChild(qWrap);
+
+        if (val) {
+          // Show answer
+          var ans = document.createElement('div');
+          ans.className = 'followup-answer';
+          ans.textContent = val;
+          round.appendChild(ans);
+        } else {
+          // Input
+          var input = document.createElement('textarea');
+          input.className = 'followup-input';
+          input.placeholder = '写下你的回答…';
+          input.setAttribute('data-task', key);
+          input.setAttribute('data-round', i);
+          input.addEventListener('input', onFollowupInput);
+          input.addEventListener('blur', onFollowupBlur);
+          round.appendChild(input);
+        }
+
+        section.appendChild(round);
+      });
+
+      container.appendChild(section);
+    });
+
+    if (!hasAnyInput) {
+      container.innerHTML = '<div style="text-align:center;color:var(--ink-mute);padding:24px;font-family:var(--fun);font-size:14px;">先在上方卡片里写点素材，追问才会出现哦～</div>';
+    }
+  }
+
+  function onFollowupInput(e) {
+    var key = e.target.getAttribute('data-task');
+    var round = parseInt(e.target.getAttribute('data-round'));
+    taskData[key].followups[round] = e.target.value.trim();
+    checkStoryReady();
+  }
+
+  function onFollowupBlur(e) {
+    var key = e.target.getAttribute('data-task');
+    var round = parseInt(e.target.getAttribute('data-round'));
+    var val = e.target.value.trim();
+    if (val) {
+      taskData[key].followups[round] = val;
+      updateFollowups();
+      checkStoryReady();
+    }
+  }
+
+  // ===== Step Bar =====
+  function updateStepBar() {
+    var steps = document.querySelectorAll('#stepBar .step');
+    var hasInput = Object.keys(taskData).some(function(k) { return taskData[k].input; });
+    var hasFollowup = Object.keys(taskData).some(function(k) { return taskData[k].followups.some(function(f) { return f; }); });
+
+    // Reset
+    steps.forEach(function(s) { s.className = 'step'; });
+
+    if (hasFollowup) {
+      steps[0].className = 'step done';
+      steps[1].className = 'step done';
+      steps[2].className = 'step active';
+      steps[3].className = 'step';
+    } else if (hasInput) {
+      steps[0].className = 'step done';
+      steps[1].className = 'step active';
+      steps[2].className = 'step';
+      steps[3].className = 'step';
+    } else {
+      steps[0].className = 'step done';
+      steps[1].className = 'step active';
+      steps[2].className = 'step';
+      steps[3].className = 'step';
+    }
+  }
+
+  // ===== Story Card =====
+  function checkStoryReady() {
+    var hasInput = Object.keys(taskData).some(function(k) { return taskData[k].input; });
+    var hasFollowup = Object.keys(taskData).some(function(k) { return taskData[k].followups.some(function(f) { return f; }); });
+
+    if (hasInput && hasFollowup) {
+      generateStoryCard();
+    }
+  }
+
+  function generateStoryCard() {
+    var storyEmpty = document.getElementById('storyEmpty');
+    var storyContent = document.getElementById('storyContent');
+    var ctaArea = document.getElementById('ctaArea');
+
+    // Collect all materials
+    var allInputs = [];
+    var allFollowups = [];
+    var sources = [];
+
+    Object.keys(taskData).forEach(function(key) {
+      if (taskData[key].input) {
+        allInputs.push(taskData[key].input);
+        sources.push(taskNames[key]);
+      }
+      taskData[key].followups.forEach(function(f) {
+        if (f) allFollowups.push(f);
+      });
+    });
+
+    // Build story fields
+    // Protagonist: extract from first meaningful input/followup
+    var protagonist = extractProtagonist(allInputs, allFollowups);
+    // Plot: combine original inputs
+    var plot = allInputs.join('；');
+    // Evidence: combine followup answers
+    var evidence = allFollowups.join('；');
+
+    document.getElementById('storyProtagonist').textContent = protagonist || '（待补充）';
+    document.getElementById('storyPlot').textContent = plot || '（待补充）';
+    document.getElementById('storyEvidence').textContent = evidence || '（待补充）';
+
+    // Sources tags
+    var sourcesContainer = document.getElementById('storySources');
+    sourcesContainer.innerHTML = '';
+    var allSourceNames = ['🧠 自己回忆', '👥 同伴交流', '🏘️ 社区调研', '🌐 网络浏览'];
+    allSourceNames.forEach(function(name) {
+      var tag = document.createElement('span');
+      tag.className = 'source-tag' + (sources.indexOf(name) === -1 ? ' pending' : '');
+      tag.textContent = name;
+      sourcesContainer.appendChild(tag);
+    });
+
+    storyEmpty.style.display = 'none';
+    storyContent.style.display = 'block';
+    ctaArea.style.display = 'flex';
+
+    // Update step bar to final step
+    var steps = document.querySelectorAll('#stepBar .step');
+    steps[0].className = 'step done';
+    steps[1].className = 'step done';
+    steps[2].className = 'step done';
+    steps[3].className = 'step active';
+
+    // Scroll to story card
+    document.getElementById('storySection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function extractProtagonist(inputs, followups) {
+    // Simple heuristic: look for common protagonist patterns in Chinese
+    var allText = inputs.concat(followups).join(' ');
+    var patterns = ['我', '同学', '朋友', '他', '她', '家人', '弟弟', '妹妹', '哥哥', '姐姐', '妈妈', '爸爸', '奶奶', '爷爷', '老师'];
+    for (var i = 0; i < patterns.length; i++) {
+      if (allText.indexOf(patterns[i]) !== -1) {
+        // Try to find a fuller reference
+        var idx = allText.indexOf(patterns[i]);
+        var start = Math.max(0, idx - 6);
+        var end = Math.min(allText.length, idx + patterns[i].length + 6);
+        var snippet = allText.substring(start, end).trim();
+        // Clean up: try to get the noun phrase
+        if (patterns[i] === '我') return '我';
+        return patterns[i];
+      }
+    }
+    return '故事中的人';
+  }
+
+  // ===== Reveal Animation =====
+  var io = new IntersectionObserver(function(es) {
+    es.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(function(el, i) {
+    el.style.transitionDelay = (i % 4 * 60) + 'ms';
+    io.observe(el);
+  });
+
+  // ===== Init =====
+  updateFollowups();
+  updateStepBar();
+
+})();
+</script>
+<script src="widget.js"></script>
+</body>
+</html>

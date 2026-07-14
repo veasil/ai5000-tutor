@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>第 8 关 · Demo工坊 — AI5000天 负责任开发者</title>
+<meta name="description" content="创心力迸发 · Demo工坊：本地 Vibe Coding + 自测迭代 + 一键出 URL" />
+<link rel="icon" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@400;500;600;700;900&family=ZCOOL+KuaiLe&family=Press+Start+2P&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+/* ============ Level 8: Demo Workshop ============ */
+
+/* Step bar */
+.l8-stepbar{display:flex;gap:6px;margin:28px 0 8px;flex-wrap:wrap}
+.l8-stepbar .s{font-size:13px;font-weight:600;color:var(--ink-mute);background:var(--surface);border:2px solid var(--line);border-radius:999px;padding:8px 16px;cursor:pointer;transition:all .2s;user-select:none}
+.l8-stepbar .s:hover{border-color:var(--primary);color:var(--primary-deep)}
+.l8-stepbar .s.done{color:var(--primary-deep);border-color:var(--primary);background:var(--primary-soft)}
+.l8-stepbar .s.done::before{content:'✓ ';font-size:11px}
+.l8-stepbar .s.active{color:#fff;background:var(--ink);border-color:var(--ink);box-shadow:var(--sh-sm)}
+
+/* Step sections */
+.l8-section{display:none;padding:24px 0 8px}
+.l8-section.active{display:block;animation:stepIn .35s ease}
+@keyframes stepIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* Wu bubble for each step */
+.wu-step{display:flex;align-items:flex-start;gap:12px;margin-bottom:20px}
+.wu-step .gava{width:40px;height:40px;border-radius:50%;border:2px solid var(--ink);background:url('assets/wu-13.png') center top/170% no-repeat,var(--primary-soft);flex:none}
+.wu-step .gb{background:var(--surface);border:2px solid var(--ink);border-radius:14px;padding:12px 18px;box-shadow:var(--sh-sm);font-family:var(--fun);font-size:16px;line-height:1.5}
+
+/* Blueprint echo card */
+.blueprint-echo{background:var(--blue-soft);border:2px solid var(--ink);border-radius:18px;padding:20px 24px;box-shadow:var(--sh);margin:20px 0 0;position:relative;overflow:hidden}
+.blueprint-echo::before{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:var(--blue);opacity:.18;border-radius:50%}
+.blueprint-echo .bp-label{font-family:var(--pixel);font-size:8px;color:var(--blue-deep);letter-spacing:1px;margin-bottom:10px}
+.blueprint-echo .bp-grid{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;align-items:baseline}
+.blueprint-echo .bp-k{font-size:12px;font-weight:700;color:var(--blue-deep);white-space:nowrap}
+.blueprint-echo .bp-v{font-size:15px;color:var(--ink);line-height:1.6}
+
+/* Teaching cards */
+.teach-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-top:16px}
+.teach-card{background:var(--surface);border:2px solid var(--ink);border-radius:16px;padding:22px;box-shadow:var(--sh);display:flex;flex-direction:column;gap:12px;transition:transform .15s ease,box-shadow .15s ease;position:relative;overflow:hidden}
+.teach-card:hover{transform:translate(-1px,-2px);box-shadow:6px 7px 0 var(--ink)}
+.teach-card .tc-num{font-family:var(--pixel);font-size:9px;color:var(--ink-mute);position:absolute;top:12px;right:14px}
+.teach-card .tc-icon{font-size:36px;line-height:1}
+.teach-card .tc-title{font-family:var(--serif);font-weight:700;font-size:18px}
+.teach-card .tc-body{font-size:14px;color:var(--ink-soft);line-height:1.7}
+.teach-card .tc-body b{color:var(--ink);font-weight:700}
+.teach-card .tc-body em{font-style:normal;color:var(--primary-deep);font-weight:600}
+
+/* Tip bar */
+.tip-bar{margin-top:20px;background:var(--primary-soft);border:2px solid var(--primary);border-radius:14px;padding:14px 20px;display:flex;align-items:center;gap:12px;font-size:14px;font-weight:600;color:var(--primary-deep)}
+.tip-bar .tip-icon{font-size:22px;flex:none}
+
+/* Checklist preview */
+.checklist-preview{margin-top:18px;background:var(--surface-warm);border:2px solid var(--ink);border-radius:14px;padding:18px 22px;box-shadow:var(--sh-sm)}
+.checklist-preview .cl-title{font-family:var(--pixel);font-size:9px;color:var(--ink-mute);letter-spacing:1px;margin-bottom:12px}
+.checklist-preview .cl-item{display:flex;align-items:flex-start;gap:10px;padding:6px 0;font-size:14px;line-height:1.6;border-bottom:1px dashed var(--line)}
+.checklist-preview .cl-item:last-child{border-bottom:none}
+.checklist-preview .cl-bullet{width:8px;height:8px;border-radius:50%;background:var(--primary);flex:none;margin-top:6px}
+
+/* Self-test form area */
+.form-area{margin-top:16px}
+.form-label{font-size:12px;font-weight:700;letter-spacing:1px;color:var(--primary-deep);margin-bottom:6px;display:block}
+.form-textarea{width:100%;min-height:100px;border:2px solid var(--line);border-radius:14px;padding:14px 16px;font-family:var(--sans);font-size:15px;outline:none;resize:vertical;transition:border-color .2s;background:var(--surface);line-height:1.7}
+.form-textarea:focus{border-color:var(--primary)}
+.form-counter{font-size:12px;color:var(--ink-mute);text-align:right;margin-top:4px}
+
+/* Edge review popup */
+.edge-review{margin-top:20px;background:var(--danger-soft);border:2px solid var(--danger);border-radius:16px;padding:22px 24px;position:relative;overflow:hidden}
+.edge-review::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;background:var(--danger);opacity:.1;border-radius:50%}
+.edge-review .er-title{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:800;font-size:18px;color:var(--danger);margin-bottom:12px}
+.edge-review .er-title .er-icon{font-size:24px}
+.edge-review .er-body{font-size:15px;line-height:1.7;color:var(--ink)}
+.edge-review .er-body em{font-style:normal;font-weight:700;color:var(--danger)}
+.edge-review .er-check{display:flex;align-items:center;gap:10px;margin-top:14px;font-weight:600;font-size:14px;cursor:pointer;user-select:none}
+.edge-review .er-check input{width:20px;height:20px;accent-color:var(--danger);cursor:pointer}
+
+/* Checkpoint cards */
+.checkpoint-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px}
+.cp-card{background:var(--surface);border:2px solid var(--ink);border-radius:18px;padding:22px 24px;box-shadow:var(--sh);display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;transition:border-color .2s}
+.cp-card.completed{border-color:var(--primary);box-shadow:4px 4px 0 var(--primary)}
+.cp-card .cp-icon{font-size:28px;line-height:1}
+.cp-card .cp-title{font-family:var(--serif);font-weight:700;font-size:18px}
+.cp-card .cp-desc{font-size:14px;color:var(--ink-soft);line-height:1.6}
+.cp-card .cp-action{margin-top:auto}
+.cp-card .cp-status{position:absolute;top:14px;right:16px;font-family:var(--pixel);font-size:8px;padding:4px 10px;border-radius:999px}
+.cp-card .cp-status.pending{background:var(--surface-warm);color:var(--ink-mute);border:1.5px solid var(--line)}
+.cp-card .cp-status.done{background:var(--primary);color:#fff;border:1.5px solid var(--primary-deep)}
+
+/* Engineering review dialog */
+.eng-dialog{display:none;margin-top:16px;background:var(--surface);border:2px solid var(--ink);border-radius:16px;padding:20px;box-shadow:var(--sh)}
+.eng-dialog.open{display:block;animation:stepIn .3s ease}
+.eng-dialog .eng-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.eng-dialog .eng-ava{width:40px;height:40px;border-radius:50%;border:2px solid var(--ink);background:url('assets/wu-13.png') center top/170% no-repeat,var(--primary-soft)}
+.eng-dialog .eng-name{font-family:var(--serif);font-weight:700;font-size:16px}
+.eng-dialog .eng-role{font-size:12px;color:var(--ink-soft)}
+.eng-dialog .eng-msg{background:var(--surface-warm);border:2px solid var(--line);border-radius:14px;padding:14px 18px;font-size:14px;line-height:1.7;margin-bottom:14px}
+.eng-dialog .eng-cost{font-family:var(--fun);font-size:13px;color:var(--primary-deep);background:var(--primary-soft);border:1.5px solid var(--primary);border-radius:999px;padding:6px 14px;display:inline-flex;align-items:center;gap:6px;margin-bottom:14px}
+
+/* Breathing animation */
+.breath-container{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:30px 20px}
+.breath-circle-wrap{position:relative;width:160px;height:160px;display:flex;align-items:center;justify-content:center}
+.breath-circle{width:80px;height:80px;border-radius:50%;background:var(--blue);border:3px solid var(--ink);box-shadow:0 0 0 4px var(--blue-soft);transition:width 4s ease,height 4s ease,background 4s ease,box-shadow 4s ease}
+.breath-circle.expand{width:150px;height:150px;background:var(--blue-deep);box-shadow:0 0 40px 8px rgba(63,146,188,.35)}
+.breath-text{font-family:var(--fun);font-size:22px;color:var(--ink);text-align:center;min-height:34px}
+.breath-counter{font-family:var(--pixel);font-size:10px;color:var(--ink-mute);margin-top:4px}
+.breath-btn{font-family:var(--serif);font-weight:600;font-size:15px;border:2px solid var(--ink);border-radius:999px;padding:12px 28px;cursor:pointer;transition:transform .12s,box-shadow .12s;background:var(--ink);color:#fff;box-shadow:var(--sh-sm)}
+.breath-btn:hover{transform:translateY(-2px);box-shadow:var(--sh)}
+.breath-btn:active{transform:translateY(1px);box-shadow:none}
+.breath-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.breath-done{text-align:center}
+.breath-done .bd-icon{font-size:40px;margin-bottom:8px}
+.breath-done .bd-text{font-family:var(--fun);font-size:16px;color:var(--primary-deep)}
+
+/* Upload area */
+.upload-area{margin-top:18px;border:3px dashed var(--line);border-radius:18px;padding:40px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;cursor:pointer;transition:border-color .2s,background .2s}
+.upload-area:hover{border-color:var(--primary);background:var(--primary-soft)}
+.upload-area .up-icon{font-size:48px;opacity:.6}
+.upload-area .up-title{font-family:var(--serif);font-weight:700;font-size:18px;color:var(--ink-soft)}
+.upload-area .up-sub{font-family:var(--fun);font-size:14px;color:var(--ink-mute)}
+
+/* URL result */
+.url-result{margin-top:18px;background:var(--surface);border:2px solid var(--primary);border-radius:16px;padding:22px 24px;box-shadow:4px 4px 0 var(--primary);display:none}
+.url-result.show{display:block;animation:stepIn .4s ease}
+.url-result .ur-label{font-family:var(--pixel);font-size:9px;color:var(--primary-deep);letter-spacing:1px;margin-bottom:8px}
+.url-result .ur-url{font-family:var(--sans);font-size:16px;font-weight:700;color:var(--ink);word-break:break-all;padding:12px 16px;background:var(--primary-soft);border:2px solid var(--primary);border-radius:10px;display:flex;align-items:center;gap:10px}
+.url-result .ur-url a{color:var(--blue-deep);text-decoration:underline}
+.url-result .ur-copy{font-size:13px;font-weight:600;background:var(--ink);color:#fff;border:none;border-radius:999px;padding:6px 14px;cursor:pointer;white-space:nowrap;transition:transform .12s}
+.url-result .ur-copy:hover{transform:translateY(-1px)}
+
+/* Next level CTA */
+.l8-cta{margin-top:24px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.l8-cta .btn-ink{font-family:var(--serif);font-weight:600;font-size:16px;display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;border-radius:999px;padding:14px 28px;background:var(--ink);color:#fff;box-shadow:var(--sh-sm);transition:transform .12s,box-shadow .12s}
+.l8-cta .btn-ink:hover{transform:translateY(-2px);box-shadow:var(--sh)}
+.l8-cta .btn-ink:active{transform:translateY(1px);box-shadow:none}
+.l8-cta .btn-primary{background:var(--primary);color:#fff;border:2px solid var(--ink)}
+.l8-cta .btn-primary:hover{transform:translateY(-2px);box-shadow:var(--sh)}
+.l8-cta .btn-primary:active{transform:translateY(1px);box-shadow:none}
+
+/* Completion card */
+.l8-complete{margin-top:28px;background:var(--surface);border:3px solid var(--primary);border-radius:18px;padding:28px;box-shadow:6px 6px 0 var(--primary);text-align:center;display:none}
+.l8-complete.show{display:block;animation:stepIn .4s ease}
+.l8-complete h3{font-family:var(--serif);font-weight:800;font-size:22px;color:var(--primary-deep);margin-bottom:10px}
+.l8-complete .lc-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;text-align:left;margin:16px 0}
+.l8-complete .lc-block{background:var(--surface-warm);border:2px solid var(--line);border-radius:12px;padding:14px}
+.l8-complete .lc-block .lck{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--primary-deep);margin-bottom:6px}
+.l8-complete .lc-block .lcv{font-size:14px;color:var(--ink);line-height:1.6}
+
+/* Shake animation */
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+
+/* Responsive */
+@media(max-width:900px){
+  .teach-grid{grid-template-columns:1fr}
+  .checkpoint-grid{grid-template-columns:1fr}
+  .blueprint-echo .bp-grid{grid-template-columns:1fr;gap:6px}
+  .l8-complete .lc-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="index.html">
+      <img class="logo" src="assets/logo.png" alt="AI5000天 标志" />
+      <div class="title-lock"><span class="n1">AI5000天</span><span class="n2">负责任开发者</span><span class="pill-tag">AI 创客 Tutor</span></div>
+    </a>
+    <div class="tabs">
+      <a href="works.html">创客作品墙</a>
+      <a href="index.html">闯关首页</a>
+      <a href="works.html">我的作品</a>
+      <a href="index.html#content">我的徽章</a>
+      <a href="map.html" class="active">闯关地图</a>
+    </div>
+    <div class="me"><span class="ava">伍</span><span>小伍创客 8023</span></div>
+  </div>
+</nav>
+
+<!-- Intro modal -->
+<div class="overlay" id="intro">
+  <div class="modal">
+    <div class="mwu"><img src="assets/wu-13.png" alt="小伍" /></div>
+    <div class="mbubble">
+      <h2>欢迎来到第 8 关 · <b>Demo工坊</b>！</h2>
+      <p style="color:var(--ink-soft);margin-top:8px;line-height:1.7">前几关你想了那么多，现在——动手把它做出来！这一关，我教你用最省事的工具，在电脑上亲手搭 Demo，自测迭代，最后变成一个能打开的网址 ✨</p>
+      <ul class="msteps">
+        <li><span class="no">1</span><span><b>配环境</b>：装工具、喂清单、开始 Vibe Coding！</span></li>
+        <li><span class="no">2</span><span><b>自测迭代</b>：测一测、改一改，想想上线前的责任。</span></li>
+        <li><span class="no">3</span><span><b>提交出 URL</b>：提交作品，一键获得网址。</span></li>
+      </ul>
+      <div class="goal">🔧 本关目标：做出一个能跑的 Demo，拿到你的专属网址。</div>
+      <button class="btn btn-ink" id="startBtn">▶ 开始动手</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="content wrap">
+    <a class="back" href="map.html">&larr; 返回闯关地图</a>
+
+    <div class="lvl-head">
+      <div class="lvl-badge"><img src="assets/power-create.png" alt="" /><span class="lv">LV 08</span></div>
+      <div>
+        <h1>Demo工坊</h1>
+        <p>创心力迸发 &middot; 本地 Vibe Coding + 自测迭代 + 一键出 URL</p>
+      </div>
+    </div>
+
+    <!-- Step bar -->
+    <div class="l8-stepbar" id="stepBar">
+      <span class="s active" data-step="1">① 配环境</span>
+      <span class="s" data-step="2">② 自测迭代</span>
+      <span class="s" data-step="3">③ 提交出URL</span>
+    </div>
+
+    <!-- Blueprint echo card -->
+    <div class="blueprint-echo reveal" id="blueprintEcho">
+      <div class="bp-label">LV 06 ~ 07 蓝图回声</div>
+      <div class="bp-grid">
+        <span class="bp-k">项目点子</span><span class="bp-v" id="bpIdea">反网络欺凌守护助手</span>
+        <span class="bp-k">模块拆分</span><span class="bp-v" id="bpModules">输入区 / AI 处理区 / 结果展示区</span>
+        <span class="bp-k">AI 规矩</span><span class="bp-v" id="bpRules">不能生成伤害内容 / 用简体中文 / 不编造事实</span>
+      </div>
+    </div>
+
+    <!-- ============ STEP 1: Setup + Local Vibe Coding ============ -->
+    <div class="l8-section active" id="step1">
+      <div class="wu-step">
+        <span class="gava"></span>
+        <span class="gb">这一关，你要在自己电脑上，亲手把它做出来。我给你配一套最省事的工具 🐝</span>
+      </div>
+
+      <!-- Teaching cards -->
+      <div class="teach-grid">
+        <div class="teach-card">
+          <span class="tc-num">01</span>
+          <span class="tc-icon">📦</span>
+          <div class="tc-title">装 Trae 国内版</div>
+          <div class="tc-body">
+            打开 <b>trae.com.cn</b>，下载安装。<br/>
+            Windows / Mac 都支持。<br/>
+            手机号登录，<em>免费</em>，<em>不需要翻墙</em>，<em>全中文界面</em>。
+          </div>
+        </div>
+        <div class="teach-card">
+          <span class="tc-num">02</span>
+          <span class="tc-icon">📋</span>
+          <div class="tc-title">喂开工清单</div>
+          <div class="tc-body">
+            把第 6 关的<em>开工清单</em>粘贴到 Trae 的对话窗口。<br/>
+            它就是你给 AI 的「工作说明书」——写清楚了，AI 才不会乱来。
+          </div>
+        </div>
+        <div class="teach-card">
+          <span class="tc-num">03</span>
+          <span class="tc-icon">🧙</span>
+          <div class="tc-title">Vibe Coding</div>
+          <div class="tc-body">
+            用<em>大白话</em>描述你要的功能，让 AI 生成代码，你再改。<br/>
+            <b>记住：你是老板，AI 是助手。</b><br/>
+            不满意就让它改，直到你觉得对为止。
+          </div>
+        </div>
+      </div>
+
+      <!-- Tip bar -->
+      <div class="tip-bar">
+        <span class="tip-icon">💡</span>
+        <span>训练营会提前一天带你装好环境，不用担心～</span>
+      </div>
+
+      <!-- Checklist preview -->
+      <div class="checklist-preview">
+        <div class="cl-title">YOUR LV 06 CHECKLIST</div>
+        <div id="clItems">
+          <div class="cl-item"><span class="cl-bullet"></span><span>AI 规矩①：不能生成伤害别人的内容</span></div>
+          <div class="cl-item"><span class="cl-bullet"></span><span>AI 规矩②：必须用简体中文回答</span></div>
+          <div class="cl-item"><span class="cl-bullet"></span><span>AI 规矩③：不能编造不存在的事实</span></div>
+          <div class="cl-item"><span class="cl-bullet"></span><span>测试节奏：每加完一个按钮，就点一下看看跳转对不对</span></div>
+          <div class="cl-item"><span class="cl-bullet"></span><span>模块 A：用户输入区 / 模块 B：AI 处理区 / 模块 C：结果展示区</span></div>
+          <div class="cl-item"><span class="cl-bullet"></span><span>不能外泄：用户的聊天记录、API Key、同学的姓名</span></div>
+          <div class="cl-item"><span class="cl-bullet"></span><span>可能受影响：被网络欺凌的同学 → 预防：加上举报按钮</span></div>
+        </div>
+      </div>
+
+      <div style="margin-top:22px">
+        <button class="btn btn-ink" id="toStep2">下一步 · 开始自测 →</button>
+      </div>
+    </div>
+
+    <!-- ============ STEP 2: Self-test Iteration + Edge Review ============ -->
+    <div class="l8-section" id="step2">
+      <div class="wu-step">
+        <span class="gava"></span>
+        <span class="gb">做完了？别急！先自己测一测，改一改，再想想上线前有什么责任 🧐</span>
+      </div>
+
+      <!-- Self-test textarea -->
+      <div class="form-area">
+        <label class="form-label">🔧 自测 / Bug / 边界情况记录</label>
+        <textarea class="form-textarea" id="selfTestNotes" placeholder="比如：&#10;• 点了按钮没反应 → 发现是事件没绑定&#10;• 输入空内容会崩溃 → 加了空值检查&#10;• 手机屏幕上按钮太小 → 改大了字号" rows="6"></textarea>
+        <div class="form-counter" id="selfTestCounter">0 字</div>
+      </div>
+
+      <!-- Iteration log -->
+      <div class="form-area" style="margin-top:18px">
+        <label class="form-label">📝 迭代记录（你改了什么、为什么改）</label>
+        <textarea class="form-textarea" id="iterLog" placeholder="比如：&#10;第1版：只有基本输入框 → 测了发现没提示&#10;第2版：加了提示文字 → 同学说看不懂 → 改成更直白的话&#10;第3版：优化了提示语 + 加了动画" rows="4"></textarea>
+        <div class="form-counter" id="iterLogCounter">0 字</div>
+      </div>
+
+      <!-- Edge responsibility review -->
+      <div class="edge-review">
+        <div class="er-title"><span class="er-icon">🛡️</span>上线前责任审查</div>
+        <div class="er-body">
+          上线前想想：<em>会不会泄露谁的隐私？</em><em>会不会误导人？</em><br/><br/>
+          你的作品一旦发布，任何人都能看到。想想这些问题：
+          <ul style="margin-top:10px;padding-left:20px;line-height:2">
+            <li>有没有收集或显示真实姓名、学校、地址？</li>
+            <li>会不会有人因为你的作品感到被冒犯或受伤？</li>
+            <li>AI 生成的内容会不会看起来像真实信息而误导人？</li>
+          </ul>
+        </div>
+        <label class="er-check">
+          <input type="checkbox" id="edgeCheck1" />
+          <span>我确认：我的 Demo 不会泄露任何人隐私</span>
+        </label>
+        <label class="er-check">
+          <input type="checkbox" id="edgeCheck2" />
+          <span>我确认：我的 Demo 不会误导或伤害任何人</span>
+        </label>
+      </div>
+
+      <div style="margin-top:12px">
+        <label class="form-label">🛡️ 责任审查记录</label>
+        <textarea class="form-textarea" id="edgeReviewNotes" placeholder="你做了哪些检查？发现了什么问题？怎么解决的？" rows="3"></textarea>
+      </div>
+
+      <!-- Two Mandatory Checkpoints -->
+      <h3 style="font-family:var(--serif);font-weight:800;font-size:20px;margin-top:28px;margin-bottom:4px">⚡ 两个必过关卡</h3>
+      <p style="font-size:14px;color:var(--ink-soft);margin-bottom:16px">完成下面两项，才能进入提交环节。</p>
+
+      <div class="checkpoint-grid">
+        <!-- Engineering Review -->
+        <div class="cp-card" id="cpEng">
+          <span class="cp-status pending" id="cpEngStatus">待完成</span>
+          <span class="cp-icon">🔧</span>
+          <div class="cp-title">工程审查</div>
+          <div class="cp-desc">把你的 Demo 拿去让技术助手过一眼，看看有没有明显问题。</div>
+          <div class="cp-action">
+            <button class="btn btn-ink" id="engReviewBtn" style="font-size:14px;padding:10px 20px">🤖 请小伍审查</button>
+          </div>
+          <!-- Engineering review dialog -->
+          <div class="eng-dialog" id="engDialog">
+            <div class="eng-head">
+              <span class="eng-ava"></span>
+              <div>
+                <div class="eng-name">小伍</div>
+                <div class="eng-role">技术审查助手</div>
+              </div>
+            </div>
+            <div class="eng-cost">⚡ 消耗 1 点能量（本关仅限 1 次）</div>
+            <div class="eng-msg" id="engMsg">
+              好的，让我看看你的 Demo～<br/><br/>
+              <b>审查要点：</b><br/>
+              1. 代码结构是否清晰<br/>
+              2. 有没有明显的安全漏洞<br/>
+              3. 用户体验是否流畅<br/>
+              4. 错误处理是否到位<br/><br/>
+              <span style="color:var(--ink-mute);font-size:13px">（模拟审查结果——实际项目中由技术导师在线下审核）</span>
+            </div>
+            <button class="btn btn-ink" id="engConfirmBtn" style="font-size:14px;padding:10px 20px">✓ 已阅读审查意见</button>
+          </div>
+        </div>
+
+        <!-- Body Break -->
+        <div class="cp-card" id="cpBody">
+          <span class="cp-status pending" id="cpBodyStatus">待完成</span>
+          <span class="cp-icon">🧘</span>
+          <div class="cp-title">身体休息</div>
+          <div class="cp-desc">做了这么久，起来动一动！跟着节奏深呼吸 3 次。</div>
+          <div class="cp-action">
+            <div class="breath-container" id="breathContainer">
+              <div class="breath-circle-wrap">
+                <div class="breath-circle" id="breathCircle"></div>
+              </div>
+              <div class="breath-text" id="breathText">准备好了吗？</div>
+              <div class="breath-counter" id="breathCounter">0 / 3</div>
+              <button class="breath-btn" id="breathStartBtn">🌬️ 开始深呼吸</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:22px">
+        <button class="btn btn-ink" id="toStep3" disabled>完成检查点后 → 提交作品</button>
+        <span style="font-size:13px;color:var(--ink-mute);margin-left:10px" id="step2hint">请先完成上方两个必过关卡</span>
+      </div>
+    </div>
+
+    <!-- ============ STEP 3: Submit → One-click URL ============ -->
+    <div class="l8-section" id="step3">
+      <div class="wu-step">
+        <span class="gava"></span>
+        <span class="gb">做好了？把文件提交给我，我帮你变成一个能打开的网址 ✨</span>
+      </div>
+
+      <!-- Upload area -->
+      <div class="upload-area" id="uploadArea">
+        <span class="up-icon">📁</span>
+        <span class="up-title">点击或拖拽文件到这里</span>
+        <span class="up-sub">支持 .html / .zip / 文件夹（模拟上传）</span>
+      </div>
+
+      <!-- File name display (hidden until upload) -->
+      <div id="fileInfo" style="display:none;margin-top:12px;background:var(--surface);border:2px solid var(--ink);border-radius:12px;padding:14px 18px;display:none;align-items:center;gap:12px">
+        <span style="font-size:22px">📄</span>
+        <div>
+          <div style="font-weight:700;font-size:15px" id="fileName">—</div>
+          <div style="font-size:12px;color:var(--ink-mute)" id="fileSize">—</div>
+        </div>
+        <button style="margin-left:auto;font-size:12px;color:var(--danger);background:none;border:1.5px solid var(--danger);border-radius:999px;padding:4px 12px;cursor:pointer" id="removeFile">删除</button>
+      </div>
+
+      <!-- Submit button -->
+      <div style="margin-top:18px">
+        <button class="btn btn-ink" id="submitWorkBtn" disabled style="font-size:16px;padding:14px 30px">🚀 提交我的作品</button>
+      </div>
+
+      <!-- URL result -->
+      <div class="url-result" id="urlResult">
+        <div class="ur-label">YOUR DEMO URL</div>
+        <div class="ur-url">
+          <span id="demoUrl">https://ai5000-demo.vercel.app/xiaowu-8023</span>
+          <button class="ur-copy" id="copyUrlBtn">📋 复制</button>
+        </div>
+      </div>
+
+      <!-- Completion card -->
+      <div class="l8-complete" id="completeCard">
+        <h3>🎉 第 8 关 · Demo工坊 完成！</h3>
+        <p style="font-size:15px;color:var(--ink-soft);margin-top:6px">你亲手做出了一个能跑的 Demo，真了不起！</p>
+        <div class="lc-grid" id="lcGrid">
+          <div class="lc-block">
+            <div class="lck">DEMO URL</div>
+            <div class="lcv" id="lcUrl">—</div>
+          </div>
+          <div class="lc-block">
+            <div class="lck">迭代记录</div>
+            <div class="lcv" id="lcIter">—</div>
+          </div>
+          <div class="lc-block">
+            <div class="lck">责任审查</div>
+            <div class="lcv" id="lcEdge">—</div>
+          </div>
+          <div class="lc-block">
+            <div class="lck">检查点</div>
+            <div class="lcv" id="lcCheckpoint">—</div>
+          </div>
+        </div>
+        <div class="l8-cta" style="justify-content:center">
+          <a class="btn-primary" href="level9.html" style="font-family:var(--serif);font-weight:600;font-size:16px;display:inline-flex;align-items:center;gap:8px;border:2px solid var(--ink);cursor:pointer;border-radius:999px;padding:14px 28px;background:var(--primary);color:#fff;text-decoration:none;box-shadow:var(--sh-sm);transition:transform .12s,box-shadow .12s">提交并进入第 9 关 · 责任检查站 →</a>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<footer>
+  <div class="foot-in">
+    <span>&copy; 2026 AI5000天 &middot; 负责任开发者 AI 创客 Tutor</span>
+    <div class="foot-links"><a href="map.html">闯关地图</a><a href="states.html">设计 &middot; 状态页</a><a href="#">隐私政策</a></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // ============ State ============
+  var state = {
+    currentStep: 1,
+    selfTestNotes: '',
+    iterLog: '',
+    edgeReviewNotes: '',
+    edgeCheck1: false,
+    edgeCheck2: false,
+    engReviewDone: false,
+    bodyBreakDone: false,
+    fileUploaded: false,
+    fileName: '',
+    submitted: false,
+    breathCount: 0
+  };
+
+  var el = function(id){ return document.getElementById(id); };
+
+  // ============ Intro Modal ============
+  el('startBtn').addEventListener('click', function(){
+    el('intro').classList.add('hide');
+  });
+
+  // ============ Step Navigation ============
+  function goToStep(n) {
+    if (n < 1 || n > 3) return;
+    state.currentStep = n;
+    // Update sections
+    [1,2,3].forEach(function(s){
+      var sec = el('step' + s);
+      if (sec) sec.classList.toggle('active', s === n);
+    });
+    // Update step bar
+    var bars = el('stepBar').querySelectorAll('.s');
+    bars.forEach(function(b){
+      var s = parseInt(b.getAttribute('data-step'));
+      b.classList.remove('active','done');
+      if (s < n) b.classList.add('done');
+      else if (s === n) b.classList.add('active');
+    });
+    // Scroll
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  // Step bar click
+  el('stepBar').addEventListener('click', function(e){
+    var s = e.target.closest('.s');
+    if (s) {
+      var n = parseInt(s.getAttribute('data-step'));
+      if (n <= state.currentStep) goToStep(n);
+    }
+  });
+
+  // ============ Step 1 → Step 2 ============
+  el('toStep2').addEventListener('click', function(){
+    goToStep(2);
+  });
+
+  // ============ Step 2: Textareas ============
+  el('selfTestNotes').addEventListener('input', function(){
+    state.selfTestNotes = this.value.trim();
+    el('selfTestCounter').textContent = this.value.length + ' 字';
+  });
+
+  el('iterLog').addEventListener('input', function(){
+    state.iterLog = this.value.trim();
+    el('iterLogCounter').textContent = this.value.length + ' 字';
+  });
+
+  el('edgeReviewNotes').addEventListener('input', function(){
+    state.edgeReviewNotes = this.value.trim();
+  });
+
+  // Edge checkboxes
+  el('edgeCheck1').addEventListener('change', function(){
+    state.edgeCheck1 = this.checked;
+  });
+  el('edgeCheck2').addEventListener('change', function(){
+    state.edgeCheck2 = this.checked;
+  });
+
+  // ============ Checkpoint: Engineering Review ============
+  el('engReviewBtn').addEventListener('click', function(){
+    if (state.engReviewDone) return;
+    el('engDialog').classList.add('open');
+  });
+
+  el('engConfirmBtn').addEventListener('click', function(){
+    state.engReviewDone = true;
+    el('engDialog').classList.remove('open');
+    // Update card
+    el('cpEng').classList.add('completed');
+    el('cpEngStatus').textContent = '已通过';
+    el('cpEngStatus').classList.remove('pending');
+    el('cpEngStatus').classList.add('done');
+    el('engReviewBtn').textContent = '✅ 审查完成';
+    el('engReviewBtn').disabled = true;
+    el('engReviewBtn').style.opacity = '.5';
+    checkCheckpoints();
+  });
+
+  // ============ Checkpoint: Body Break (Breathing Animation) ============
+  var breathingActive = false;
+  var breathInterval = null;
+
+  el('breathStartBtn').addEventListener('click', function(){
+    if (state.bodyBreakDone) return;
+    if (breathingActive) return;
+    startBreathing();
+  });
+
+  function startBreathing(){
+    breathingActive = true;
+    state.breathCount = 0;
+    el('breathStartBtn').disabled = true;
+    el('breathStartBtn').textContent = '呼吸中…';
+    doBreathCycle();
+  }
+
+  function doBreathCycle(){
+    if (state.breathCount >= 3){
+      finishBreathing();
+      return;
+    }
+
+    var circle = el('breathCircle');
+    var text = el('breathText');
+    var counter = el('breathCounter');
+
+    // Inhale phase (4 seconds)
+    text.textContent = '吸气…';
+    circle.classList.add('expand');
+    circle.style.transition = 'width 4s ease, height 4s ease, background 4s ease, box-shadow 4s ease';
+
+    setTimeout(function(){
+      // Exhale phase (4 seconds)
+      text.textContent = '呼气…';
+      circle.classList.remove('expand');
+
+      setTimeout(function(){
+        state.breathCount++;
+        counter.textContent = state.breathCount + ' / 3';
+        doBreathCycle();
+      }, 4200);
+    }, 4200);
+  }
+
+  function finishBreathing(){
+    breathingActive = false;
+    state.bodyBreakDone = true;
+    el('breathText').textContent = '完成！感觉好些了吗？';
+    el('breathCounter').textContent = '3 / 3 ✓';
+    el('breathStartBtn').textContent = '✅ 已完成';
+    el('breathStartBtn').disabled = true;
+
+    // Update card
+    el('cpBody').classList.add('completed');
+    el('cpBodyStatus').textContent = '已通过';
+    el('cpBodyStatus').classList.remove('pending');
+    el('cpBodyStatus').classList.add('done');
+
+    checkCheckpoints();
+  }
+
+  // ============ Check both checkpoints ============
+  function checkCheckpoints(){
+    if (state.engReviewDone && state.bodyBreakDone){
+      var btn = el('toStep3');
+      btn.disabled = false;
+      el('step2hint').textContent = '检查点全部通过！';
+      el('step2hint').style.color = 'var(--primary-deep)';
+    }
+  }
+
+  // ============ Step 2 → Step 3 ============
+  el('toStep3').addEventListener('click', function(){
+    if (!state.engReviewDone || !state.bodyBreakDone) return;
+    goToStep(3);
+  });
+
+  // ============ Step 3: Upload Simulation ============
+  var uploadArea = el('uploadArea');
+
+  uploadArea.addEventListener('click', function(){
+    simulateUpload();
+  });
+
+  uploadArea.addEventListener('dragover', function(e){
+    e.preventDefault();
+    uploadArea.style.borderColor = 'var(--primary)';
+    uploadArea.style.background = 'var(--primary-soft)';
+  });
+
+  uploadArea.addEventListener('dragleave', function(){
+    uploadArea.style.borderColor = '';
+    uploadArea.style.background = '';
+  });
+
+  uploadArea.addEventListener('drop', function(e){
+    e.preventDefault();
+    uploadArea.style.borderColor = '';
+    uploadArea.style.background = '';
+    simulateUpload();
+  });
+
+  function simulateUpload(){
+    // Simulate a file upload
+    state.fileUploaded = true;
+    var fakeNames = ['anti-bullying-demo.html', 'my-ai-helper.zip', 'demo-project.zip'];
+    var fakeSizes = ['12.4 KB', '156 KB', '2.1 MB'];
+    var idx = Math.floor(Math.random() * fakeNames.length);
+    state.fileName = fakeNames[idx];
+
+    // Update UI
+    uploadArea.innerHTML = '<span class="up-icon" style="opacity:1">✅</span><span class="up-title" style="color:var(--primary-deep)">文件已上传！</span><span class="up-sub">点击可重新上传</span>';
+    uploadArea.style.borderColor = 'var(--primary)';
+    uploadArea.style.borderStyle = 'solid';
+    uploadArea.style.background = 'var(--primary-soft)';
+
+    // Show file info
+    var fileInfo = el('fileInfo');
+    fileInfo.style.display = 'flex';
+    el('fileName').textContent = state.fileName;
+    el('fileSize').textContent = fakeSizes[idx];
+
+    // Enable submit
+    el('submitWorkBtn').disabled = false;
+  }
+
+  el('removeFile').addEventListener('click', function(){
+    state.fileUploaded = false;
+    state.fileName = '';
+    // Reset upload area
+    uploadArea.innerHTML = '<span class="up-icon">📁</span><span class="up-title">点击或拖拽文件到这里</span><span class="up-sub">支持 .html / .zip / 文件夹（模拟上传）</span>';
+    uploadArea.style.borderColor = '';
+    uploadArea.style.borderStyle = 'dashed';
+    uploadArea.style.background = '';
+    // Hide file info
+    el('fileInfo').style.display = 'none';
+    // Disable submit
+    el('submitWorkBtn').disabled = true;
+  });
+
+  // ============ Submit Work ============
+  el('submitWorkBtn').addEventListener('click', function(){
+    if (!state.fileUploaded) return;
+    if (state.submitted) return;
+
+    var btn = el('submitWorkBtn');
+    btn.textContent = '⏳ 提交中…';
+    btn.disabled = true;
+
+    setTimeout(function(){
+      state.submitted = true;
+
+      // Generate URL
+      var url = 'https://ai5000-demo.vercel.app/xiaowu-' + (1000 + Math.floor(Math.random() * 9000));
+      el('demoUrl').textContent = url;
+
+      // Show URL result
+      el('urlResult').classList.add('show');
+
+      // Update submit button
+      btn.textContent = '✅ 已提交';
+      btn.style.background = '#4CAF50';
+
+      // Populate completion card
+      el('lcUrl').innerHTML = '<a href="#" style="color:var(--blue-deep)">' + url + '</a>';
+      el('lcIter').textContent = state.iterLog || '（未填写迭代记录）';
+      el('lcEdge').textContent = state.edgeReviewNotes || (state.edgeCheck1 && state.edgeCheck2 ? '已确认隐私和安全检查' : '（未完成）');
+      el('lcCheckpoint').innerHTML = '🔧 工程审查：' + (state.engReviewDone ? '✓' : '✗') + '<br/>🧘 身体休息：' + (state.bodyBreakDone ? '✓' : '✗');
+
+      // Show completion card
+      setTimeout(function(){
+        el('completeCard').classList.add('show');
+        el('completeCard').scrollIntoView({behavior: 'smooth', block: 'center'});
+      }, 300);
+
+      // Mark step bar all done
+      var bars = el('stepBar').querySelectorAll('.s');
+      bars.forEach(function(b){
+        b.classList.remove('active');
+        b.classList.add('done');
+      });
+    }, 1500);
+  });
+
+  // ============ Copy URL ============
+  el('copyUrlBtn').addEventListener('click', function(){
+    var url = el('demoUrl').textContent;
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(function(){
+        el('copyUrlBtn').textContent = '✅ 已复制';
+        setTimeout(function(){ el('copyUrlBtn').textContent = '📋 复制'; }, 1500);
+      });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = url;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      el('copyUrlBtn').textContent = '✅ 已复制';
+      setTimeout(function(){ el('copyUrlBtn').textContent = '📋 复制'; }, 1500);
+    }
+  });
+
+  // ============ Intersection Observer for reveal animations ============
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold: 0.1});
+  document.querySelectorAll('.reveal').forEach(function(elem, i){
+    elem.style.transitionDelay = (i % 3 * 60) + 'ms';
+    io.observe(elem);
+  });
+
+})();
+</script>
+<script src="widget.js"></script>
+</body>
+</html>

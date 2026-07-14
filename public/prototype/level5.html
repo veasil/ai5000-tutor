@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>第 5 关 · AI机制拆解局 — AI5000天 负责任开发者</title>
+<meta name="description" content="实感力锻造 · AI机制拆解局：看清AI如何影响和牵引人。" />
+<link rel="icon" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@400;500;600;700;900&family=ZCOOL+KuaiLe&family=Press+Start+2P&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+/* ===== Level 5 custom ===== */
+:root{
+  --sense:#4CAF50; --sense-deep:#2E7D32; --sense-soft:#E8F5E9;
+  --can-bg:#E3F2FD; --can-border:#1976D2; --can-accent:#1565C0;
+  --cant-bg:#FFF3E0; --cant-border:#E65100; --cant-accent:#BF360C;
+}
+
+/* topic echo bar */
+.topic-echo{
+  background:var(--surface);border:2px solid var(--ink);border-radius:14px;
+  padding:12px 18px;display:flex;align-items:center;gap:12px;
+  margin:18px 0 0;box-shadow:var(--sh-sm);
+}
+.topic-echo .te-label{font-size:12px;font-weight:700;color:var(--ink-mute);letter-spacing:1px;text-transform:uppercase}
+.topic-echo .te-val{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--primary-deep)}
+
+/* step content containers */
+.step-content{display:none;animation:fadeUp .35s ease}
+.step-content.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ===== Step 1: Panorama blocks ===== */
+.pano-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
+.pano-block{
+  background:var(--surface);border:2px solid var(--ink);border-radius:18px;
+  padding:24px;box-shadow:var(--sh);transition:transform .15s ease,box-shadow .15s ease;
+  display:flex;flex-direction:column;gap:14px;cursor:default;
+}
+.pano-block:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+.pano-block .p-head{display:flex;align-items:center;gap:12px}
+.pano-block .p-icon{
+  width:52px;height:52px;border:2px solid var(--ink);border-radius:12px;
+  display:grid;place-items:center;font-size:26px;flex:none;
+  box-shadow:var(--sh-sm);
+}
+.pano-block .p-icon.i1{background:#E3F2FD}
+.pano-block .p-icon.i2{background:#F3E5F5}
+.pano-block .p-icon.i3{background:#E8F5E9}
+.pano-block .p-icon.i4{background:#FFF3E0}
+.pano-block .p-title{font-family:var(--serif);font-weight:700;font-size:17px}
+.pano-block .p-desc{font-size:15px;color:var(--ink-soft);line-height:1.7}
+.pano-block .p-illus{
+  height:100px;border:2px dashed var(--line);border-radius:12px;
+  display:grid;place-items:center;font-size:13px;color:var(--ink-mute);
+  background:var(--surface-warm);margin-top:4px;
+}
+.pano-block .p-illus.illus-img{
+  background-size:cover;background-position:center;border-style:solid;
+}
+
+/* ===== Step 2: Can / Cannot ===== */
+.can-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:20px}
+.can-col{display:flex;flex-direction:column;gap:14px}
+.can-col-title{
+  font-family:var(--serif);font-weight:800;font-size:20px;
+  text-align:center;padding:10px 0;border-radius:14px;
+  border:2px solid var(--ink);
+}
+.can-col-title.yes{background:var(--can-bg);color:var(--can-accent);box-shadow:var(--sh-sm)}
+.can-col-title.no{background:var(--cant-bg);color:var(--cant-accent);box-shadow:var(--sh-sm)}
+.case-card{
+  background:var(--surface);border:2px solid var(--ink);border-radius:14px;
+  padding:16px;box-shadow:var(--sh-sm);transition:transform .15s,box-shadow .15s;
+  cursor:pointer;position:relative;overflow:hidden;
+}
+.case-card:hover{transform:translateY(-3px);box-shadow:5px 5px 0 var(--ink)}
+.case-card .cc-tag{
+  position:absolute;top:10px;right:10px;
+  font-family:var(--pixel);font-size:8px;padding:3px 8px;border-radius:999px;
+}
+.case-card.yes .cc-tag{background:var(--can-bg);color:var(--can-accent);border:1.5px solid var(--can-border)}
+.case-card.no .cc-tag{background:var(--cant-bg);color:var(--cant-accent);border:1.5px solid var(--cant-border)}
+.case-card .cc-icon{font-size:28px;margin-bottom:8px}
+.case-card .cc-title{font-family:var(--serif);font-weight:700;font-size:16px;margin-bottom:4px}
+.case-card .cc-desc{font-size:13px;color:var(--ink-soft);line-height:1.5}
+.case-card .cc-example{
+  max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;
+  font-size:13px;color:var(--ink-soft);line-height:1.6;
+  border-top:1px solid var(--line);padding:0;
+}
+.case-card.open .cc-example{max-height:200px;padding:10px 0 0}
+
+/* ===== Step 3: Decompose ===== */
+.decompose{display:flex;flex-direction:column;gap:24px}
+.dec-textarea{
+  width:100%;min-height:120px;border:2px solid var(--ink);border-radius:14px;
+  padding:16px;font-family:var(--sans);font-size:15px;line-height:1.7;
+  resize:vertical;outline:none;background:var(--surface);box-shadow:var(--sh-sm);
+}
+.dec-textarea:focus{border-color:var(--primary);box-shadow:3px 3px 0 var(--primary)}
+.dec-textarea::placeholder{color:var(--ink-mute)}
+
+.list-section{background:var(--surface);border:2px solid var(--ink);border-radius:18px;padding:24px;box-shadow:var(--sh)}
+.list-section .ls-head{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.list-section .ls-icon{font-size:22px}
+.list-section .ls-title{font-family:var(--serif);font-weight:700;font-size:18px}
+.list-section.yes .ls-title{color:var(--can-accent)}
+.list-section.no .ls-title{color:var(--cant-accent)}
+
+.list-items{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.list-item{
+  display:flex;align-items:center;gap:10px;
+  background:var(--surface-warm);border:2px solid var(--line);border-radius:10px;
+  padding:10px 14px;animation:fadeUp .25s ease;
+}
+.list-item .li-text{flex:1;font-size:14px;font-weight:500}
+.list-item .li-remove{
+  width:22px;height:22px;border-radius:50%;border:1.5px solid var(--ink-mute);
+  background:var(--surface);display:grid;place-items:center;cursor:pointer;
+  font-size:12px;color:var(--ink-mute);transition:background .15s,color .15s;
+}
+.list-item .li-remove:hover{background:var(--danger-soft);color:var(--danger);border-color:var(--danger)}
+
+.list-add{display:flex;gap:8px}
+.list-add input{
+  flex:1;border:2px solid var(--line);border-radius:10px;padding:9px 12px;
+  font-family:var(--sans);font-size:14px;outline:none;
+}
+.list-add input:focus{border-color:var(--primary)}
+.list-add button{
+  border:2px solid var(--ink);border-radius:10px;padding:9px 16px;
+  font-weight:700;font-size:13px;cursor:pointer;transition:transform .12s;
+  box-shadow:var(--sh-sm);
+}
+.list-add button:hover{transform:translateY(-1px)}
+.list-section.yes .list-add button{background:var(--can-bg);color:var(--can-accent)}
+.list-section.no .list-add button{background:var(--cant-bg);color:var(--cant-accent)}
+
+/* output preview */
+.output-preview{
+  background:var(--ink);color:#fff;border-radius:14px;padding:18px 22px;
+  font-family:monospace;font-size:13px;line-height:1.8;white-space:pre-wrap;
+  box-shadow:var(--sh);margin-top:8px;
+}
+.output-preview .op-key{color:var(--primary-bright)}
+.output-preview .op-str{color:#A5D6A7}
+.output-preview .op-arr{color:#90CAF9}
+
+/* submit area */
+.submit-area{
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:8px;
+}
+.submit-area .status{font-size:14px;color:var(--ink-soft);font-weight:500}
+
+/* responsive */
+@media(max-width:900px){
+  .pano-grid{grid-template-columns:1fr}
+  .can-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="index.html">
+      <img class="logo" src="assets/logo.png" alt="AI5000天 标志" />
+      <div class="title-lock"><span class="n1">AI5000天</span><span class="n2">负责任开发者</span><span class="pill-tag">AI 创客 Tutor</span></div>
+    </a>
+    <div class="tabs">
+      <a href="works.html">创客作品墙</a>
+      <a href="index.html">闯关首页</a>
+      <a href="works.html">我的作品</a>
+      <a href="index.html#content">我的徽章</a>
+      <a href="map.html" class="active">闯关地图</a>
+    </div>
+    <div class="me"><span class="ava">伍</span><span>小伍创客 8023</span></div>
+  </div>
+</nav>
+
+<!-- 进入讲解：居中模态 + 遮罩 -->
+<div class="overlay" id="intro">
+  <div class="modal">
+    <div class="mwu"><img src="assets/wu-13.png" alt="小伍" /></div>
+    <div class="mbubble">
+      <h2>欢迎来到第 5 关 · <b>AI机制拆解局</b>！</h2>
+      <p style="color:var(--ink-soft);margin-top:8px;line-height:1.7">前几关你选了议题、爆发了脑洞。现在我们要来拆开看看——AI 到底是怎么在背后影响人的？</p>
+      <ul class="msteps">
+        <li><span class="no">1</span><span><b>人机交互全景</b>：看看 AI 在生活里都做了什么。</span></li>
+        <li><span class="no">2</span><span><b>AI 能/不能</b>：划清一条线，AI 擅长什么、做不了什么？</span></li>
+        <li><span class="no">3</span><span><b>拆解我的议题</b>：回到你的议题，用你自己的话说清楚。</span></li>
+      </ul>
+      <div class="goal">🎯 本关目标：写出你议题的 AI 机制描述 + 能/不能清单，解锁第 6 关。</div>
+      <button class="btn btn-ink" id="startBtn">▶ 开始拆解</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="content wrap">
+    <a class="back" href="map.html">← 返回闯关地图</a>
+
+    <div class="lvl-head">
+      <div class="lvl-badge" style="background:var(--sense)"><img src="assets/power-sense.png" alt="" /><span class="lv">LV 05</span></div>
+      <div>
+        <h1>AI机制拆解局</h1>
+        <p>实感力锻造 · 看清 AI 如何影响和牵引人</p>
+      </div>
+    </div>
+
+    <!-- topic echo bar -->
+    <div class="topic-echo">
+      <span class="te-label">你的议题</span>
+      <span class="te-val" id="topicEcho">网络欺凌</span>
+    </div>
+
+    <div class="steps" id="stepBar">
+      <span class="step active" data-step="1">① 人机交互全景</span>
+      <span class="step" data-step="2">② AI 能/不能</span>
+      <span class="step" data-step="3">③ 拆解我的议题</span>
+    </div>
+
+    <!-- ===== Step 1: 人机交互全景 ===== -->
+    <div class="step-content active" id="step1">
+      <div class="guide reveal"><span class="gava"></span><span class="gb">AI 已经悄悄在很多地方影响我们了，一起看看 👇</span></div>
+
+      <div class="pano-grid">
+        <div class="pano-block reveal">
+          <div class="p-head">
+            <div class="p-icon i1">🎯</div>
+            <div class="p-title">推荐算法与广告</div>
+          </div>
+          <div class="p-desc">你越看什么，它越推什么——它在"猜"并"引导"你想要什么。</div>
+          <div class="p-illus">📐 插画占位：无限滚动的推荐流</div>
+        </div>
+
+        <div class="pano-block reveal">
+          <div class="p-head">
+            <div class="p-icon i2">👁️</div>
+            <div class="p-title">视觉识别与智能驾驶</div>
+          </div>
+          <div class="p-desc">它能"看懂"画面，但看懂 ≠ 真的理解。</div>
+          <div class="p-illus">📐 插画占位：摄像头 + 识别框</div>
+        </div>
+
+        <div class="pano-block reveal">
+          <div class="p-head">
+            <div class="p-icon i3">💬</div>
+            <div class="p-title">大模型与聊天机器人</div>
+          </div>
+          <div class="p-desc">它能陪你聊、帮你写，但它是在"预测下一个词"，不是真的懂你。</div>
+          <div class="p-illus">📐 插画占位：聊天气泡 + 齿轮</div>
+        </div>
+
+        <div class="pano-block reveal">
+          <div class="p-head">
+            <div class="p-icon i4">🤖</div>
+            <div class="p-title">AI 智能体与画图/创意/编程</div>
+          </div>
+          <div class="p-desc">它能帮你做出东西——本关结束你就会亲手用到。</div>
+          <div class="p-illus">📐 插画占位：AI 助手 + 画板</div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;margin-top:28px">
+        <button class="btn btn-ink" onclick="goStep(2)">下一步：AI 能/不能 →</button>
+      </div>
+    </div>
+
+    <!-- ===== Step 2: AI 能/不能 ===== -->
+    <div class="step-content" id="step2">
+      <div class="guide reveal"><span class="gava"></span><span class="gb">划一条线——AI 擅长什么，做不了什么？点开每张卡看看 👇</span></div>
+
+      <div class="can-row">
+        <!-- AI 擅长的 -->
+        <div class="can-col">
+          <div class="can-col-title yes">✅ AI 擅长的</div>
+
+          <div class="case-card yes reveal" onclick="toggleCard(this)">
+            <span class="cc-tag">CAN</span>
+            <div class="cc-icon">🔍</div>
+            <div class="cc-title">找规律、发现模式</div>
+            <div class="cc-desc">AI 能在海量数据里找到人眼看不到的规律。</div>
+            <div class="cc-example">比如：从几百万条购买记录里发现"买纸尿裤的人也常买啤酒"，推荐系统据此推送——你看到的是"刚好是我要的"，背后是 AI 找到了模式。</div>
+          </div>
+
+          <div class="case-card yes reveal" onclick="toggleCard(this)">
+            <span class="cc-tag">CAN</span>
+            <div class="cc-icon">📝</div>
+            <div class="cc-title">快速生成草稿</div>
+            <div class="cc-desc">写文案、画草图、出方案——AI 一秒出第一版。</div>
+            <div class="cc-example">比如：让 AI 帮你写一封道歉信，它 3 秒就出稿。但信里的感情是它"算"出来的，不是它"感受"到的。</div>
+          </div>
+
+          <div class="case-card yes reveal" onclick="toggleCard(this)">
+            <span class="cc-tag">CAN</span>
+            <div class="cc-icon">♾️</div>
+            <div class="cc-title">不知疲倦地执行</div>
+            <div class="cc-desc">AI 不会累、不会烦，可以 24 小时重复同样的操作。</div>
+            <div class="cc-example">比如：客服机器人可以同时回复 1000 个人的问题，每个都"态度很好"。但它并不在乎你的感受。</div>
+          </div>
+        </div>
+
+        <!-- AI 不行的 -->
+        <div class="can-col">
+          <div class="can-col-title no">🚫 AI 不行的</div>
+
+          <div class="case-card no reveal" onclick="toggleCard(this)">
+            <span class="cc-tag">CAN'T</span>
+            <div class="cc-icon">⚖️</div>
+            <div class="cc-title">承担责任</div>
+            <div class="cc-desc">AI 做错了事，它不会道歉，也没法被追责。</div>
+            <div class="cc-example">比如：AI 误判某人"有风险"导致他被拒贷，AI 不会赔偿也不会内疚——责任必须由人来扛。</div>
+          </div>
+
+          <div class="case-card no reveal" onclick="toggleCard(this)">
+            <span class="cc-tag">CAN'T</span>
+            <div class="cc-icon">❤️</div>
+            <div class="cc-title">真正共情</div>
+            <div class="cc-desc">AI 可以说"我理解你"，但它并不真的理解你的感受。</div>
+            <div class="cc-example">比如：你对 AI 说"我好难过"，它回"听起来你很难过，我陪着你"——但这些话是模式匹配出来的，不是因为它心疼你。</div>
+          </div>
+
+          <div class="case-card no reveal" onclick="toggleCard(this)">
+            <span class="cc-tag">CAN'T</span>
+            <div class="cc-icon">🎭</div>
+            <div class="cc-title">辨别真实动机</div>
+            <div class="cc-desc">AI 分不清"开玩笑"和"真恶意"，也看不出背后的意图。</div>
+            <div class="cc-example">比如：有人在评论区说"你去死吧"，可能是朋友间的玩笑，也可能是真的网络暴力。AI 读不出语气和关系，容易误判。</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;margin-top:28px;flex-wrap:wrap;gap:10px">
+        <button class="btn btn-ghost" onclick="goStep(1)" style="border:2px solid var(--ink);border-radius:999px;padding:15px 30px;font-family:var(--serif);font-weight:600;font-size:17px;cursor:pointer;background:var(--surface)">← 上一步</button>
+        <button class="btn btn-ink" onclick="goStep(3)">下一步：拆解我的议题 →</button>
+      </div>
+    </div>
+
+    <!-- ===== Step 3: 拆解我的议题 ===== -->
+    <div class="step-content" id="step3">
+      <div class="guide reveal"><span class="gava"></span><span class="gb" id="decGuide">回到你的「网络欺凌」——这里面，AI 是怎么影响/牵引人的？用你自己的话说。</span></div>
+
+      <div class="decompose">
+        <!-- 开放描述 -->
+        <div class="reveal">
+          <label class="cap-label" style="margin-bottom:8px;display:block;font-size:13px">✏️ 议题机制描述</label>
+          <textarea class="dec-textarea" id="mechanismDesc" placeholder="比如：它一直给我推荐类似的恶意评论，让我忍不住去看，越看越难受……"></textarea>
+        </div>
+
+        <!-- 能/不能清单 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px" id="listGrid">
+          <!-- AI 能帮 -->
+          <div class="list-section yes reveal">
+            <div class="ls-head"><span class="ls-icon">✅</span><span class="ls-title">就我的议题，AI 能帮：</span></div>
+            <div class="list-items" id="canList"></div>
+            <div class="list-add">
+              <input id="canInput" placeholder="写一条 AI 能帮的，比如：自动识别恶意评论" />
+              <button onclick="addListItem('can')">+ 添加</button>
+            </div>
+          </div>
+
+          <!-- AI 不能替 -->
+          <div class="list-section no reveal">
+            <div class="ls-head"><span class="ls-icon">🚫</span><span class="ls-title">就我的议题，AI 不能替：</span></div>
+            <div class="list-items" id="cantList"></div>
+            <div class="list-add">
+              <input id="cantInput" placeholder="写一条 AI 不能替的，比如：判断哪些是开玩笑" />
+              <button onclick="addListItem('cant')">+ 添加</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 输出预览 -->
+        <div class="reveal">
+          <label class="cap-label" style="margin-bottom:8px;display:block;font-size:13px">📋 你的拆解结果预览</label>
+          <div class="output-preview" id="outputPreview">{ 议题机制描述: <span class="op-str">"…"</span>, AI能: <span class="op-arr">[]</span>, AI不能: <span class="op-arr">[]</span> }</div>
+        </div>
+
+        <!-- 提交 -->
+        <div class="submit-area reveal">
+          <button class="btn btn-ink" id="submitBtn" onclick="submitDecompose()">提交我的拆解</button>
+          <span class="status" id="submitStatus">完成后将点亮「实感力」并解锁第 6 关</span>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-start;margin-top:20px">
+        <button class="btn btn-ghost" onclick="goStep(2)" style="border:2px solid var(--ink);border-radius:999px;padding:15px 30px;font-family:var(--serif);font-weight:600;font-size:17px;cursor:pointer;background:var(--surface)">← 上一步</button>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<footer>
+  <div class="foot-in">
+    <span>© 2026 AI5000天 · 负责任开发者 AI 创客 Tutor</span>
+    <div class="foot-links"><a href="map.html">闯关地图</a><a href="states.html">设计 · 状态页</a><a href="#">隐私政策</a></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* ===== Config ===== */
+  var TOPIC = '网络欺凌'; // Will be dynamic from URL/state in production
+
+  /* ===== Intro modal ===== */
+  document.getElementById('startBtn').addEventListener('click', function(){
+    document.getElementById('intro').classList.add('hide');
+  });
+
+  /* ===== Step navigation ===== */
+  var currentStep = 1;
+  window.goStep = function(n){
+    if(n < 1 || n > 3) return;
+    // deactivate old
+    document.getElementById('step' + currentStep).classList.remove('active');
+    document.querySelector('#stepBar .step[data-step="'+currentStep+'"]').classList.remove('active');
+    if(currentStep < n){
+      document.querySelector('#stepBar .step[data-step="'+currentStep+'"]').classList.add('done');
+    }
+    // activate new
+    currentStep = n;
+    document.getElementById('step' + currentStep).classList.add('active');
+    var newStepEl = document.querySelector('#stepBar .step[data-step="'+currentStep+'"]');
+    newStepEl.classList.add('active');
+    newStepEl.classList.remove('done');
+    // re-observe reveals in new step
+    document.querySelectorAll('#step'+currentStep+' .reveal:not(.in)').forEach(function(el){
+      io.observe(el);
+    });
+    // scroll to top of content
+    document.querySelector('.steps').scrollIntoView({behavior:'smooth',block:'start'});
+    // update preview when entering step 3
+    if(n === 3) updatePreview();
+  };
+
+  // step bar click
+  document.querySelectorAll('#stepBar .step').forEach(function(s){
+    s.addEventListener('click', function(){
+      goStep(parseInt(s.dataset.step));
+    });
+  });
+
+  /* ===== Topic echo ===== */
+  // Parse from URL param or use default
+  var urlParams = new URLSearchParams(window.location.search);
+  var topicParam = urlParams.get('topic');
+  if(topicParam){
+    TOPIC = decodeURIComponent(topicParam);
+  }
+  document.getElementById('topicEcho').textContent = TOPIC;
+  document.getElementById('decGuide').innerHTML = '回到你的「<b>'+TOPIC+'</b>」——这里面，AI 是怎么影响/牵引人的？用你自己的话说。';
+
+  /* ===== Case card expand/collapse ===== */
+  window.toggleCard = function(card){
+    card.classList.toggle('open');
+  };
+
+  /* ===== Can/Cannot lists ===== */
+  var canItems = [];
+  var cantItems = [];
+
+  window.addListItem = function(type){
+    var input = document.getElementById(type + 'Input');
+    var val = input.value.trim();
+    if(!val) return;
+    if(type === 'can'){
+      canItems.push(val);
+    } else {
+      cantItems.push(val);
+    }
+    input.value = '';
+    renderList(type);
+    updatePreview();
+  };
+
+  // Enter key support
+  document.getElementById('canInput').addEventListener('keydown', function(e){ if(e.key==='Enter') addListItem('can'); });
+  document.getElementById('cantInput').addEventListener('keydown', function(e){ if(e.key==='Enter') addListItem('cant'); });
+
+  function renderList(type){
+    var list = type === 'can' ? canItems : cantItems;
+    var container = document.getElementById(type + 'List');
+    container.innerHTML = '';
+    list.forEach(function(item, idx){
+      var div = document.createElement('div');
+      div.className = 'list-item';
+      div.innerHTML = '<span class="li-text">'+escHtml(item)+'</span><button class="li-remove" title="移除" onclick="removeListItem(\''+type+'\','+idx+')">×</button>';
+      container.appendChild(div);
+    });
+  }
+
+  window.removeListItem = function(type, idx){
+    if(type === 'can'){
+      canItems.splice(idx, 1);
+    } else {
+      cantItems.splice(idx, 1);
+    }
+    renderList(type);
+    updatePreview();
+  };
+
+  /* ===== Output preview ===== */
+  var descEl = document.getElementById('mechanismDesc');
+  descEl.addEventListener('input', updatePreview);
+
+  function updatePreview(){
+    var desc = descEl.value.trim() || '…';
+    var canArr = canItems.length ? canItems.map(function(s){ return '"'+s+'"'; }).join(', ') : '';
+    var cantArr = cantItems.length ? cantItems.map(function(s){ return '"'+s+'"'; }).join(', ') : '';
+    document.getElementById('outputPreview').innerHTML =
+      '{<br>' +
+      '  <span class="op-key">议题机制描述</span>: <span class="op-str">"' + escHtml(desc) + '"</span>,<br>' +
+      '  <span class="op-key">AI能</span>: <span class="op-arr">[' + canArr + ']</span>,<br>' +
+      '  <span class="op-key">AI不能</span>: <span class="op-arr">[' + cantArr + ']</span><br>' +
+      '}';
+  }
+
+  /* ===== Submit ===== */
+  window.submitDecompose = function(){
+    var desc = descEl.value.trim();
+    if(!desc){
+      descEl.focus();
+      descEl.style.borderColor = 'var(--danger)';
+      setTimeout(function(){ descEl.style.borderColor = ''; }, 1500);
+      return;
+    }
+    if(canItems.length === 0 && cantItems.length === 0){
+      document.getElementById('canInput').focus();
+      var status = document.getElementById('submitStatus');
+      status.textContent = '⚠️ 至少添加一条「AI 能帮」或「AI 不能替」';
+      status.style.color = 'var(--danger)';
+      setTimeout(function(){ status.style.color = ''; status.textContent = '完成后将点亮「实感力」并解锁第 6 关'; }, 2500);
+      return;
+    }
+
+    var output = {
+      议题机制描述: desc,
+      AI能: canItems.slice(),
+      AI不能: cantItems.slice()
+    };
+    console.log('Level 5 output:', JSON.stringify(output, null, 2));
+
+    var btn = document.getElementById('submitBtn');
+    btn.textContent = '✅ 拆解完成！';
+    btn.style.background = 'var(--sense)';
+    btn.disabled = true;
+
+    // Add link to next level
+    var statusEl = document.getElementById('submitStatus');
+    statusEl.innerHTML = '🎉 实感力已点亮！<a href="level6.html" style="color:var(--sense-deep);font-weight:700;text-decoration:underline;margin-left:6px">进入第 6 关 →</a>';
+
+    // Mark all steps done
+    document.querySelectorAll('#stepBar .step').forEach(function(s){
+      s.classList.add('done');
+      s.classList.remove('active');
+    });
+  };
+
+  /* ===== IntersectionObserver reveal ===== */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold: 0.1});
+
+  document.querySelectorAll('.reveal').forEach(function(el, i){
+    el.style.transitionDelay = (i % 3 * 60) + 'ms';
+    io.observe(el);
+  });
+
+  /* ===== Util ===== */
+  function escHtml(s){
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+})();
+</script>
+<script src="widget.js"></script>
+</body>
+</html>

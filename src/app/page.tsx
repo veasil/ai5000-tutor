@@ -2,32 +2,42 @@ import { StartMvpButton } from "./StartMvpButton";
 
 export default function HomePage() {
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        padding: "48px min(6vw, 72px)",
-        background:
-          "linear-gradient(135deg, #f5ead8 0%, #dbeee8 54%, #f8d89b 100%)",
-        color: "#332316",
-        fontFamily: "Noto Sans SC, sans-serif",
-      }}
-    >
-      <div style={{ maxWidth: 880 }}>
-        <p style={{ letterSpacing: "0.14em" }}>AI5000天 · MVP</p>
-        <h1 style={{ fontSize: "clamp(40px, 7vw, 76px)", lineHeight: 1.02 }}>
-          负责任开发者 AI Tutor
-        </h1>
-        <p style={{ fontSize: 20, lineHeight: 1.7 }}>
-          Next.js 应用壳已接入早期状态机和数据库模型。第1关先嵌入 WQT
-          卡牌系统，WQT 继续负责卡牌、计分和复盘，AI Tutor 负责保存旅程进度。
-        </p>
+    <main style={{ minHeight: "100vh", background: "#f8efe0" }}>
+      <iframe
+        src="/prototype/index.html"
+        title="AI5000天完整静态首页原型"
+        style={{
+          width: "100%",
+          minHeight: "100vh",
+          border: 0,
+          display: "block",
+          background: "#f8efe0",
+        }}
+      />
+      <aside
+        style={{
+          position: "fixed",
+          right: 18,
+          bottom: 18,
+          width: "min(360px, calc(100vw - 36px))",
+          display: "grid",
+          gap: 10,
+          padding: 16,
+          border: "3px solid #2f281f",
+          borderRadius: 18,
+          background: "rgba(255, 250, 239, 0.96)",
+          boxShadow: "8px 8px 0 rgba(47, 40, 31, 0.25)",
+          zIndex: 20,
+          fontFamily: "Noto Sans SC, sans-serif",
+          color: "#2f281f",
+        }}
+      >
+        <strong>Next MVP 入口</strong>
+        <span style={{ lineHeight: 1.5 }}>
+          首页显示原始 HTML 原型。点这里会创建真实 Journey 并进入 WQT 第1关。
+        </span>
         <StartMvpButton />
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 28 }}>
-          <a href="/journey/demo-journey/level/1">打开第1关 WQT 嵌入页</a>
-          <a href="/api/health">查看 health API</a>
-          <a href="https://veasil.github.io/ai5000-tutor/">打开静态原型</a>
-        </div>
-      </div>
+      </aside>
     </main>
   );
 }

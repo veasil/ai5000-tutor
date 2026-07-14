@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>第 7 关 · 愿景与方法站 — AI5000天 负责任开发者</title>
+<meta name="description" content="创心力迸发 · 愿景与方法站：画出你的方案蓝图，把点子变成可落地的 Demo。" />
+<link rel="icon" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@400;500;600;700;900&family=ZCOOL+KuaiLe&family=Press+Start+2P&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+/* ============ Level 7: Vision & Method Station ============ */
+
+/* Step bar */
+.step-bar{display:flex;gap:6px;margin:28px 0 8px;flex-wrap:wrap}
+.step-bar .s{font-size:13px;font-weight:600;color:var(--ink-mute);background:var(--surface);border:2px solid var(--line);border-radius:999px;padding:8px 16px;cursor:pointer;transition:all .2s;user-select:none}
+.step-bar .s:hover{border-color:var(--primary);color:var(--primary-deep)}
+.step-bar .s.done{color:var(--primary-deep);border-color:var(--primary);background:var(--primary-soft)}
+.step-bar .s.done::before{content:'✓ ';font-size:11px}
+.step-bar .s.active{color:#fff;background:var(--ink);border-color:var(--ink);box-shadow:var(--sh-sm)}
+
+/* Topic echo bar */
+.topic-echo{background:linear-gradient(135deg,var(--primary-soft) 0%,var(--blue-soft) 100%);border:2px solid var(--ink);border-radius:18px;padding:18px 24px;box-shadow:var(--sh);margin:20px 0 0;position:relative;overflow:hidden}
+.topic-echo::before{content:'';position:absolute;top:-18px;right:-18px;width:70px;height:70px;background:var(--primary);opacity:.12;border-radius:50%}
+.topic-echo .te-label{font-family:var(--pixel);font-size:8px;color:var(--primary-deep);letter-spacing:1px;margin-bottom:8px}
+.topic-echo .te-grid{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;align-items:baseline}
+.topic-echo .te-k{font-size:12px;font-weight:700;color:var(--primary-deep);white-space:nowrap}
+.topic-echo .te-v{font-size:15px;color:var(--ink);line-height:1.6}
+
+/* Step sections */
+.step-section{display:none;padding:24px 0 8px}
+.step-section.active{display:block;animation:stepIn .35s ease}
+@keyframes stepIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* Wu bubble for each step */
+.wu-step{display:flex;align-items:flex-start;gap:12px;margin-bottom:20px}
+.wu-step .gava{width:40px;height:40px;border-radius:50%;border:2px solid var(--ink);background:url('assets/wu-13.png') center top/170% no-repeat,var(--primary-soft);flex:none}
+.wu-step .gb{background:var(--surface);border:2px solid var(--ink);border-radius:14px;padding:12px 18px;box-shadow:var(--sh-sm);font-family:var(--fun);font-size:16px;line-height:1.5}
+
+/* Vision section */
+.vision-card{background:var(--surface);border:3px solid var(--ink);border-radius:20px;padding:28px;box-shadow:var(--sh);position:relative;overflow:hidden}
+.vision-card::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;background:var(--primary);opacity:.08;border-radius:50%}
+.vision-card .vc-icon{font-size:36px;margin-bottom:10px}
+.vision-card .vc-title{font-family:var(--serif);font-weight:800;font-size:22px;margin-bottom:6px}
+.vision-card .vc-sub{font-size:14px;color:var(--ink-soft);margin-bottom:20px;line-height:1.6}
+.vision-fields{display:flex;flex-direction:column;gap:18px}
+.vf-group{display:flex;flex-direction:column;gap:6px}
+.vf-label{font-size:12px;font-weight:700;letter-spacing:1px;color:var(--primary-deep);display:flex;align-items:center;gap:6px}
+.vf-label .vf-emoji{font-size:16px}
+.vf-input{border:2px solid var(--line);border-radius:12px;padding:12px 16px;font-family:var(--sans);font-size:15px;outline:none;resize:none;background:var(--surface-warm);transition:border-color .2s,box-shadow .2s;line-height:1.6}
+.vf-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(245,135,31,.15)}
+.vf-input::placeholder{color:var(--ink-mute)}
+
+/* ABC Canvas */
+.abc-canvas{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-top:16px}
+.abc-card{background:var(--surface);border:3px solid var(--ink);border-radius:18px;padding:22px;box-shadow:var(--sh);display:flex;flex-direction:column;gap:12px;transition:transform .15s ease,box-shadow .15s ease,border-color .15s}
+.abc-card:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 var(--ink)}
+.abc-card.card-a{border-top:5px solid #C0492E}
+.abc-card.card-b{border-top:5px solid #F5871F}
+.abc-card.card-c{border-top:5px solid #10B981}
+.abc-card .abc-letter{font-family:var(--pixel);font-size:28px;line-height:1;opacity:.7}
+.abc-card.card-a .abc-letter{color:#C0492E}
+.abc-card.card-b .abc-letter{color:#F5871F}
+.abc-card.card-c .abc-letter{color:#10B981}
+.abc-card .abc-title{font-family:var(--serif);font-weight:800;font-size:17px}
+.abc-card.card-a .abc-title{color:#C0492E}
+.abc-card.card-b .abc-title{color:#F5871F}
+.abc-card.card-c .abc-title{color:#10B981}
+.abc-card .abc-desc{font-size:13px;color:var(--ink-soft);line-height:1.5}
+.abc-card .abc-input{border:2px solid var(--line);border-radius:10px;padding:10px 14px;font-family:var(--sans);font-size:14px;outline:none;resize:none;background:var(--surface-warm);min-height:80px;transition:border-color .2s;flex:1}
+.abc-card .abc-input:focus{border-color:var(--primary)}
+.abc-card .abc-input::placeholder{color:var(--ink-mute)}
+
+/* Mid-point responsibility popup */
+.midpoint-overlay{position:fixed;inset:0;z-index:150;background:rgba(44,32,23,.55);display:flex;align-items:center;justify-content:center;padding:24px;animation:fade .2s ease}
+.midpoint-overlay.hide{display:none}
+.midpoint-card{background:var(--surface);border:3px solid var(--danger);border-radius:22px;padding:32px;box-shadow:8px 8px 0 var(--danger);max-width:560px;width:100%;animation:pop .25s ease}
+.midpoint-card .mp-icon{font-size:40px;margin-bottom:8px}
+.midpoint-card h3{font-family:var(--serif);font-weight:800;font-size:22px;color:var(--danger);margin-bottom:8px}
+.midpoint-card p{font-size:15px;color:var(--ink-soft);line-height:1.7;margin-bottom:18px}
+.midpoint-card .mp-question{background:var(--danger-soft);border:2px solid var(--danger);border-radius:12px;padding:14px 18px;font-weight:700;font-size:16px;color:var(--danger);margin-bottom:18px;text-align:center}
+.midpoint-card .mp-input{border:2px solid var(--danger);border-radius:12px;padding:12px 16px;font-family:var(--sans);font-size:15px;outline:none;resize:none;width:100%;min-height:60px;background:var(--surface-warm);transition:border-color .2s}
+.midpoint-card .mp-input:focus{box-shadow:0 0 0 3px rgba(192,73,46,.15)}
+.midpoint-btns{display:flex;gap:12px;margin-top:18px;justify-content:flex-end;flex-wrap:wrap}
+.mp-btn{font-family:var(--serif);font-weight:600;font-size:15px;border:none;border-radius:999px;padding:12px 24px;cursor:pointer;transition:transform .12s,box-shadow .12s}
+.mp-btn:hover{transform:translateY(-1px)}
+.mp-btn:active{transform:translateY(1px)}
+.mp-btn-primary{background:var(--danger);color:#fff;box-shadow:var(--sh-sm)}
+.mp-btn-primary:hover{box-shadow:var(--sh)}
+.mp-btn-ghost{background:var(--surface);border:2px solid var(--ink);color:var(--ink)}
+
+/* Demo planning */
+.demo-plan{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:16px}
+.demo-field{background:var(--surface);border:2px solid var(--ink);border-radius:16px;padding:18px;box-shadow:var(--sh-sm);display:flex;flex-direction:column;gap:8px}
+.demo-field .df-label{font-size:12px;font-weight:700;letter-spacing:1px;color:var(--primary-deep);display:flex;align-items:center;gap:6px}
+.demo-field .df-emoji{font-size:18px}
+.demo-field .df-input{border:2px solid var(--line);border-radius:10px;padding:10px 14px;font-family:var(--sans);font-size:14px;outline:none;resize:none;background:var(--surface-warm);min-height:70px;transition:border-color .2s;flex:1}
+.demo-field .df-input:focus{border-color:var(--primary)}
+.demo-field .df-input::placeholder{color:var(--ink-mute)}
+.demo-field.full{grid-column:1/-1}
+
+/* Blueprint generation */
+.blueprint-gen{margin-top:24px}
+.gen-btn{font-family:var(--serif);font-weight:700;font-size:17px;border:none;border-radius:999px;padding:16px 32px;cursor:pointer;transition:transform .12s,box-shadow .12s}
+.gen-btn.enabled{background:var(--primary);color:#fff;border:3px solid var(--ink);box-shadow:var(--sh)}
+.gen-btn.enabled:hover{transform:translateY(-2px);box-shadow:6px 6px 0 var(--ink)}
+.gen-btn.enabled:active{transform:translateY(2px);box-shadow:none}
+.gen-btn.disabled{background:var(--line);color:var(--ink-mute);border:2px solid var(--line);cursor:not-allowed;box-shadow:none}
+.gen-status{font-family:var(--fun);font-size:14px;color:var(--ink-soft);margin-top:8px}
+
+/* Blueprint result card */
+.blueprint-card{background:var(--surface);border:3px solid var(--primary);border-radius:22px;padding:28px;box-shadow:6px 6px 0 var(--primary);margin-top:24px;display:none}
+.blueprint-card.visible{display:block;animation:stepIn .4s ease}
+.blueprint-card h3{font-family:var(--serif);font-weight:800;font-size:22px;color:var(--primary-deep);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.bp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.bp-block{background:var(--surface-warm);border:2px solid var(--line);border-radius:12px;padding:14px}
+.bp-block.full{grid-column:1/-1}
+.bp-block .bp-k{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--primary-deep);margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.bp-block .bp-v{font-size:14px;color:var(--ink);line-height:1.6}
+.bp-abc{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.bp-abc-item{padding:8px;border-radius:8px;font-size:13px;font-weight:600}
+.bp-abc-item.bp-a{background:rgba(192,73,46,.1);border:1px solid rgba(192,73,46,.3);color:#C0492E}
+.bp-abc-item.bp-b{background:rgba(245,135,31,.1);border:1px solid rgba(245,135,31,.3);color:#B85C09}
+.bp-abc-item.bp-c{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:#10B981}
+.bp-abc-item .bp-abc-letter{font-family:var(--pixel);font-size:8px;opacity:.7}
+
+/* Completion CTA */
+.bp-cta{margin-top:20px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.bp-cta .btn-ink{font-family:var(--serif);font-weight:600;font-size:16px;display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;border-radius:999px;padding:14px 28px;background:var(--ink);color:#fff;box-shadow:var(--sh-sm);transition:transform .12s,box-shadow .12s}
+.bp-cta .btn-ink:hover{transform:translateY(-2px);box-shadow:var(--sh)}
+.bp-cta .btn-ink:active{transform:translateY(1px);box-shadow:none}
+
+/* Next step button */
+.next-step{display:inline-flex;align-items:center;gap:8px;font-family:var(--serif);font-weight:600;font-size:16px;background:var(--ink);color:#fff;border:none;border-radius:999px;padding:12px 24px;cursor:pointer;box-shadow:var(--sh-sm);margin-top:20px;transition:transform .12s,box-shadow .12s}
+.next-step:hover{transform:translateY(-2px);box-shadow:var(--sh)}
+.next-step:active{transform:translateY(1px);box-shadow:none}
+
+/* Badge pulse animation */
+@keyframes badgePulse{0%,100%{box-shadow:var(--sh)}50%{box-shadow:var(--sh),0 0 20px rgba(245,135,31,.4)}}
+.lvl-badge.pulse{animation:badgePulse 2s ease-in-out infinite}
+
+/* ============ Responsive ============ */
+@media(max-width:900px){
+  .abc-canvas{grid-template-columns:1fr}
+  .demo-plan{grid-template-columns:1fr}
+  .bp-grid{grid-template-columns:1fr}
+  .bp-abc{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="index.html">
+      <img class="logo" src="assets/logo.png" alt="AI5000天 标志" />
+      <div class="title-lock"><span class="n1">AI5000天</span><span class="n2">负责任开发者</span><span class="pill-tag">AI 创客 Tutor</span></div>
+    </a>
+    <div class="tabs">
+      <a href="works.html">创客作品墙</a>
+      <a href="index.html">闯关首页</a>
+      <a href="works.html">我的作品</a>
+      <a href="index.html#content">我的徽章</a>
+      <a href="map.html" class="active">闯关地图</a>
+    </div>
+    <div class="me"><span class="ava">伍</span><span>小伍创客 8023</span></div>
+  </div>
+</nav>
+
+<!-- Intro modal -->
+<div class="overlay" id="intro">
+  <div class="modal">
+    <div class="mwu"><img src="assets/wu-13.png" alt="小伍" /></div>
+    <div class="mbubble">
+      <h2>欢迎来到第 7 关 · <b>愿景与方法站</b>！</h2>
+      <p style="color:var(--ink-soft);margin-top:8px;line-height:1.7">前面你已经选好了议题、讲好了故事、挖出了根因——现在，该想想怎么行动了！这一关，我们把点子变成一份方案蓝图。</p>
+      <ul class="msteps">
+        <li><span class="no">1</span><span><b>愿景</b>：想象你的东西做出来后，世界哪里变好了一点点？</span></li>
+        <li><span class="no">2</span><span><b>ABC 画布</b>：意识唤醒 → 行为干预 → 结果验证，三步画出你的方法</span></li>
+        <li><span class="no">3</span><span><b>Demo 规划</b>：你要做什么 Demo？怎么算成功？</span></li>
+      </ul>
+      <div class="goal">🚀 本关目标：输出方案设计蓝图{愿景, ABC, Demo规划, 效果验证}</div>
+      <button class="btn btn-ink" id="startBtn">▶ 开始规划</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="content wrap">
+    <a class="back" href="map.html">← 返回闯关地图</a>
+
+    <div class="lvl-head">
+      <div class="lvl-badge pulse"><img src="assets/power-create.png" alt="" /><span class="lv">LV 07</span></div>
+      <div>
+        <h1>愿景与方法站</h1>
+        <p>创心力迸发 · 画出方案蓝图，把点子变成可落地的 Demo</p>
+      </div>
+    </div>
+
+    <!-- Step bar -->
+    <div class="step-bar" id="stepBar">
+      <span class="s active" data-step="1">① 愿景</span>
+      <span class="s" data-step="2">② ABC 画布</span>
+      <span class="s" data-step="3">③ Demo 规划</span>
+    </div>
+
+    <!-- Topic echo card -->
+    <div class="topic-echo reveal" id="topicEcho">
+      <div class="te-label">YOUR TOPIC</div>
+      <div class="te-grid">
+        <span class="te-k">议题</span><span class="se-v" id="teTopic">网络欺凌</span>
+        <span class="te-k">切入窗口</span><span class="se-v" id="teEntry">帮助被欺凌者识别和应对网络恶意行为</span>
+      </div>
+    </div>
+
+    <!-- ============ STEP 1: 愿景 ============ -->
+    <div class="step-section active" id="step1">
+      <div class="wu-step">
+        <span class="gava"></span>
+        <span class="gb">想象一下，你的东西做出来后，世界哪里变好了一点点？</span>
+      </div>
+
+      <div class="vision-card reveal">
+        <div class="vc-icon">🔭</div>
+        <div class="vc-title">你的愿景</div>
+        <div class="vc-sub">一个好的创客项目，不一定要改变整个世界——哪怕只让一个人的生活变好一点点，就已经很厉害了。</div>
+        <div class="vision-fields">
+          <div class="vf-group">
+            <label class="vf-label"><span class="vf-emoji">🌟</span> 愿景一句话</label>
+            <textarea class="vf-input" id="visionText" rows="2" placeholder="比如：让每一个被网暴的同学都能快速找到帮助和陪伴"></textarea>
+          </div>
+          <div class="vf-group">
+            <label class="vf-label"><span class="vf-emoji">🤖</span> AI Action（AI 帮你做的关键一步）</label>
+            <textarea class="vf-input" id="aiActionText" rows="2" placeholder="比如：AI 自动识别恶意评论，给被攻击者推送心理支持和举报指引"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <button class="next-step" id="toStep2">下一步 · ABC 画布 →</button>
+    </div>
+
+    <!-- ============ STEP 2: ABC Canvas ============ -->
+    <div class="step-section" id="step2">
+      <div class="wu-step">
+        <span class="gava"></span>
+        <span class="gb">现在把你的方法拆成三步：先让人意识到问题，再推动行为改变，最后验证效果——这就是 ABC 技术画布！</span>
+      </div>
+
+      <div class="abc-canvas reveal">
+        <div class="abc-card card-a">
+          <span class="abc-letter">A</span>
+          <div class="abc-title">意识唤醒</div>
+          <div class="abc-desc">怎么让人意识到问题存在？让他们「看到」什么？</div>
+          <textarea class="abc-input" id="abcA" placeholder="比如：用数据可视化展示网络暴力的真实规模，让旁观者意识到沉默也是一种参与"></textarea>
+        </div>
+        <div class="abc-card card-b">
+          <span class="abc-letter">B</span>
+          <div class="abc-title">行为干预</div>
+          <div class="abc-desc">你用什么方法推动人做出改变？具体做什么？</div>
+          <textarea class="abc-input" id="abcB" placeholder="比如：设计一个一键举报+暖语安慰按钮，让旁观者可以低成本地站出来"></textarea>
+        </div>
+        <div class="abc-card card-c">
+          <span class="abc-letter">C</span>
+          <div class="abc-title">结果验证</div>
+          <div class="abc-desc">怎么知道你的方法真的起作用了？</div>
+          <textarea class="abc-input" id="abcC" placeholder="比如：统计使用后恶意评论的减少比例、被攻击者的心理自评改善分数"></textarea>
+        </div>
+      </div>
+
+      <!-- Mid-point responsibility decision (triggered after ABC) -->
+      <div style="margin-top:24px" class="reveal">
+        <button class="next-step" id="showMidpointBtn">🛑 先停一下——谁可能会受影响？</button>
+      </div>
+
+      <!-- Midpoint overlay -->
+      <div class="midpoint-overlay hide" id="midpointOverlay">
+        <div class="midpoint-card">
+          <div class="mp-icon">🛑</div>
+          <h3>责任检查站</h3>
+          <p>在继续之前，想一想：这样做，谁可能会受影响？有没有谁被忽略了？有没有可能帮了一个人，却意外伤害了另一个人？</p>
+          <div class="mp-question">先停一下——这样做，谁可能会受影响？</div>
+          <textarea class="mp-input" id="midpointInput" placeholder="比如：举报功能可能被滥用、被攻击者可能不想被关注、平台可能不愿配合……"></textarea>
+          <div class="mp-btns">
+            <button class="mp-btn mp-btn-ghost" id="midpointSkip">我还没想好</button>
+            <button class="mp-btn mp-btn-primary" id="midpointConfirm">✓ 我想到了，继续</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="midpointDone" style="display:none;margin-top:16px">
+        <div class="guide reveal" style="margin:0">
+          <span class="gava"></span>
+          <span class="gb" id="midpointEcho" style="border-color:var(--danger);background:var(--danger-soft)">🛑 你想到了：…</span>
+        </div>
+      </div>
+
+      <div style="margin-top:18px" id="step2NextWrap">
+        <button class="next-step" id="toStep3" style="display:none">下一步 · Demo 规划 →</button>
+      </div>
+    </div>
+
+    <!-- ============ STEP 3: Demo Planning ============ -->
+    <div class="step-section" id="step3">
+      <div class="wu-step">
+        <span class="gava"></span>
+        <span class="gb">最后一步——说清楚你要做的 Demo 是什么，怎么判断它成功了！</span>
+      </div>
+
+      <div class="demo-plan reveal">
+        <div class="demo-field full">
+          <label class="df-label"><span class="df-emoji">🛠️</span> 我要做的 Demo 是</label>
+          <textarea class="df-input" id="demoWhat" placeholder="比如：一个浏览器插件，当检测到恶意评论时，自动高亮并显示善意提醒"></textarea>
+        </div>
+        <div class="demo-field">
+          <label class="df-label"><span class="df-emoji">✅</span> 怎么算成功（效果验证）</label>
+          <textarea class="df-input" id="demoSuccess" placeholder="比如：10 个同学试用后，8 个觉得能帮到自己"></textarea>
+        </div>
+        <div class="demo-field">
+          <label class="df-label"><span class="df-emoji">⚠️</span> 可能的难点</label>
+          <textarea class="df-input" id="demoRisk" placeholder="比如：AI 识别恶意评论的准确率可能不够高"></textarea>
+        </div>
+      </div>
+
+      <!-- Generate blueprint button -->
+      <div class="blueprint-gen reveal" id="blueprintGen">
+        <button class="gen-btn disabled" id="genBtn" disabled>🗺️ 生成方案蓝图</button>
+        <div class="gen-status" id="genStatus">请填写以上所有字段后生成</div>
+      </div>
+
+      <!-- Blueprint result -->
+      <div class="blueprint-card" id="blueprintCard">
+        <h3>🗺️ 方案设计蓝图</h3>
+        <div class="bp-grid">
+          <div class="bp-block full">
+            <div class="bp-k">🌟 愿景</div>
+            <div class="bp-v" id="bpVision"></div>
+          </div>
+          <div class="bp-block full">
+            <div class="bp-k">🤖 AI Action</div>
+            <div class="bp-v" id="bpAiAction"></div>
+          </div>
+          <div class="bp-block full">
+            <div class="bp-k">📐 ABC 技术画布</div>
+            <div class="bp-abc" id="bpAbc"></div>
+          </div>
+          <div class="bp-block full">
+            <div class="bp-k">🛑 责任考量</div>
+            <div class="bp-v" id="bpMidpoint"></div>
+          </div>
+          <div class="bp-block full">
+            <div class="bp-k">🛠️ Demo 规划</div>
+            <div class="bp-v" id="bpDemo"></div>
+          </div>
+          <div class="bp-block">
+            <div class="bp-k">✅ 效果验证</div>
+            <div class="bp-v" id="bpEffect"></div>
+          </div>
+          <div class="bp-block">
+            <div class="bp-k">⚠️ 可能的难点</div>
+            <div class="bp-v" id="bpRisk"></div>
+          </div>
+        </div>
+        <div class="bp-cta">
+          <a class="btn-ink" href="level8.html">进入第 8 关 · 原型锻造 →</a>
+          <span style="font-size:14px;color:var(--ink-soft)">完成后将点亮「创心力迸发」并解锁第 8 关</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<footer>
+  <div class="foot-in">
+    <span>© 2026 AI5000天 · 负责任开发者 AI 创客 Tutor</span>
+    <div class="foot-links"><a href="map.html">闯关地图</a><a href="states.html">设计 · 状态页</a><a href="#">隐私政策</a></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // ============ State ============
+  var state = {
+    currentStep: 1,
+    vision: '',
+    aiAction: '',
+    abcA: '',
+    abcB: '',
+    abcC: '',
+    midpointNote: '',
+    midpointDone: false,
+    demoWhat: '',
+    demoSuccess: '',
+    demoRisk: ''
+  };
+
+  var el = function(id){ return document.getElementById(id); };
+
+  // ============ Intro Modal ============
+  el('startBtn').addEventListener('click', function(){
+    el('intro').classList.add('hide');
+  });
+
+  // ============ Step Navigation ============
+  var steps = [1,2,3];
+
+  function goToStep(n) {
+    if (n < 1 || n > 3) return;
+    state.currentStep = n;
+    // Update step sections
+    steps.forEach(function(s){
+      var sec = el('step' + s);
+      if (sec) sec.classList.toggle('active', s === n);
+    });
+    // Update step bar
+    var bars = el('stepBar').querySelectorAll('.s');
+    bars.forEach(function(b){
+      var s = parseInt(b.getAttribute('data-step'));
+      b.classList.remove('active','done');
+      if (s < n) b.classList.add('done');
+      else if (s === n) b.classList.add('active');
+    });
+    // Scroll to top of content
+    var sec = el('step' + n);
+    if (sec) sec.scrollIntoView({behavior:'smooth', block:'start'});
+    // Trigger reveal animations for newly visible items
+    if (sec) {
+      sec.querySelectorAll('.reveal:not(.in)').forEach(function(r){
+        r.classList.add('in');
+      });
+    }
+  }
+
+  // Click step bar
+  el('stepBar').addEventListener('click', function(e){
+    var s = e.target.closest('.s');
+    if (s) {
+      var n = parseInt(s.getAttribute('data-step'));
+      if (n <= state.currentStep) goToStep(n);
+    }
+  });
+
+  // ============ Helper: shake ============
+  function shakeElement(elem) {
+    elem.style.animation = 'none';
+    elem.offsetHeight;
+    elem.style.animation = 'shake .4s ease';
+    setTimeout(function(){ elem.style.animation = ''; }, 500);
+  }
+  var shakeStyle = document.createElement('style');
+  shakeStyle.textContent = '@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}';
+  document.head.appendChild(shakeStyle);
+
+  // ============ STEP 1: Vision ============
+  el('visionText').addEventListener('input', function(){
+    state.vision = this.value.trim();
+  });
+  el('aiActionText').addEventListener('input', function(){
+    state.aiAction = this.value.trim();
+  });
+
+  el('toStep2').addEventListener('click', function(){
+    if (!state.vision) {
+      shakeElement(el('visionText'));
+      return;
+    }
+    goToStep(2);
+  });
+
+  // ============ STEP 2: ABC Canvas ============
+  el('abcA').addEventListener('input', function(){ state.abcA = this.value.trim(); });
+  el('abcB').addEventListener('input', function(){ state.abcB = this.value.trim(); });
+  el('abcC').addEventListener('input', function(){ state.abcC = this.value.trim(); });
+
+  // Midpoint popup
+  el('showMidpointBtn').addEventListener('click', function(){
+    if (!state.abcA && !state.abcB && !state.abcC) {
+      shakeElement(el('abcA').closest('.abc-canvas'));
+      return;
+    }
+    el('midpointOverlay').classList.remove('hide');
+  });
+
+  el('midpointConfirm').addEventListener('click', function(){
+    state.midpointNote = el('midpointInput').value.trim();
+    state.midpointDone = true;
+    el('midpointOverlay').classList.add('hide');
+    // Show echo
+    el('midpointDone').style.display = 'block';
+    el('midpointEcho').textContent = '🛑 你想到了：' + (state.midpointNote || '（没写具体，但思考过了）');
+    el('midpointDone').querySelector('.reveal').classList.add('in');
+    // Show next step button
+    el('toStep3').style.display = 'inline-flex';
+    el('showMidpointBtn').style.display = 'none';
+  });
+
+  el('midpointSkip').addEventListener('click', function(){
+    state.midpointNote = '';
+    state.midpointDone = true;
+    el('midpointOverlay').classList.add('hide');
+    el('midpointDone').style.display = 'block';
+    el('midpointEcho').textContent = '🛑 你想到了：（还没想好，稍后回来补充）';
+    el('midpointDone').querySelector('.reveal').classList.add('in');
+    el('toStep3').style.display = 'inline-flex';
+    el('showMidpointBtn').style.display = 'none';
+  });
+
+  el('toStep3').addEventListener('click', function(){
+    if (!state.abcA && !state.abcB && !state.abcC) {
+      shakeElement(el('abcA').closest('.abc-canvas'));
+      return;
+    }
+    goToStep(3);
+  });
+
+  // ============ STEP 3: Demo Planning ============
+  el('demoWhat').addEventListener('input', function(){
+    state.demoWhat = this.value.trim();
+    checkGenBtn();
+  });
+  el('demoSuccess').addEventListener('input', function(){
+    state.demoSuccess = this.value.trim();
+    checkGenBtn();
+  });
+  el('demoRisk').addEventListener('input', function(){
+    state.demoRisk = this.value.trim();
+    checkGenBtn();
+  });
+
+  function checkGenBtn() {
+    var btn = el('genBtn');
+    var status = el('genStatus');
+    var allFilled = state.vision && state.abcA && state.abcB && state.abcC && state.demoWhat && state.demoSuccess;
+    if (allFilled) {
+      btn.disabled = false;
+      btn.classList.remove('disabled');
+      btn.classList.add('enabled');
+      status.textContent = '一切就绪，点击生成你的方案蓝图！';
+    } else {
+      btn.disabled = true;
+      btn.classList.add('disabled');
+      btn.classList.remove('enabled');
+      var missing = [];
+      if (!state.vision) missing.push('愿景');
+      if (!state.abcA) missing.push('意识唤醒(A)');
+      if (!state.abcB) missing.push('行为干预(B)');
+      if (!state.abcC) missing.push('结果验证(C)');
+      if (!state.demoWhat) missing.push('Demo规划');
+      if (!state.demoSuccess) missing.push('效果验证');
+      status.textContent = '还需填写：' + missing.join('、');
+    }
+  }
+
+  // Generate blueprint
+  el('genBtn').addEventListener('click', function(){
+    if (!state.vision || !state.abcA || !state.abcB || !state.abcC || !state.demoWhat || !state.demoSuccess) return;
+
+    // Populate blueprint
+    el('bpVision').textContent = state.vision;
+    el('bpAiAction').textContent = state.aiAction || '（未填写）';
+
+    // ABC
+    var abcHtml = '';
+    abcHtml += '<div class="bp-abc-item bp-a"><span class="bp-abc-letter">A</span> ' + state.abcA + '</div>';
+    abcHtml += '<div class="bp-abc-item bp-b"><span class="bp-abc-letter">B</span> ' + state.abcB + '</div>';
+    abcHtml += '<div class="bp-abc-item bp-c"><span class="bp-abc-letter">C</span> ' + state.abcC + '</div>';
+    el('bpAbc').innerHTML = abcHtml;
+
+    el('bpMidpoint').textContent = state.midpointNote || '（未填写）';
+    el('bpDemo').textContent = state.demoWhat;
+    el('bpEffect').textContent = state.demoSuccess;
+    el('bpRisk').textContent = state.demoRisk || '（未填写）';
+
+    // Show card
+    el('blueprintCard').classList.add('visible');
+    el('blueprintCard').style.display = 'block';
+
+    // Update button
+    var btn = el('genBtn');
+    btn.textContent = '✅ 蓝图已生成！';
+    btn.disabled = true;
+    btn.classList.remove('enabled');
+    btn.classList.add('disabled');
+    btn.style.background = 'var(--primary)';
+    btn.style.color = '#fff';
+    el('genStatus').textContent = '方案设计蓝图{愿景: "' + state.vision.substring(0,20) + '…", ABC: [A|B|C], Demo规划: "' + state.demoWhat.substring(0,15) + '…", 效果验证: "' + state.demoSuccess.substring(0,15) + '…" }';
+
+    // Mark all steps done
+    var bars = el('stepBar').querySelectorAll('.s');
+    bars.forEach(function(b){ b.classList.remove('active'); b.classList.add('done'); });
+
+    // Scroll to blueprint
+    setTimeout(function(){
+      el('blueprintCard').scrollIntoView({behavior:'smooth', block:'center'});
+    }, 100);
+  });
+
+  // ============ Intersection Observer for reveal animations ============
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold: 0.1});
+  document.querySelectorAll('.reveal').forEach(function(elem, i){
+    elem.style.transitionDelay = (i % 3 * 60) + 'ms';
+    io.observe(elem);
+  });
+
+})();
+</script>
+<script src="widget.js"></script>
+</body>
+</html>
