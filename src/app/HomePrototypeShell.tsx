@@ -1,9 +1,18 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 export function HomePrototypeShell() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+    const handleLoad = () => attachBridge();
+    iframe.addEventListener("load", handleLoad);
+    attachBridge();
+    return () => iframe.removeEventListener("load", handleLoad);
+  }, []);
 
   function attachBridge() {
     const doc = iframeRef.current?.contentDocument;
@@ -60,7 +69,6 @@ export function HomePrototypeShell() {
         ref={iframeRef}
         src="/prototype/index.html"
         title="AI5000天完整静态首页原型"
-        onLoad={attachBridge}
         style={{
           width: "100%",
           minHeight: "100vh",

@@ -15,6 +15,14 @@ const CompleteLevel1RequestSchema = z.object({
   wqtReviewReportUrl: z.string().url().optional(),
   entryChoice: z.enum(["RECOMMEND", "IDEA"]).default("RECOMMEND"),
   ideaText: z.string().optional(),
+  powerScores: z.object({
+    bodySafety: z.number().min(1).max(5),
+    mentalSafety: z.number().min(1).max(5),
+    socialSafety: z.number().min(1).max(5),
+    economicSafety: z.number().min(1).max(5),
+    digitalRights: z.number().min(1).max(5),
+  }).optional(),
+  top3Concerns: z.array(z.string().min(1)).length(3).optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -44,6 +52,8 @@ export async function POST(request: NextRequest) {
       parseWqtLevel1Input({
         entryChoice: parsedBody.entryChoice,
         ideaText: parsedBody.ideaText,
+        powerScores: parsedBody.powerScores,
+        top3Concerns: parsedBody.top3Concerns,
         wqtSessionId: parsedBody.wqtSessionId,
         wqtReviewSnapshot: parsedBody.reviewSnapshot,
         wqtReviewReportUrl: parsedBody.wqtReviewReportUrl || parsedBody.reportUrl,

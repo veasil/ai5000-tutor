@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 type PrototypeLevelShellProps = {
   journeyId: string;
@@ -20,6 +20,15 @@ export function PrototypeLevelShell({ journeyId, level }: PrototypeLevelShellPro
     () => `/prototype/level${level}.html?journeyId=${encodeURIComponent(journeyId)}`,
     [journeyId, level]
   );
+
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+    const handleLoad = () => attachBridge();
+    iframe.addEventListener("load", handleLoad);
+    attachBridge();
+    return () => iframe.removeEventListener("load", handleLoad);
+  }, [journeyId, level]);
 
   function attachBridge() {
     const iframe = iframeRef.current;
@@ -79,7 +88,6 @@ export function PrototypeLevelShell({ journeyId, level }: PrototypeLevelShellPro
         ref={iframeRef}
         src={prototypeUrl}
         title={`第${level}关完整静态原型`}
-        onLoad={attachBridge}
         style={{
           width: "100%",
           minHeight: "100vh",

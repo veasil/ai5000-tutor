@@ -10,6 +10,14 @@ const ChoiceSchema = z.enum(["A", "B", "C", "D"]);
 const WqtLevel1InputSchema = z.object({
   entryChoice: z.enum(["RECOMMEND", "IDEA"]).default("RECOMMEND"),
   ideaText: z.string().optional(),
+  powerScores: z.object({
+    bodySafety: z.number().min(1).max(5),
+    mentalSafety: z.number().min(1).max(5),
+    socialSafety: z.number().min(1).max(5),
+    economicSafety: z.number().min(1).max(5),
+    digitalRights: z.number().min(1).max(5),
+  }).optional(),
+  top3Concerns: z.array(z.string().min(1)).length(3).optional(),
   wqtSessionId: z.string().min(1),
   wqtReviewSnapshot: WqtReviewSnapshotSchema,
   wqtReviewReportUrl: z.string().url().optional(),
@@ -23,11 +31,12 @@ export function parseWqtLevel1Input(input: unknown): WqtLevel1Input {
 
 export function buildLevel1OutputFromWqt(input: WqtLevel1Input) {
   const cardsPlayed = deriveCardsPlayed(input.wqtReviewSnapshot.cards);
-  const top3Concerns = deriveTop3Concerns(input.wqtReviewSnapshot.cards);
+  const top3Concerns = input.top3Concerns || deriveTop3Concerns(input.wqtReviewSnapshot.cards);
 
   return Level1OutputSchema.parse({
     entryChoice: input.entryChoice,
     ideaText: input.ideaText,
+    powerScores: input.powerScores,
     cardsPlayed,
     top3Concerns,
     wqtSessionId: input.wqtSessionId,
