@@ -31,25 +31,33 @@ export function Level1WqtEmbed({ journeyId, wqtUrl }: Level1WqtEmbedProps) {
   useEffect(() => {
     const iframe = prototypeRef.current;
     if (!iframe) return;
-    const handleLoad = () => attachPrototypeBridge();
+    const retryId = window.setInterval(() => {
+      if (attachPrototypeBridge()) window.clearInterval(retryId);
+    }, 250);
+    const handleLoad = () => {
+      if (attachPrototypeBridge()) window.clearInterval(retryId);
+    };
     iframe.addEventListener("load", handleLoad);
     attachPrototypeBridge();
-    return () => iframe.removeEventListener("load", handleLoad);
+    return () => {
+      window.clearInterval(retryId);
+      iframe.removeEventListener("load", handleLoad);
+    };
   }, [journeyId, wqtUrl]);
 
   function attachPrototypeBridge() {
     const prototypeFrame = prototypeRef.current;
     const doc = prototypeFrame?.contentDocument;
     const prototypeWindow = prototypeFrame?.contentWindow;
-    if (!doc || !prototypeWindow || doc.body.dataset.wqtBridgeAttached === "true") return;
-    doc.body.dataset.wqtBridgeAttached = "true";
+    if (!doc || !prototypeWindow) return false;
+    if (doc.body.dataset.wqtBridgeAttached === "true") return true;
 
     const cardPlaceholder = doc.querySelector<HTMLElement>("#sec3 .placeholder-zone");
     const cardNextButton = doc.getElementById("cardNextBtn") as HTMLButtonElement | null;
     if (!cardPlaceholder || !cardNextButton) {
-      window.alert("第1关原型缺少卡牌占位区域，暂时无法加载 WQT。");
-      return;
+      return false;
     }
+    doc.body.dataset.wqtBridgeAttached = "true";
 
     const wqtFrame = doc.createElement("iframe");
     wqtFrame.title = "AI5000天伍力全开卡牌系统";
@@ -112,6 +120,7 @@ export function Level1WqtEmbed({ journeyId, wqtUrl }: Level1WqtEmbedProps) {
       },
       true
     );
+    return true;
   }
 
   async function completeLevel(doc: Document) {
