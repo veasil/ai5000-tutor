@@ -49,7 +49,7 @@ export function Level1WqtEmbed({ journeyId, wqtUrl }: Level1WqtEmbedProps) {
     const prototypeFrame = prototypeRef.current;
     const doc = prototypeFrame?.contentDocument;
     const prototypeWindow = prototypeFrame?.contentWindow;
-    if (!doc || !prototypeWindow) return false;
+    if (!doc || !prototypeWindow || !doc.body) return false;
     if (doc.body.dataset.wqtBridgeAttached === "true") return true;
 
     const cardPlaceholder = doc.querySelector<HTMLElement>("#sec3 .placeholder-zone");
