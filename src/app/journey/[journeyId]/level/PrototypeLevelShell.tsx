@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef } from "react";
 
 type PrototypeLevelShellProps = {
   journeyId: string;
@@ -15,20 +15,21 @@ type PrototypeFrameValues = {
 
 export function PrototypeLevelShell({ journeyId, level }: PrototypeLevelShellProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const [status, setStatus] = useState("原型已嵌入：请先在页面里体验/填写，再点右下角同步。");
-  const [isBusy, setIsBusy] = useState(false);
 
   const prototypeUrl = useMemo(
     () => `/prototype/level${level}.html?journeyId=${encodeURIComponent(journeyId)}`,
     [journeyId, level]
   );
 
-  async function completeLevel() {
-    setIsBusy(true);
-    setStatus("正在读取原型页面内容并同步到 MVP 状态机...");
+  function attachBridge() {
+    const iframe = iframeRef.current;
+    const doc = iframe?.contentDocument;
+    if (!doc || doc.body.dataset.mvpBridgeAttached === "true") return;
 
-    try {
-      const values = collectPrototypeValues(iframeRef.current);
+    doc.body.dataset.mvpBridgeAttached = "true";
+
+    async function completeLevel() {
+      const values = collectPrototypeValues(iframe);
       const response = await fetch(`/api/journey/${journeyId}/level/${level}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -40,12 +41,36 @@ export function PrototypeLevelShell({ journeyId, level }: PrototypeLevelShellPro
       }
 
       const nextLevel = Math.min(level + 1, 10);
-      setStatus(level === 10 ? "发布完成，正在刷新作品卡..." : `已同步，正在进入第${nextLevel}关...`);
       window.location.href = `/journey/${journeyId}/level/${nextLevel}`;
-    } catch (error) {
-      setStatus(error instanceof Error ? error.message : `第${level}关同步失败`);
-      setIsBusy(false);
     }
+
+    function showBridgeError(error: unknown) {
+      const message = error instanceof Error ? error.message : `第${level}关同步失败`;
+      window.alert(message);
+    }
+
+    doc.addEventListener(
+      "click",
+      (event) => {
+        const target = event.target as Element | null;
+        const link = target?.closest("a[href]") as HTMLAnchorElement | null;
+        if (!link) return;
+
+        const href = link.getAttribute("href") || "";
+        const match = href.match(/^level(\d+)\.html(?:[?#].*)?$/);
+        if (!match) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+        completeLevel().catch(showBridgeError);
+      },
+      true
+    );
+
+    const publishButton = doc.getElementById("publishBtn");
+    publishButton?.addEventListener("click", () => {
+      window.setTimeout(() => completeLevel().catch(showBridgeError), 50);
+    });
   }
 
   return (
@@ -54,6 +79,7 @@ export function PrototypeLevelShell({ journeyId, level }: PrototypeLevelShellPro
         ref={iframeRef}
         src={prototypeUrl}
         title={`第${level}关完整静态原型`}
+        onLoad={attachBridge}
         style={{
           width: "100%",
           minHeight: "100vh",
@@ -62,16 +88,6 @@ export function PrototypeLevelShell({ journeyId, level }: PrototypeLevelShellPro
           background: "#f8efe0",
         }}
       />
-      <aside style={bridgeStyle}>
-        <strong>Next MVP 桥接</strong>
-        <span style={{ lineHeight: 1.5 }}>
-          当前显示的是原始 HTML 交互原型。React 只负责同步进度和入库。
-        </span>
-        <button type="button" onClick={completeLevel} disabled={isBusy} style={buttonStyle}>
-          {isBusy ? "同步中..." : level === 10 ? "同步并完成发布" : `同步第${level}关，进入下一关`}
-        </button>
-        <span style={{ color: "#6f604c", lineHeight: 1.45 }}>{status}</span>
-      </aside>
     </main>
   );
 }
@@ -209,31 +225,3 @@ function longText(value: string, fallback: string) {
   const clean = value.trim();
   return clean.length >= 10 ? clean : fallback;
 }
-
-const bridgeStyle = {
-  position: "fixed",
-  right: 18,
-  bottom: 18,
-  width: "min(360px, calc(100vw - 36px))",
-  display: "grid",
-  gap: 10,
-  padding: 16,
-  border: "3px solid #2f281f",
-  borderRadius: 18,
-  background: "rgba(255, 250, 239, 0.96)",
-  boxShadow: "8px 8px 0 rgba(47, 40, 31, 0.25)",
-  zIndex: 20,
-  fontFamily: "Noto Sans SC, sans-serif",
-  fontSize: 14,
-  color: "#2f281f",
-} as const;
-
-const buttonStyle = {
-  border: "3px solid #2f281f",
-  borderRadius: 999,
-  padding: "12px 16px",
-  background: "#f2b84b",
-  color: "#2f281f",
-  cursor: "pointer",
-  fontWeight: 900,
-} as const;
