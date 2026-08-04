@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" fill="none" font-family="system-ui, -apple-system, Segoe UI, PingFang SC, Microsoft YaHei, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f8f9fc"/>
+      <stop offset="100%" stop-color="#eef0f5"/>
+    </linearGradient>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="108%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#00000012"/>
+    </filter>
+    <filter id="colShadow" x="-1%" y="-1%" width="102%" height="104%">
+      <feDropShadow dx="0" dy="1" stdDeviation="3" flood-color="#00000010"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="720" rx="16" fill="url(#bg)"/>
+
+  <!-- ===== HEADER ===== -->
+  <rect x="24" y="24" width="1152" height="72" rx="14" fill="#17152f" filter="url(#shadow)"/>
+  <text x="600" y="66" font-size="28" font-weight="800" fill="#ffffff" text-anchor="middle" letter-spacing="4">IDEATE</text>
+  <text x="600" y="84" font-size="11" fill="#9a97b0" text-anchor="middle" letter-spacing="1">INNOVATE  DEVELOP  ENACT  ACT</text>
+  <circle cx="1130" cy="52" r="5" fill="#23b58d"/>
+  <circle cx="1118" cy="52" r="5" fill="#6558f5"/>
+  <circle cx="1106" cy="52" r="5" fill="#ff7540"/>
+
+  <!-- ===== COLUMN 1: 开发灵感 / 实感力 (Mint) ===== -->
+  <g filter="url(#colShadow)">
+    <rect x="24" y="116" width="372" height="580" rx="16" fill="#f0faf6" stroke="#9ce2cf" stroke-width="1.5"/>
+  </g>
+  <rect x="24" y="116" width="372" height="56" rx="16" fill="#23b58d"/>
+  <rect x="24" y="156" width="372" height="16" fill="#23b58d"/>
+  <text x="218" y="150" font-size="19" font-weight="700" fill="#ffffff" text-anchor="middle">开发灵感</text>
+  <text x="218" y="168" font-size="10" fill="#d4f5e8" text-anchor="middle" letter-spacing="2">实感力 / REAL SENSATION</text>
+  <circle cx="56" cy="144" r="16" fill="#ffffff22"/>
+  <text x="56" y="150" font-size="17" text-anchor="middle">&#x1f50d;</text>
+
+  <!-- 议题选择 -->
+  <rect x="44" y="196" width="332" height="38" rx="10" fill="#23b58d18"/>
+  <circle cx="64" cy="215" r="10" fill="#23b58d"/>
+  <text x="64" y="219" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+  <text x="84" y="220" font-size="15" font-weight="600" fill="#1a8a6e">议题选择</text>
+  <text x="360" y="219" font-size="10" fill="#5cb68d" text-anchor="end">Issue Selection</text>
+
+  <!-- 三问 -->
+  <rect x="44" y="248" width="332" height="50" rx="10" fill="#ffffff"/>
+  <circle cx="64" cy="273" r="6" fill="#23b58d40"/>
+  <text x="64" y="277" font-size="8" fill="#23b58d" text-anchor="middle" font-weight="700">A</text>
+  <text x="78" y="270" font-size="13" font-weight="600" fill="#333">经历过</text>
+  <text x="78" y="286" font-size="10" fill="#999">Personal Experience</text>
+  <line x1="100" y1="273" x2="362" y2="273" stroke="#e8f5ef" stroke-width="1" stroke-dasharray="3 3"/>
+
+  <rect x="44" y="304" width="332" height="50" rx="10" fill="#ffffff"/>
+  <circle cx="64" cy="329" r="6" fill="#23b58d40"/>
+  <text x="64" y="333" font-size="8" fill="#23b58d" text-anchor="middle" font-weight="700">B</text>
+  <text x="78" y="326" font-size="13" font-weight="600" fill="#333">见证过</text>
+  <text x="78" y="342" font-size="10" fill="#999">Witnessed</text>
+  <line x1="100" y1="329" x2="362" y2="329" stroke="#e8f5ef" stroke-width="1" stroke-dasharray="3 3"/>
+
+  <rect x="44" y="360" width="332" height="50" rx="10" fill="#ffffff"/>
+  <circle cx="64" cy="385" r="6" fill="#23b58d40"/>
+  <text x="64" y="389" font-size="8" fill="#23b58d" text-anchor="middle" font-weight="700">C</text>
+  <text x="78" y="382" font-size="13" font-weight="600" fill="#333">听说过</text>
+  <text x="78" y="398" font-size="10" fill="#999">Heard About</text>
+  <line x1="100" y1="385" x2="362" y2="385" stroke="#e8f5ef" stroke-width="1" stroke-dasharray="3 3"/>
+
+  <!-- Arrow col1->col2 -->
+  <path d="M396 400 L414 400" stroke="#23b58d66" stroke-width="2" stroke-linecap="round"/>
+  <polygon points="410,395 420,400 410,405" fill="#23b58d66"/>
+
+  <!-- ===== COLUMN 2: 开发创想 / 脑波力 (Violet) ===== -->
+  <g filter="url(#colShadow)">
+    <rect x="414" y="116" width="372" height="580" rx="16" fill="#f6f4ff" stroke="#c3bbff" stroke-width="1.5"/>
+  </g>
+  <rect x="414" y="116" width="372" height="56" rx="16" fill="#6558f5"/>
+  <rect x="414" y="156" width="372" height="16" fill="#6558f5"/>
+  <text x="610" y="150" font-size="19" font-weight="700" fill="#ffffff" text-anchor="middle">开发创想</text>
+  <text x="610" y="168" font-size="10" fill="#ddd6ff" text-anchor="middle" letter-spacing="2">脑波力 / BRAINSTORM</text>
+  <circle cx="446" cy="144" r="16" fill="#ffffff22"/>
+  <text x="446" y="150" font-size="17" text-anchor="middle">&#x1f4a1;</text>
+
+  <!-- Deep Sink -->
+  <rect x="434" y="196" width="332" height="38" rx="10" fill="#6558f518"/>
+  <circle cx="454" cy="215" r="10" fill="#6558f5"/>
+  <text x="454" y="219" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">D</text>
+  <text x="474" y="220" font-size="15" font-weight="600" fill="#5144d4">Deep Sink / 深挖事件</text>
+  <rect x="434" y="242" width="332" height="36" rx="8" fill="#ffffff"/>
+  <text x="454" y="264" font-size="11" fill="#555">网上有谁？涉及哪些人？</text>
+  <rect x="434" y="282" width="332" height="36" rx="8" fill="#ffffff"/>
+  <text x="454" y="304" font-size="11" fill="#555">节点关系与机制是什么？</text>
+  <rect x="434" y="322" width="332" height="36" rx="8" fill="#ffffff"/>
+  <text x="454" y="344" font-size="11" fill="#555">入口：如何被卷入？</text>
+  <rect x="434" y="362" width="332" height="36" rx="8" fill="#ffffff"/>
+  <text x="454" y="384" font-size="11" fill="#555">切入点：能推动哪个节点？</text>
+
+  <!-- Envision -->
+  <rect x="434" y="414" width="332" height="38" rx="10" fill="#6558f518"/>
+  <circle cx="454" cy="433" r="10" fill="#6558f5"/>
+  <text x="454" y="437" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">E</text>
+  <text x="474" y="438" font-size="15" font-weight="600" fill="#5144d4">Envision / 愿景构建</text>
+  <rect x="434" y="460" width="332" height="36" rx="8" fill="#ffffff"/>
+  <text x="454" y="482" font-size="11" fill="#555">愿景：解决后会是什么样？</text>
+  <rect x="434" y="500" width="332" height="36" rx="8" fill="#ffffff"/>
+  <text x="454" y="522" font-size="11" fill="#555">Gap：现状和愿景之间差什么？</text>
+
+  <!-- AI Action -->
+  <rect x="434" y="552" width="332" height="38" rx="10" fill="#6558f518"/>
+  <circle cx="454" cy="571" r="10" fill="#6558f5"/>
+  <text x="454" y="575" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">A</text>
+  <text x="474" y="576" font-size="15" font-weight="600" fill="#5144d4">AI Action / AI 行动</text>
+  <rect x="434" y="598" width="332" height="36" rx="8" fill="#ffffff"/>
+  <text x="454" y="620" font-size="11" fill="#555">基于 Gap，采取什么行动？</text>
+
+  <!-- Tech ABC -->
+  <rect x="434" y="646" width="332" height="38" rx="10" fill="#6558f518"/>
+  <circle cx="454" cy="665" r="10" fill="#6558f5"/>
+  <text x="454" y="669" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">T</text>
+  <text x="474" y="670" font-size="15" font-weight="600" fill="#5144d4">Tech / ABC 拆解</text>
+
+  <!-- ABC chips -->
+  <rect x="434" y="692" width="106" height="22" rx="6" fill="#23b58d25" stroke="#23b58d44" stroke-width="1"/>
+  <text x="487" y="707" font-size="10" fill="#1a8a6e" text-anchor="middle" font-weight="600">A 意识唤醒</text>
+  <rect x="548" y="692" width="106" height="22" rx="6" fill="#6558f525" stroke="#6558f544" stroke-width="1"/>
+  <text x="601" y="707" font-size="10" fill="#5144d4" text-anchor="middle" font-weight="600">B 行为干预</text>
+  <rect x="662" y="692" width="106" height="22" rx="6" fill="#ff754025" stroke="#ff754044" stroke-width="1"/>
+  <text x="715" y="707" font-size="10" fill="#d45a2a" text-anchor="middle" font-weight="600">C 结果验证</text>
+
+  <!-- Arrow col2->col3 -->
+  <path d="M786 400 L804 400" stroke="#6558f566" stroke-width="2" stroke-linecap="round"/>
+  <polygon points="800,395 810,400 800,405" fill="#6558f566"/>
+
+  <!-- ===== COLUMN 3: Effect / 衡量效果 (Orange) ===== -->
+  <g filter="url(#colShadow)">
+    <rect x="804" y="116" width="372" height="580" rx="16" fill="#fff5f0" stroke="#ffb899" stroke-width="1.5"/>
+  </g>
+  <rect x="804" y="116" width="372" height="56" rx="16" fill="#ff7540"/>
+  <rect x="804" y="156" width="372" height="16" fill="#ff7540"/>
+  <text x="1000" y="150" font-size="19" font-weight="700" fill="#ffffff" text-anchor="middle">Effect</text>
+  <text x="1000" y="168" font-size="10" fill="#ffd5c0" text-anchor="middle" letter-spacing="2">衡量效果 / IMPACT</text>
+  <circle cx="836" cy="144" r="16" fill="#ffffff22"/>
+  <text x="836" y="150" font-size="17" text-anchor="middle">&#x1f4ca;</text>
+
+  <!-- 获得真实世界的反馈 -->
+  <rect x="824" y="196" width="332" height="38" rx="10" fill="#ff754018"/>
+  <circle cx="844" cy="215" r="10" fill="#ff7540"/>
+  <text x="844" y="219" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">F</text>
+  <text x="864" y="220" font-size="15" font-weight="600" fill="#d45a2a">获得真实世界的反馈</text>
+
+  <!-- 用户反馈 -->
+  <rect x="824" y="248" width="332" height="76" rx="12" fill="#ffffff" stroke="#ffceba" stroke-width="1"/>
+  <circle cx="846" cy="270" r="11" fill="#ff754020"/>
+  <text x="846" y="274" font-size="12" text-anchor="middle">&#x1f465;</text>
+  <text x="866" y="268" font-size="13" font-weight="600" fill="#d45a2a">用户反馈</text>
+  <text x="866" y="286" font-size="10" fill="#888">谁用了？反应是什么？会分享吗？</text>
+  <text x="866" y="302" font-size="10" fill="#bbb">User Feedback</text>
+
+  <!-- 数据验证 -->
+  <rect x="824" y="334" width="332" height="76" rx="12" fill="#ffffff" stroke="#ffceba" stroke-width="1"/>
+  <circle cx="846" cy="356" r="11" fill="#ff754020"/>
+  <text x="846" y="360" font-size="12" text-anchor="middle">&#x1f4c8;</text>
+  <text x="866" y="354" font-size="13" font-weight="600" fill="#d45a2a">数据验证</text>
+  <text x="866" y="372" font-size="10" fill="#888">多少人参与？使用频率？指标变化？</text>
+  <text x="866" y="388" font-size="10" fill="#bbb">Data Validation</text>
+
+  <!-- 真实影响 -->
+  <rect x="824" y="420" width="332" height="76" rx="12" fill="#ffffff" stroke="#ffceba" stroke-width="1"/>
+  <circle cx="846" cy="442" r="11" fill="#ff754020"/>
+  <text x="846" y="446" font-size="12" text-anchor="middle">&#x1f30d;</text>
+  <text x="866" y="440" font-size="13" font-weight="600" fill="#d45a2a">真实影响</text>
+  <text x="866" y="458" font-size="10" fill="#888">问题有没有发生哪怕很小的改变？</text>
+  <text x="866" y="474" font-size="10" fill="#bbb">Real Impact</text>
+
+  <!-- 下一步迭代 -->
+  <rect x="824" y="506" width="332" height="76" rx="12" fill="#ffffff" stroke="#ffceba" stroke-width="1"/>
+  <circle cx="846" cy="528" r="11" fill="#ff754020"/>
+  <text x="846" y="532" font-size="12" text-anchor="middle">&#x1f504;</text>
+  <text x="866" y="526" font-size="13" font-weight="600" fill="#d45a2a">下一步迭代</text>
+  <text x="866" y="544" font-size="10" fill="#888">基于反馈，要改进什么？补充什么？</text>
+  <text x="866" y="560" font-size="10" fill="#bbb">Next Iteration</text>
+
+  <!-- Reflection (dashed) -->
+  <rect x="824" y="600" width="332" height="76" rx="12" fill="#ff754008" stroke="#ffceba" stroke-width="1" stroke-dasharray="4 3"/>
+  <circle cx="846" cy="622" r="11" fill="#ff754018"/>
+  <text x="846" y="626" font-size="12" text-anchor="middle">&#x1f4ad;</text>
+  <text x="866" y="620" font-size="13" font-weight="600" fill="#d45a2a">Reflection</text>
+  <text x="866" y="638" font-size="10" fill="#888">回顾你的 IDEATE 旅程</text>
+  <text x="866" y="654" font-size="10" fill="#999">写下最重要的一个发现</text>
+</svg>
